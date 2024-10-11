@@ -15,22 +15,42 @@
 
 <script>
 import PhoneType from './components/PhoneType.vue';
+
+
 export default {
     name: 'App',
     data() {
         return {
             userInput: [],
-            phoneType: 'hellooooooo',
+            phoneType: 'Default Phone Type',
             selectedValue: ''
+        }
+    },
+    components: {
+        PhoneType
+    },
+    methods: {
+        fetchPhoneType(banana) {
+            console.log(banana, typeof banana);
+            fetch(`./json/${banana}`)
+                .then(response => {
+                    console.log('RESPONSE STATUS: ', response.status);
+                    response.json()
+                })
+                .then(data => {
+                    console.log(data);
+                })
+                .catch(error => {
+                    console.error('There was an error!', error);
+                });
         }
     },
     watch: {
         selectedValue(newValue) {
             this.phoneType = newValue;
+            console.log(this.phoneType);
+            this.fetchPhoneType(this.phoneType);
         }
-    },
-    components: {
-        PhoneType
     }
 }
 </script>
