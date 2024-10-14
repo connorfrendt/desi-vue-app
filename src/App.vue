@@ -8,37 +8,37 @@
                 <option id="option-3" value="12455.json">12455</option>
             </select>
         </div>
-        <div></div>
-        <PhoneType :phoneType="phoneType" />
+        
+        <PhoneType :data="data" />
     </div>
 </template>
 
 <script>
 import PhoneType from './components/PhoneType.vue';
 
-
 export default {
     name: 'App',
     data() {
         return {
-            userInput: [],
             phoneType: 'Default Phone Type',
-            selectedValue: ''
+            selectedValue: '',
+            data: ''
         }
     },
     components: {
         PhoneType
     },
     methods: {
-        fetchPhoneType(banana) {
-            console.log(banana, typeof banana);
-            fetch(`./json/${banana}`)
+        fetchPhoneType(phone) {
+            // console.log('phone: ', typeof phone);
+            return fetch(`./json/${phone}`)
                 .then(response => {
-                    console.log('RESPONSE STATUS: ', response.status);
-                    response.json()
+                    // console.log('RESPONSE STATUS: ', response);
+                    return response.json();
                 })
                 .then(data => {
-                    console.log(data);
+                    // console.log('DATA: ', data, typeof data);
+                    this.data = data;
                 })
                 .catch(error => {
                     console.error('There was an error!', error);
@@ -48,7 +48,7 @@ export default {
     watch: {
         selectedValue(newValue) {
             this.phoneType = newValue;
-            console.log(this.phoneType);
+            console.log('Selected Value: ', this.selectedValue);
             this.fetchPhoneType(this.phoneType);
         }
     }
