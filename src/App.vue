@@ -30,14 +30,11 @@ export default {
     },
     methods: {
         fetchPhoneType(phone) {
-            // console.log('phone: ', typeof phone);
             return fetch(`./json/${phone}`)
                 .then(response => {
-                    // console.log('RESPONSE STATUS: ', response);
                     return response.json();
                 })
                 .then(data => {
-                    // console.log('DATA: ', data, typeof data);
                     this.data = data;
                 })
                 .catch(error => {
@@ -48,7 +45,6 @@ export default {
     watch: {
         selectedValue(newValue) {
             this.phoneType = newValue;
-            console.log('Selected Value: ', this.selectedValue);
             this.fetchPhoneType(this.phoneType);
         }
     }
