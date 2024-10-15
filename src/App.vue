@@ -52,6 +52,10 @@ export default {
 </script>
 
 <style>
+body {
+    background-color: gray;
+}
+
 #app {
     font-family: Avenir, Helvetica, Arial, sans-serif;
     text-align: center;
