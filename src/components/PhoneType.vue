@@ -39,8 +39,10 @@ export default {
             // console.log('WIDTH/HEIGHT: ', data.width, data.height, typeof this.twipsToPixels(data.width), typeof this.twipsToPixels(data.height));
             this.outerContainerStyles.width = this.twipsToPixels(data.width) + 'px';
             this.outerContainerStyles.height = this.twipsToPixels(data.height) + 'px';
-            // this.outerContainerStyles.width = this.twipsToPixels(this.origins[0][0]) + 'px';
-            // this.outerContainerStyles.height = this.twipsToPixels(this.origins[0][1]) + 'px';
+            console.log(this.origins[0]);
+            this.outerContainerStyles.position = 'absolute';
+            this.outerContainerStyles.left = this.twipsToPixels(this.origins[0][0]) + 'px';
+            this.outerContainerStyles.top = this.twipsToPixels(this.origins[0][1]) + 'px';
             this.outerContainerStyles.backgroundColor = 'lightgray';
 
         },
