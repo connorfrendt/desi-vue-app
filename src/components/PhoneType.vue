@@ -3,10 +3,14 @@
         <form>
             <div id="outer-box" :style="outerContainerStyles">
                 <div id="main-box">
-                    <div v-for="box in boxes" :key="box[0]"
-                        :id="input-box-box[0]"
-                        :style="containerStyles"
-                    ></div>
+                    <ul>
+                        <li v-for="box in boxes" :key="box[0]"
+                            :id="input-box-box[0]"
+                            :style="containerStyles"
+                        >
+                        {{ obj }}
+                        </li>
+                    </ul>
                 </div>
             </div>
         </form>
@@ -32,7 +36,8 @@ export default {
                 width: '',
                 position: 'absolute',
                 left: '',
-                top: ''
+                top: '',
+                backgroundColor: ''
             },
         }
     },
@@ -58,17 +63,23 @@ export default {
             this.outerContainerStyles.top = this.twipsToPixels(this.origins[0][1]) + 'px';
             this.outerContainerStyles.backgroundColor = 'lightgray';
 
-            console.log(this.userInput[0].objects);
+            // console.log(this.userInput[0].objects);
             this.boxes = Object.entries(this.userInput[0].objects);
-            console.log(this.boxes);
+            console.log('BOXES: ', this.boxes);
             
-            // for(let i = 0; i < this.boxes.length; i++) {
-            //     let key = boxes[i][0];
-            //     let obj = boxes[i][1];  // The object with the attributes of each box.  The second element of the boxes array for each box
+            for(let i = 0; i < this.boxes.length; i++) {
+                // let key = boxes[i][0];
+                this.obj = this.boxes[i][1];  // The object with the attributes of each box.  The second element of the boxes array for each box
 
-            //     let width  = this.twipsToPixels(obj.position[2] - obj.position[0]);
-            //     let height = this.twipsToPixels(obj.position[3] - obj.position[1]);
-            // }
+                let width  = this.twipsToPixels(this.obj.position[2] - this.obj.position[0]);
+                let height = this.twipsToPixels(this.obj.position[3] - this.obj.position[1]);
+                
+                this.containerStyles.width = width + 'px';
+                this.containerStyles.height = height + 'px';
+                this.containerStyles.left = this.twipsToPixels(this.obj.position[0]) + 'px';
+                this.containerStyles.top = this.twipsToPixels(this.obj.position[1]) + 'px';
+                // this.containerStyles.backgroundColor = this.obj;
+            }
         },
         twipsToPixels(num) {
             let numTwips = num / 1440; // 1440 twips per inch
@@ -78,7 +89,6 @@ export default {
     },
     watch: {
         data(newValue) {
-            console.log('NEW VALUE: ', newValue);
             this.updatePhone(newValue);
         }
     }
