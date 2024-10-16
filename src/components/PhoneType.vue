@@ -10,7 +10,6 @@
                             v-html="box[1].defaultText"
                             style="list-style-type: none;"
                             :contenteditable="box[1].editable ? 'true' : 'false'"
-                            z-index="2"
                         ></li>
                     </ul>
                 </div>
@@ -31,7 +30,8 @@ export default {
                 height: '',
                 top: '',
                 left: '',
-                backgroundColor: ''
+                backgroundColor: '',
+                zIndex: ''
             }
         }
     },
@@ -72,7 +72,8 @@ export default {
                 top: this.twipsToPixels(box.position[1]) + 'px',
                 backgroundColor: box.kind === 'text' ? box.color : box.kind === 'rectangle' ? box.color : '',
                 border: box.kind === 'dottedLine' ? `1px dotted ${box.color}` : '',
-                color: box.kind === 'staticText' ? box.color : ''
+                color: box.kind === 'staticText' ? box.color : '',
+                zIndex: box.editable ? 2 : 1
             }
             return styles;
         },
