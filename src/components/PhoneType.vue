@@ -10,6 +10,7 @@
                             v-html="box[1].defaultText"
                             style="list-style-type: none;"
                             :contenteditable="box[1].editable ? 'true' : 'false'"
+                            z-index="2"
                         ></li>
                     </ul>
                 </div>
@@ -69,7 +70,7 @@ export default {
                 position: 'absolute',
                 left: this.twipsToPixels(box.position[0]) + 'px',
                 top: this.twipsToPixels(box.position[1]) + 'px',
-                backgroundColor: box.kind === "rectangle" ? box.color: '',
+                backgroundColor: box.kind === 'text' ? box.color : box.kind === 'rectangle' ? box.color : '',
                 border: box.kind === 'dottedLine' ? `1px dotted ${box.color}` : '',
                 color: box.kind === 'staticText' ? box.color : ''
             }
