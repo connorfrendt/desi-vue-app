@@ -4,12 +4,13 @@
             <div id="outer-box" :style="outerContainerStyles">
                 <div id="main-box">
                     <ul>
-                        <li v-for="box in boxes" :key="box[0]"
-                            :id="input-box-box[0]"
-                            :style="containerStyles"
-                        >
-                        {{ obj }}
-                        </li>
+                        <li v-for="(box, index) in boxes" :key="box[0]"
+                            :id="input-box-`${index}`"
+                            :style="getBoxStyles(box[1])"
+                            v-html="box[1].defaultText"
+                            style="list-style-type: none;"
+                            :contenteditable="box[1].editable ? 'true' : 'false'"
+                        ></li>
                     </ul>
                 </div>
             </div>
@@ -30,15 +31,7 @@ export default {
                 top: '',
                 left: '',
                 backgroundColor: ''
-            },
-            containerStyles: {
-                height: '',
-                width: '',
-                position: 'absolute',
-                left: '',
-                top: '',
-                backgroundColor: ''
-            },
+            }
         }
     },
     props: {
@@ -55,31 +48,32 @@ export default {
             this.userInput = [];
             this.userInput.push(data);
             
-            this.outerContainerStyles.width = this.twipsToPixels(data.width) + 'px';
-            this.outerContainerStyles.height = this.twipsToPixels(data.height) + 'px';
-            
-            this.outerContainerStyles.position = 'absolute';
-            this.outerContainerStyles.left = this.twipsToPixels(this.origins[0][0]) + 'px';
-            this.outerContainerStyles.top = this.twipsToPixels(this.origins[0][1]) + 'px';
-            this.outerContainerStyles.backgroundColor = 'lightgray';
+            this.outerContainerStyles = {
+                position: 'absolute',
+                left: this.twipsToPixels(data.origins[0][0]) + 'px',
+                top: this.twipsToPixels(data.origins[0][1]) + 'px',
+                width: this.twipsToPixels(data.width) + 'px',
+                height: this.twipsToPixels(data.height) + 'px',
+                backgroundColor: 'lightgray'
+            }
 
             // console.log(this.userInput[0].objects);
             this.boxes = Object.entries(this.userInput[0].objects);
-            console.log('BOXES: ', this.boxes);
             
-            for(let i = 0; i < this.boxes.length; i++) {
-                // let key = boxes[i][0];
-                this.obj = this.boxes[i][1];  // The object with the attributes of each box.  The second element of the boxes array for each box
-
-                let width  = this.twipsToPixels(this.obj.position[2] - this.obj.position[0]);
-                let height = this.twipsToPixels(this.obj.position[3] - this.obj.position[1]);
-                
-                this.containerStyles.width = width + 'px';
-                this.containerStyles.height = height + 'px';
-                this.containerStyles.left = this.twipsToPixels(this.obj.position[0]) + 'px';
-                this.containerStyles.top = this.twipsToPixels(this.obj.position[1]) + 'px';
-                // this.containerStyles.backgroundColor = this.obj;
+        },
+        getBoxStyles(box) {
+            console.log('BOX: ', box);
+            let styles = {
+                height: this.twipsToPixels(box.position[3] - box.position[1]) + 'px',
+                width: this.twipsToPixels(box.position[2] - box.position[0]) + 'px',
+                position: 'absolute',
+                left: this.twipsToPixels(box.position[0]) + 'px',
+                top: this.twipsToPixels(box.position[1]) + 'px',
+                backgroundColor: box.kind === "rectangle" ? box.color: '',
+                border: box.kind === 'dottedLine' ? `1px dotted ${box.color}` : '',
+                color: box.kind === 'staticText' ? box.color : ''
             }
+            return styles;
         },
         twipsToPixels(num) {
             let numTwips = num / 1440; // 1440 twips per inch
