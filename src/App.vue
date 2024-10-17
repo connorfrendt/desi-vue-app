@@ -20,9 +20,10 @@ export default {
     name: 'App',
     data() {
         return {
+            message: '',
             phoneType: 'Default Phone Type',
             selectedValue: '',
-            data: ''
+            data: {}
         }
     },
     components: {

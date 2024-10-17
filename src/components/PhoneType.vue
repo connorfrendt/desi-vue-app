@@ -1,19 +1,21 @@
 <template>
     <div>
-        <form>
+        <form @submit.prevent="testFunc">
             <div id="outer-box" :style="outerContainerStyles">
                 <div id="main-box">
                     <ul>
                         <li v-for="(box, index) in boxes" :key="box[0]"
-                            :id="input-box-`${index}`"
+                            :id="`input-box-${index}`"
                             :style="getBoxStyles(box[1])"
                             v-html="box[1].defaultText"
                             style="list-style-type: none;"
                             :contenteditable="box[1].editable ? 'true' : 'false'"
+                            
                         ></li>
                     </ul>
                 </div>
             </div>
+            <button type="submit">Submit</button>
         </form>
     </div>
 </template>
@@ -63,7 +65,6 @@ export default {
             
         },
         getBoxStyles(box) {
-            console.log('BOX: ', box);
             let styles = {
                 height: this.twipsToPixels(box.position[3] - box.position[1]) + 'px',
                 width: this.twipsToPixels(box.position[2] - box.position[0]) + 'px',
@@ -77,6 +78,20 @@ export default {
             }
             return styles;
         },
+        testFunc() {
+            let userInputObjects = Object.entries(this.userInput[0].objects);
+            for(let i = 0; i < userInputObjects.length; i++) {
+                let obj = userInputObjects[i][1];
+                if(obj.editable) {
+                    let userComment = document.getElementById(`input-box-${i}`).innerText;
+                    obj.userComment = userComment;
+                    console.log(obj.userComment);
+                }
+            }
+        },
+        // updateBoxContent(event, index) {
+        //     this.boxes[index][1]
+        // },
         twipsToPixels(num) {
             let numTwips = num / 1440; // 1440 twips per inch
             let twipsToPixels = numTwips * 96; // 96 pixels per inch
