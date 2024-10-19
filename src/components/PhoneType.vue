@@ -1,6 +1,6 @@
 <template>
     <div>
-        <form @submit.prevent="testFunc">
+        <form @submit.prevent="gatherUserComments">
             <div id="outer-box" :style="outerContainerStyles">
                 <div id="main-box">
                     <ul>
@@ -26,6 +26,7 @@ export default {
         return {
             userInput: [],
             boxes: [],
+            testData: {},
             outerContainerStyles: {
                 position: '',
                 width: '',
@@ -78,7 +79,7 @@ export default {
             }
             return styles;
         },
-        testFunc() {
+        gatherUserComments() {
             let userInputObjects = Object.entries(this.userInput[0].objects);
             for(let i = 0; i < userInputObjects.length; i++) {
                 let obj = userInputObjects[i][1];
@@ -88,10 +89,8 @@ export default {
                     console.log(obj.userComment);
                 }
             }
+            this.testData = { ...this.userInput };
         },
-        // updateBoxContent(event, index) {
-        //     this.boxes[index][1]
-        // },
         twipsToPixels(num) {
             let numTwips = num / 1440; // 1440 twips per inch
             let twipsToPixels = numTwips * 96; // 96 pixels per inch
