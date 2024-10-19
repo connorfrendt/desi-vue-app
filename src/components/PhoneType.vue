@@ -26,7 +26,7 @@ export default {
         return {
             userInput: [],
             boxes: [],
-            testData: {},
+            userInputObject: {},
             outerContainerStyles: {
                 position: '',
                 width: '',
@@ -89,7 +89,10 @@ export default {
                     console.log(obj.userComment);
                 }
             }
-            this.testData = { ...this.userInput };
+            this.userInputObject = { ...this.userInput };
+            console.log(this.userInputObject);
+
+            this.$emit('user-input-object', this.userInputObject);
         },
         twipsToPixels(num) {
             let numTwips = num / 1440; // 1440 twips per inch

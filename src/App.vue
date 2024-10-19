@@ -20,7 +20,7 @@
                 <button @click="clickCancel">Cancel</button>
             </div>
         </div>
-        <PhoneType :data="data" />
+        <PhoneType :data="data" @user-input-object="userInputObjectUpdate"/>
     </div>
 </template>
 
@@ -35,7 +35,8 @@ export default {
             selectedValue: '',
             data: {},
             buttonClicked: false,
-            extension: ''
+            extension: '',
+            userInputObjectData: {}
         }
     },
     components: {
@@ -63,9 +64,14 @@ export default {
                 this.fetchPhoneType(this.selectedValue);
                 this.buttonClicked = false;
             }
+            console.log(this.extension);
         },
         clickCancel() {
             this.buttonClicked = false;
+        },
+        userInputObjectUpdate(testData) {
+            this.userInputObjectData = testData;
+            console.log('Updated testData: ', this.testData);
         }
     }
 }
