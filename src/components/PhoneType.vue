@@ -10,7 +10,6 @@
                             v-html="box[1].defaultText"
                             style="list-style-type: none;"
                             :contenteditable="box[1].editable ? 'true' : 'false'"
-                            
                         ></li>
                     </ul>
                 </div>

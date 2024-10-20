@@ -16,11 +16,24 @@
             </div>
 
             <div>
-                <button @click="clickOK">OK</button>
+                <button @click="clickOK" :disabled="!extension || !selectedValue">OK</button>
                 <button @click="clickCancel">Cancel</button>
             </div>
         </div>
-        <PhoneType :data="data" @user-input-object="userInputObjectUpdate"/>
+        <div style="display: flex;">
+            <div 
+                style="height: 100vh; width: 300px; background-color: slategrey; position: relative;" 
+                ref="draggableDiv"
+                @mousedown="initDrag"
+            >
+                a
+                <div 
+                    style="width: 10px; height: 100%; background-color: darkslategray; position: absolute; top: 0; right: 0; cursor: ew-resize;" 
+                    @mousedown.stop="startResize"
+                ></div>
+            </div>
+            <PhoneType :data="data" @user-input-object="userInputObjectUpdate"/>
+        </div>
         <button @click="seeData">Data</button>
     </div>
 </template>
@@ -41,7 +54,10 @@ export default {
             userInputAndExtension: {
                 "Ext": '',
                 "ObjData": {}
-            }
+            },
+            isResizing: false,
+            initialWidth: 0,
+            initialX: 0
         }
     },
     components: {
@@ -83,6 +99,24 @@ export default {
                 "ObjData": this.userInputObjectData
             }
             console.log('User input and extension:\n', this.userInputAndExtension);
+        },
+        startResize(event) {
+            this.isResizing = true;
+            this.initialWidth = this.$refs.draggableDiv.offsetWidth;
+            this.initialX = event.clientX;
+            document.addEventListener('mousemove', this.resize);
+            document.addEventListener('mouseup', this.stopResize);
+        },
+        resize(event) {
+            if(this.isResizing) {
+                const newWidth = this.initialWidth + (event.clientX - this.initialX);
+                this.$refs.draggableDiv.style.width = `${newWidth}px`;
+            }
+        },
+        stopResize() {
+            this.isResizing = false;
+            document.removeEventListener('mousemove', this.resize);
+            document.removeEventListener('mouseup', this.stopResize);
         }
     }
 }
