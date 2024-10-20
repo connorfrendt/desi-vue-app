@@ -86,12 +86,12 @@ export default {
                 if(obj.editable) {
                     let userComment = document.getElementById(`input-box-${i}`).innerText;
                     obj.userComment = userComment;
-                    console.log(obj.userComment);
                 }
             }
             this.userInputObject = { ...this.userInput };
-            console.log(this.userInputObject);
+            console.log('USER INPUT OBJECT: ', this.userInputObject);
 
+            // Passes the userInputObject up to the parent component "App.vue"
             this.$emit('user-input-object', this.userInputObject);
         },
         twipsToPixels(num) {
@@ -108,6 +108,4 @@ export default {
 }
 </script>
 
-<style>
-
-</style>
+<style></style>

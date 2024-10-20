@@ -1,6 +1,6 @@
 <template>
     <div id="app">
-        <button @click="extensionAndPhoneType">ADD</button>
+        <button @click="addButton">ADD</button>
         <div id="open-window" v-if="buttonClicked">
             <label for="extension">Extension number to add:</label> 
             <input id="extension" type="text" v-model="extension" />
@@ -21,6 +21,7 @@
             </div>
         </div>
         <PhoneType :data="data" @user-input-object="userInputObjectUpdate"/>
+        <button @click="seeData">Data</button>
     </div>
 </template>
 
@@ -36,7 +37,11 @@ export default {
             data: {},
             buttonClicked: false,
             extension: '',
-            userInputObjectData: {}
+            userInputObjectData: {},
+            userInputAndExtension: {
+                "Ext": '',
+                "ObjData": {}
+            }
         }
     },
     components: {
@@ -55,23 +60,29 @@ export default {
                     console.error('There was an error!', error);
                 });
         },
-        extensionAndPhoneType() {
+        addButton() {
             this.buttonClicked = !this.buttonClicked;
-            // return this.buttonClicked;
         },
         clickOK() {
             if(this.selectedValue) {
                 this.fetchPhoneType(this.selectedValue);
                 this.buttonClicked = false;
             }
+
             console.log(this.extension);
         },
         clickCancel() {
             this.buttonClicked = false;
         },
-        userInputObjectUpdate(testData) {
-            this.userInputObjectData = testData;
-            console.log('Updated testData: ', this.testData);
+        userInputObjectUpdate(data) {
+            this.userInputObjectData = data;
+        },
+        seeData() {
+            this.userInputAndExtension = {
+                "Ext": this.extension,
+                "ObjData": this.userInputObjectData
+            }
+            console.log('User input and extension:\n', this.userInputAndExtension);
         }
     }
 }
