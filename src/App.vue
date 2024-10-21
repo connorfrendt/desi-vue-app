@@ -1,32 +1,42 @@
 <template>
     <div id="app">
-        <button @click="addButton">ADD</button>
-        <div id="open-window" v-if="buttonClicked">
-            <label for="extension">Extension number to add:</label> 
-            <input id="extension" type="text" v-model="extension" />
-            
-            <div><label>Phone to add:</label></div>
-            <div style="display: flex; justify-content: center;">
-                <select id="dropdown" v-model="selectedValue">
-                    <option id="option-0" value=""></option>
-                    <option id="option-1" value="phone.json">Phone</option>
-                    <option id="option-2" value="10130.json">10130</option>
-                    <option id="option-3" value="12455.json">12455</option>
-                </select>
-            </div>
+        <div style="text-align: center;">
+            <button @click="addButton">Add</button>
+        </div>
 
-            <div>
-                <button @click="clickOK" :disabled="!extension || !selectedValue">OK</button>
-                <button @click="clickCancel">Cancel</button>
+        <div style="display: flex; justify-content: center;">
+            <div id="open-window" v-if="buttonClicked" style="text-align: center;">
+                <label for="extension">Extension number to add:</label> 
+                <input id="extension" type="text" v-model="extension" />
+                
+                <div><label>Phone to add:</label></div>
+                <div style="display: flex; justify-content: center;">
+                    <select id="dropdown" v-model="selectedValue">
+                        <option id="option-0" value=""></option>
+                        <option id="option-1" value="phone.json">Phone</option>
+                        <option id="option-2" value="10130.json">10130</option>
+                        <option id="option-3" value="12455.json">12455</option>
+                    </select>
+                </div>
+    
+                <div>
+                    <button @click="clickOK" :disabled="!extension || !selectedValue">OK</button>
+                    <button @click="clickCancel">Cancel</button>
+                </div>
             </div>
         </div>
+
         <div style="display: flex;">
             <div 
-                style="height: 100vh; width: 300px; background-color: slategrey; position: relative;" 
+                style="height: 100vh; width: 250px; min-width: 215px; background-color: slategrey; position: relative;" 
                 ref="draggableDiv"
-                @mousedown="initDrag"
             >
-                a
+                <div style="display: flex; justify-content: space-around; background-color: lightgray;">
+                    <div>Extension</div>
+                    <div>Model</div>
+                    <div>Name</div>
+                </div>
+                <div>{{ extension }}</div>
                 <div 
                     style="width: 10px; height: 100%; background-color: darkslategray; position: absolute; top: 0; right: 0; cursor: ew-resize;" 
                     @mousedown.stop="startResize"
@@ -57,7 +67,8 @@ export default {
             },
             isResizing: false,
             initialWidth: 0,
-            initialX: 0
+            initialX: 0,
+            phones: []
         }
     },
     components: {
@@ -84,8 +95,8 @@ export default {
                 this.fetchPhoneType(this.selectedValue);
                 this.buttonClicked = false;
             }
-
-            console.log(this.extension);
+            this.addPhone('Hello');
+            this.addPhone('World');
         },
         clickCancel() {
             this.buttonClicked = false;
@@ -98,7 +109,6 @@ export default {
                 "Ext": this.extension,
                 "ObjData": this.userInputObjectData
             }
-            console.log('User input and extension:\n', this.userInputAndExtension);
         },
         startResize(event) {
             this.isResizing = true;
@@ -117,6 +127,14 @@ export default {
             this.isResizing = false;
             document.removeEventListener('mousemove', this.resize);
             document.removeEventListener('mouseup', this.stopResize);
+        },
+        addPhone(phone) {
+            this.phones.push(phone);
+            this.savePhones();
+            console.log(this.phones);
+        },
+        savePhones() {
+            localStorage.setItem('phone', JSON.stringify(this.phones));
         }
     }
 }
@@ -125,13 +143,6 @@ export default {
 <style>
 body {
     background-color: gray;
-}
-
-#app {
-    font-family: Avenir, Helvetica, Arial, sans-serif;
-    text-align: center;
-    color: #2c3e50;
-    margin-top: 60px;
 }
 
 #open-window {
