@@ -27,10 +27,7 @@
         </div>
 
         <div style="display: flex;">
-            <div 
-                style="height: 100vh; width: 250px; min-width: 215px; background-color: slategrey; position: relative;" 
-                ref="draggableDiv"
-            >
+            <div id="draggable-side-bar" ref="draggableDiv">
                 <div style="display: flex; justify-content: space-around; background-color: lightgray;">
                     <div>Extension</div>
                     <div>Model</div>
@@ -149,5 +146,14 @@ body {
     background-color: lightgray;
     height: 200px;
     width: 300px;
+}
+
+#draggable-side-bar {
+    height: 100vh;
+    width: 250px;
+    min-width: 215px;
+    max-width: 400px;
+    background-color: slategrey;
+    position: relative;
 }
 </style>
