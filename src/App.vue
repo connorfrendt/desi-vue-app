@@ -1,7 +1,7 @@
 <template>
     <div id="app">
-        <div style="text-align: center;">
-            <button @click="addButton">Add</button>
+        <div style="text-align: center; background-color: slategray">
+            <button @click="addButton">+ Add</button>
         </div>
 
         <div style="display: flex; justify-content: center;">
@@ -13,7 +13,7 @@
                 <div style="display: flex; justify-content: center;">
                     <select id="dropdown" v-model="tempSelectedValue">
                         <option id="option-0" value=""></option>
-                        <option id="option-1" value="phone.json">Phone</option>
+                        <option id="option-1" value="10075.json">10075</option>
                         <option id="option-2" value="10130.json">10130</option>
                         <option id="option-3" value="12455.json">12455</option>
                     </select>
@@ -32,16 +32,16 @@
                     <div>Extension</div>
                     <div>Model</div>
                 </div>
-                <div style="display: flex; justify-content: space-around;">
+                <div style="display: grid; grid-template-columns: 1fr 1fr;">
                     <div>{{ extension }}</div>
-                    <div>{{ selectedValue }}</div>
+                    <div>{{ modelName }}</div>
                 </div>
                 <div 
                     style="width: 10px; height: 100%; background-color: darkslategray; position: absolute; top: 0; right: 0; cursor: ew-resize;"
                     @mousedown.stop="startResize"
                 ></div>
             </div>
-            <PhoneType :data="data" @user-input-object="userInputObjectUpdate"/>
+            <PhoneType :data="data" @user-input-object="userInputObjectUpdate" @model-name="modelNameUpdate"/>
         </div>
         <button @click="seeData">Data</button>
     </div>
@@ -70,7 +70,8 @@ export default {
             initialWidth: 0,
             initialX: 0,
             phones: [],
-            modelNum: ''
+            modelNum: '',
+            modelName: ''
         }
     },
     components: {
@@ -110,6 +111,10 @@ export default {
         },
         userInputObjectUpdate(data) {
             this.userInputObjectData = data;
+        },
+        modelNameUpdate(data) {
+            console.log('DATA HERE: ', data);
+            this.modelName = data;
         },
         seeData() {
             this.userInputAndExtension = {
@@ -164,7 +169,7 @@ body {
 }
 
 #draggable-side-bar {
-    height: 100vh;
+    height: 75vh;
     width: 250px;
     min-width: 215px;
     max-width: 400px;
