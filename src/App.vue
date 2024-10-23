@@ -7,11 +7,11 @@
         <div style="display: flex; justify-content: center;">
             <div id="open-window" v-if="buttonClicked" style="text-align: center;">
                 <label for="extension">Extension number to add:</label> 
-                <input id="extension" type="text" v-model="extension" />
+                <input id="extension" type="text" v-model="tempExtension" />
                 
                 <div><label>Phone to add:</label></div>
                 <div style="display: flex; justify-content: center;">
-                    <select id="dropdown" v-model="selectedValue">
+                    <select id="dropdown" v-model="tempSelectedValue">
                         <option id="option-0" value=""></option>
                         <option id="option-1" value="phone.json">Phone</option>
                         <option id="option-2" value="10130.json">10130</option>
@@ -20,7 +20,7 @@
                 </div>
     
                 <div>
-                    <button @click="clickOK" :disabled="!extension || !selectedValue">OK</button>
+                    <button @click="clickOK" :disabled="!tempExtension || !tempSelectedValue">OK</button>
                     <button @click="clickCancel">Cancel</button>
                 </div>
             </div>
@@ -31,11 +31,13 @@
                 <div style="display: flex; justify-content: space-around; background-color: lightgray;">
                     <div>Extension</div>
                     <div>Model</div>
-                    <div>Name</div>
                 </div>
-                <div>{{ extension }}</div>
+                <div style="display: flex; justify-content: space-around;">
+                    <div>{{ extension }}</div>
+                    <div>{{ selectedValue }}</div>
+                </div>
                 <div 
-                    style="width: 10px; height: 100%; background-color: darkslategray; position: absolute; top: 0; right: 0; cursor: ew-resize;" 
+                    style="width: 10px; height: 100%; background-color: darkslategray; position: absolute; top: 0; right: 0; cursor: ew-resize;"
                     @mousedown.stop="startResize"
                 ></div>
             </div>
@@ -53,9 +55,11 @@ export default {
     data() {
         return {
             message: '',
+            tempSelectedValue: '',
             selectedValue: '',
             data: {},
             buttonClicked: false,
+            tempExtension: '',
             extension: '',
             userInputObjectData: {},
             userInputAndExtension: {
@@ -65,7 +69,8 @@ export default {
             isResizing: false,
             initialWidth: 0,
             initialX: 0,
-            phones: []
+            phones: [],
+            modelNum: ''
         }
     },
     components: {
@@ -88,12 +93,17 @@ export default {
             this.buttonClicked = !this.buttonClicked;
         },
         clickOK() {
+            this.extension = this.tempExtension;
+            this.selectedValue = this.tempSelectedValue;
             if(this.selectedValue) {
                 this.fetchPhoneType(this.selectedValue);
+                console.log('here');
                 this.buttonClicked = false;
             }
-            this.addPhone('Hello');
-            this.addPhone('World');
+            
+            this.getModelNumber(this.selectedValue);
+            this.addPhone('Hello World');
+            // this.addPhone();
         },
         clickCancel() {
             this.buttonClicked = false;
@@ -106,6 +116,7 @@ export default {
                 "Ext": this.extension,
                 "ObjData": this.userInputObjectData
             }
+            console.log(this.userInputAndExtension);
         },
         startResize(event) {
             this.isResizing = true;
@@ -125,13 +136,17 @@ export default {
             document.removeEventListener('mousemove', this.resize);
             document.removeEventListener('mouseup', this.stopResize);
         },
+        getModelNumber(file) {
+            this.modelNum = file.split('.')[0];
+            console.log(this.modelNum);
+        },
         addPhone(phone) {
             this.phones.push(phone);
             this.savePhones();
             console.log(this.phones);
         },
         savePhones() {
-            localStorage.setItem('phone', JSON.stringify(this.phones));
+            localStorage.setItem(this.extension + '-' + this.modelNum, JSON.stringify(this.phones));
         }
     }
 }
