@@ -46,13 +46,12 @@ export default {
     },
     methods: {
         updatePhone(data) {
-            
+            console.log('updatePhone');
             // Origins - top left corner of the phone's outer box
             this.origins = data.origins;
             this.modelName = data.description + ' (' + data.group + ')';
-            console.log('MODEL NAME: ', this.modelName);
             this.$emit('model-name', this.modelName);
-
+            
             this.userInput = [];
             this.userInput.push(data);
             
@@ -65,7 +64,6 @@ export default {
                 backgroundColor: 'lightgray'
             }
 
-            // console.log(this.userInput[0].objects);
             this.boxes = Object.entries(this.userInput[0].objects);
             
         },
@@ -93,7 +91,6 @@ export default {
                 }
             }
             this.userInputObject = { ...this.userInput };
-            console.log('USER INPUT OBJECT: ', this.userInputObject);
 
             // Passes the userInputObject up to the parent component "App.vue"
             this.$emit('user-input-object', this.userInputObject);
@@ -106,6 +103,7 @@ export default {
     },
     watch: {
         data(newValue) {
+            console.log('here', newValue.group);
             this.updatePhone(newValue);
         }
     }

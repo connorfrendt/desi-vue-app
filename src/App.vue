@@ -9,16 +9,26 @@
                 <label for="extension">Extension number to add:</label> 
                 <input id="extension" type="text" v-model="tempExtension" />
                 
-                <div><label>Phone to add:</label></div>
+                <div><label>Product Family:</label></div>
                 <div style="display: flex; justify-content: center;">
                     <select id="dropdown" v-model="tempSelectedValue">
-                        <option id="option-0" value=""></option>
-                        <option id="option-1" value="10075.json">10075</option>
-                        <option id="option-2" value="10130.json">10130</option>
-                        <option id="option-3" value="12455.json">12455</option>
+                        <option value=""></option>
+                        <option value="10075.json">Toshiba DKT 2000</option>
+                        <option value="10130.json">Vodavi Starplus II</option>
+                        <option value="12455.json">Inter-Tel Axxess 8000 Series</option>
                     </select>
                 </div>
-    
+                
+                <div><label>Model:</label></div>
+                <div style="display: flex; justify-content: center;">
+                    <select v-model="tempModel">
+                        <option value=""></option>
+                        <option value="20-button-phone">20 Button Phone</option>
+                        <option value="260">2603E, 2604, 2604E, 2606</option>
+                        <option value="Inter-Tel">Inter-Tel Axxess 8000 Series</option>
+                    </select>
+                </div>
+
                 <div>
                     <button @click="clickOK" :disabled="!tempExtension || !tempSelectedValue">OK</button>
                     <button @click="clickCancel">Cancel</button>
@@ -33,15 +43,20 @@
                     <div>Model</div>
                 </div>
                 <div style="display: grid; grid-template-columns: 1fr 1fr;">
-                    <div>{{ extension }}</div>
-                    <div>{{ modelName }}</div>
+                    <!-- <div>{{ extAndModelName.ext }}</div>
+                    <div>{{ extAndModelName.modelName }}</div> -->
+                    <div>{{ phones }}</div>
                 </div>
-                <div 
+                <!-- <div 
                     style="width: 10px; height: 100%; background-color: darkslategray; position: absolute; top: 0; right: 0; cursor: ew-resize;"
                     @mousedown.stop="startResize"
-                ></div>
+                ></div> -->
             </div>
-            <PhoneType :data="data" @user-input-object="userInputObjectUpdate" @model-name="modelNameUpdate"/>
+            <PhoneType
+                :data="data"
+                @model-name="modelNameUpdate"
+                @user-input-object="userInputObjectUpdate"
+            />
         </div>
         <button @click="seeData">Data</button>
     </div>
@@ -55,23 +70,33 @@ export default {
     data() {
         return {
             message: '',
+
             tempSelectedValue: '',
             selectedValue: '',
+            
+            tempModel: '',
+            model: '',
+            
+            // selectedValue: '',
             data: {},
             buttonClicked: false,
             tempExtension: '',
             extension: '',
             userInputObjectData: {},
             userInputAndExtension: {
-                "Ext": '',
-                "ObjData": {}
+                "ext": '',
+                "objData": {}
             },
-            isResizing: false,
-            initialWidth: 0,
-            initialX: 0,
+            extAndModelName: {
+                "ext": '',
+                "modelName": ''
+            },
             phones: [],
             modelNum: '',
             modelName: ''
+            // isResizing: false,
+            // initialWidth: 0,
+            // initialX: 0,
         }
     },
     components: {
@@ -81,9 +106,11 @@ export default {
         fetchPhoneType(phone) {
             return fetch(`./json/${phone}`)
                 .then(response => {
+                    console.log('response');
                     return response.json();
                 })
                 .then(data => {
+                    console.log('data');
                     this.data = data;
                 })
                 .catch(error => {
@@ -98,13 +125,11 @@ export default {
             this.selectedValue = this.tempSelectedValue;
             if(this.selectedValue) {
                 this.fetchPhoneType(this.selectedValue);
-                console.log('here');
                 this.buttonClicked = false;
             }
-            
             this.getModelNumber(this.selectedValue);
-            this.addPhone('Hello World');
-            // this.addPhone();
+            console.log('MODEL??????', this.tempModel);
+            // this.addPhone({ [this.extension]: [this.modelName] });
         },
         clickCancel() {
             this.buttonClicked = false;
@@ -113,46 +138,42 @@ export default {
             this.userInputObjectData = data;
         },
         modelNameUpdate(data) {
-            console.log('DATA HERE: ', data);
             this.modelName = data;
+        },
+        getModelNumber(file) {
+            this.modelNum = file.split('.')[0];
+        },
+        addPhone(phone) {
+            this.phones.push(phone);
+            this.savePhones();
+        },
+        savePhones() {
+            localStorage.setItem(this.extension + '-' + this.modelNum, JSON.stringify(this.phones));
         },
         seeData() {
             this.userInputAndExtension = {
                 "Ext": this.extension,
                 "ObjData": this.userInputObjectData
             }
-            console.log(this.userInputAndExtension);
         },
-        startResize(event) {
-            this.isResizing = true;
-            this.initialWidth = this.$refs.draggableDiv.offsetWidth;
-            this.initialX = event.clientX;
-            document.addEventListener('mousemove', this.resize);
-            document.addEventListener('mouseup', this.stopResize);
-        },
-        resize(event) {
-            if(this.isResizing) {
-                const newWidth = this.initialWidth + (event.clientX - this.initialX);
-                this.$refs.draggableDiv.style.width = `${newWidth}px`;
-            }
-        },
-        stopResize() {
-            this.isResizing = false;
-            document.removeEventListener('mousemove', this.resize);
-            document.removeEventListener('mouseup', this.stopResize);
-        },
-        getModelNumber(file) {
-            this.modelNum = file.split('.')[0];
-            console.log(this.modelNum);
-        },
-        addPhone(phone) {
-            this.phones.push(phone);
-            this.savePhones();
-            console.log(this.phones);
-        },
-        savePhones() {
-            localStorage.setItem(this.extension + '-' + this.modelNum, JSON.stringify(this.phones));
-        }
+        // startResize(event) {
+        //     this.isResizing = true;
+        //     this.initialWidth = this.$refs.draggableDiv.offsetWidth;
+        //     this.initialX = event.clientX;
+        //     document.addEventListener('mousemove', this.resize);
+        //     document.addEventListener('mouseup', this.stopResize);
+        // },
+        // resize(event) {
+        //     if(this.isResizing) {
+        //         const newWidth = this.initialWidth + (event.clientX - this.initialX);
+        //         this.$refs.draggableDiv.style.width = `${newWidth}px`;
+        //     }
+        // },
+        // stopResize() {
+        //     this.isResizing = false;
+        //     document.removeEventListener('mousemove', this.resize);
+        //     document.removeEventListener('mouseup', this.stopResize);
+        // },
     }
 }
 </script>
