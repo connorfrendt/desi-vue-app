@@ -43,9 +43,8 @@
                     <div>Model</div>
                 </div>
                 <div style="display: grid; grid-template-columns: 1fr 1fr;">
-                    <!-- <div>{{ extAndModelName.ext }}</div>
-                    <div>{{ extAndModelName.modelName }}</div> -->
-                    <div>{{ phones }}</div>
+                    <div>{{ extension }}</div>
+                    <div>{{ model }}</div>
                 </div>
                 <!-- <div 
                     style="width: 10px; height: 100%; background-color: darkslategray; position: absolute; top: 0; right: 0; cursor: ew-resize;"
@@ -106,11 +105,9 @@ export default {
         fetchPhoneType(phone) {
             return fetch(`./json/${phone}`)
                 .then(response => {
-                    console.log('response');
                     return response.json();
                 })
                 .then(data => {
-                    console.log('data');
                     this.data = data;
                 })
                 .catch(error => {
@@ -123,13 +120,14 @@ export default {
         clickOK() {
             this.extension = this.tempExtension;
             this.selectedValue = this.tempSelectedValue;
+            this.model = this.tempModel;
             if(this.selectedValue) {
                 this.fetchPhoneType(this.selectedValue);
                 this.buttonClicked = false;
             }
             this.getModelNumber(this.selectedValue);
-            console.log('MODEL??????', this.tempModel);
-            // this.addPhone({ [this.extension]: [this.modelName] });
+            console.log('MODEL??????', this.model);
+            this.addPhone({ [this.extension]: this.model });
         },
         clickCancel() {
             this.buttonClicked = false;
