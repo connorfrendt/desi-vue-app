@@ -10,7 +10,7 @@
                             v-html="box[1].defaultText"
                             style="list-style-type: none;"
                             :contenteditable="box[1].editable ? 'true' : 'false'"
-                            @dblclick="showPopUp(box, index)"
+                            @click="showPopUp(box, index)"
                         ></li>
                     </ul>
                 </div>
@@ -57,7 +57,6 @@ export default {
     },
     methods: {
         updatePhone(data) {
-            console.log('updatePhone');
             // Origins - top left corner of the phone's outer box
             this.origins = data.origins;
             this.modelName = data.description + ' (' + data.group + ')';
@@ -68,7 +67,7 @@ export default {
             
             this.outerContainerStyles = {
                 position: 'absolute',
-                left: this.twipsToPixels(data.origins[0][0]) + 'px',
+                left: this.twipsToPixels(data.origins[0][0]) + 500 + 'px',
                 top: this.twipsToPixels(data.origins[0][1]) + 'px',
                 width: this.twipsToPixels(data.width) + 'px',
                 height: this.twipsToPixels(data.height) + 'px',
@@ -131,7 +130,6 @@ export default {
     },
     watch: {
         data(newValue) {
-            console.log('here', newValue.group);
             this.updatePhone(newValue);
         }
     }

@@ -23,9 +23,9 @@
                 <div style="display: flex; justify-content: center;">
                     <select v-model="tempModel">
                         <option value=""></option>
-                        <option value="20-button-phone">20 Button Phone</option>
-                        <option value="260">2603E, 2604, 2604E, 2606</option>
-                        <option value="Inter-Tel">Inter-Tel Axxess 8000 Series</option>
+                        <option id="value1" value="20-button-phone">20 Button Phone</option>
+                        <option id="value2" value="260">2603E, 2604, 2604E, 2606</option>
+                        <option id="value3" value="Inter-Tel">Inter-Tel Axxess 8000 Series</option>
                     </select>
                 </div>
 
@@ -42,22 +42,21 @@
                     <div>Extension</div>
                     <div>Model</div>
                 </div>
-                <div style="display: grid; grid-template-columns: 1fr 1fr;" v-for="extAndModel in extAndModelNames" :key="extAndModel.ext">
+                <div style="display: grid; grid-template-columns: 1fr 1fr;"
+                    v-for="extAndModel in extAndModelNames" :key="extAndModel.ext"
+                >
                     <div>{{ extAndModel.ext }}</div>
-                    <div>{{ extAndModel.modelName }}</div>
+                    <div>{{ extAndModel.modelName }} ({{ getOptionText(extAndModel.modelName) }})</div>
                 </div>
-                <!-- <div 
-                    style="width: 10px; height: 100%; background-color: darkslategray; position: absolute; top: 0; right: 0; cursor: ew-resize;"
-                    @mousedown.stop="startResize"
-                ></div> -->
             </div>
             <PhoneType
                 :data="data"
-                @model-name="modelNameUpdate"
                 @user-input-object="userInputObjectUpdate"
             />
         </div>
-        <button @click="seeData">Data</button>
+
+        <button @click="myFunc">CLICK HERE</button>
+
     </div>
 </template>
 
@@ -76,23 +75,14 @@ export default {
             tempModel: '',
             model: '',
             
-            // selectedValue: '',
             data: {},
             buttonClicked: false,
             tempExtension: '',
             extension: '',
             userInputObjectData: {},
-            userInputAndExtension: {
-                "ext": '',
-                "objData": {}
-            },
             extAndModelNames: [],
             phones: [],
             modelNum: '',
-            modelName: ''
-            // isResizing: false,
-            // initialWidth: 0,
-            // initialX: 0,
         }
     },
     components: {
@@ -123,7 +113,6 @@ export default {
                 this.buttonClicked = false;
             }
             this.getModelNumber(this.selectedValue);
-            // this.addPhone({ [this.extension]: this.model });
             this.extAndModelNames.push({ "ext": this.extension, "modelName": this.model });
         },
         clickCancel() {
@@ -131,9 +120,6 @@ export default {
         },
         userInputObjectUpdate(data) {
             this.userInputObjectData = data;
-        },
-        modelNameUpdate(data) {
-            this.modelName = data;
         },
         getModelNumber(file) {
             this.modelNum = file.split('.')[0];
@@ -145,30 +131,17 @@ export default {
         savePhones() {
             localStorage.setItem(this.extension + '-' + this.modelNum, JSON.stringify(this.phones));
         },
-        seeData() {
-            this.userInputAndExtension = {
-                "Ext": this.extension,
-                "ObjData": this.userInputObjectData
-            }
+        myFunc() {
+            console.log(this.tempSelectedValue)
         },
-        // startResize(event) {
-        //     this.isResizing = true;
-        //     this.initialWidth = this.$refs.draggableDiv.offsetWidth;
-        //     this.initialX = event.clientX;
-        //     document.addEventListener('mousemove', this.resize);
-        //     document.addEventListener('mouseup', this.stopResize);
-        // },
-        // resize(event) {
-        //     if(this.isResizing) {
-        //         const newWidth = this.initialWidth + (event.clientX - this.initialX);
-        //         this.$refs.draggableDiv.style.width = `${newWidth}px`;
-        //     }
-        // },
-        // stopResize() {
-        //     this.isResizing = false;
-        //     document.removeEventListener('mousemove', this.resize);
-        //     document.removeEventListener('mouseup', this.stopResize);
-        // },
+        getOptionText(value) {
+            const option = this.$el.querySelector(`option[value="${value}"]`);
+            console.log('VALUE****', value);
+            console.log('OPTION****', option);
+            console.log('OPTION INNER****', option.innerHTML);
+            // return option ? option.innerHTML : value;
+            return option.innerHTML;
+        }
     }
 }
 </script>
