@@ -10,12 +10,19 @@
                             v-html="box[1].defaultText"
                             style="list-style-type: none;"
                             :contenteditable="box[1].editable ? 'true' : 'false'"
+                            @dblclick="showPopUp(box, index)"
                         ></li>
                     </ul>
                 </div>
             </div>
             <button type="submit">Submit</button>
         </form>
+
+        <div v-if="popupVisible" class="popup">
+            <textarea v-model="popupText"></textarea>
+            <button @click="confirmEdit">OK</button>
+            <button @click="cancelEdit">Cancel</button>
+        </div>
     </div>
 </template>
 
@@ -35,7 +42,11 @@ export default {
                 backgroundColor: '',
                 zIndex: ''
             },
-            modelName: ''
+            modelName: '',
+            popupVisible: false,
+            popupText: '',
+            currentBox: null,
+            currentIndex: null
         }
     },
     props: {
@@ -95,6 +106,23 @@ export default {
             // Passes the userInputObject up to the parent component "App.vue"
             this.$emit('user-input-object', this.userInputObject);
         },
+        showPopUp(box, index) {
+            this.popupVisible = true;
+            this.popupText = box[1].defaultText;
+            this.currentBox = box;
+            this.currentIndex = index;
+        },
+        confirmEdit() {
+            this.currentBox[1].defaultText = this.popupText;
+            this.popupVisible = false;
+            this.currentBox = null;
+            this.currentIndex = null;
+        },
+        cancelEdit() {
+            this.popupVisible = false;
+            this.currentBox = null;
+            this.currentIndex = null;
+        },
         twipsToPixels(num) {
             let numTwips = num / 1440; // 1440 twips per inch
             let twipsToPixels = numTwips * 96; // 96 pixels per inch
@@ -110,4 +138,15 @@ export default {
 }
 </script>
 
-<style></style>
+<style>
+.popup {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: white;
+    border: 1px solid #ccc;
+    padding: 20px;
+    z-index: 100;
+}
+</style>
