@@ -43,8 +43,8 @@
                     <div>Model</div>
                 </div>
                 <div style="display: grid; grid-template-columns: 1fr 1fr;">
-                    <div>{{ extension }}</div>
-                    <div>{{ model }}</div>
+                    <!-- <div v-for="phone in phones" :key="phone.key">{{ phone }}</div> -->
+                    <!-- <div>{{ model }}</div> -->
                 </div>
                 <!-- <div 
                     style="width: 10px; height: 100%; background-color: darkslategray; position: absolute; top: 0; right: 0; cursor: ew-resize;"
@@ -86,10 +86,7 @@ export default {
                 "ext": '',
                 "objData": {}
             },
-            extAndModelName: {
-                "ext": '',
-                "modelName": ''
-            },
+            extAndModelName: [],
             phones: [],
             modelNum: '',
             modelName: ''
@@ -126,8 +123,8 @@ export default {
                 this.buttonClicked = false;
             }
             this.getModelNumber(this.selectedValue);
-            console.log('MODEL??????', this.model);
-            this.addPhone({ [this.extension]: this.model });
+            // this.addPhone({ [this.extension]: this.model });
+            this.extAndModelName.push({ "ext": this.extension, "modelName": })
         },
         clickCancel() {
             this.buttonClicked = false;
