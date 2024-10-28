@@ -46,7 +46,7 @@
                     v-for="extAndModel in extAndModelNames" :key="extAndModel.ext"
                 >
                     <div>{{ extAndModel.ext }}</div>
-                    <div>{{ extAndModel.modelName }} ({{ getOptionText(extAndModel.modelName) }})</div>
+                    <div>{{ extAndModel.modelName }}</div>
                 </div>
             </div>
             <PhoneType
@@ -54,8 +54,6 @@
                 @user-input-object="userInputObjectUpdate"
             />
         </div>
-
-        <button @click="myFunc">CLICK HERE</button>
 
     </div>
 </template>
@@ -113,7 +111,7 @@ export default {
                 this.buttonClicked = false;
             }
             this.getModelNumber(this.selectedValue);
-            this.extAndModelNames.push({ "ext": this.extension, "modelName": this.model });
+            this.extAndModelNames.push({ "ext": this.extension, "modelName": this.getOptionText(this.model) + ' (' + this.getOptionText(this.selectedValue) + ')' });
         },
         clickCancel() {
             this.buttonClicked = false;
@@ -131,14 +129,9 @@ export default {
         savePhones() {
             localStorage.setItem(this.extension + '-' + this.modelNum, JSON.stringify(this.phones));
         },
-        myFunc() {
-            console.log(this.tempSelectedValue)
-        },
         getOptionText(value) {
+            console.log('Value: ', value);
             const option = this.$el.querySelector(`option[value="${value}"]`);
-            console.log('VALUE****', value);
-            console.log('OPTION****', option);
-            console.log('OPTION INNER****', option.innerHTML);
             // return option ? option.innerHTML : value;
             return option.innerHTML;
         }

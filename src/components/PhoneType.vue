@@ -60,7 +60,7 @@ export default {
             // Origins - top left corner of the phone's outer box
             this.origins = data.origins;
             this.modelName = data.description + ' (' + data.group + ')';
-            this.$emit('model-name', this.modelName);
+            // this.$emit('model-name', this.modelName);
             
             this.userInput = [];
             this.userInput.push(data);
