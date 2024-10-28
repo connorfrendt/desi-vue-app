@@ -7,7 +7,7 @@
                         <li v-for="(box, index) in boxes" :key="box[0]"
                             :id="`input-box-${index}`"
                             :style="getBoxStyles(box[1])"
-                            v-html="box[1].defaultText"
+                            v-html="box[1].editable ? box[1].userComment : box[1].defaultText"
                             style="list-style-type: none;"
                             :contenteditable="box[1].editable ? 'true' : 'false'"
                             @click="showPopUp(box, index)"
@@ -60,7 +60,6 @@ export default {
             // Origins - top left corner of the phone's outer box
             this.origins = data.origins;
             this.modelName = data.description + ' (' + data.group + ')';
-            // this.$emit('model-name', this.modelName);
             
             this.userInput = [];
             this.userInput.push(data);
@@ -112,10 +111,13 @@ export default {
             this.currentIndex = index;
         },
         confirmEdit() {
-            this.currentBox[1].defaultText = this.popupText;
+            console.log(this.currentBox[1]);
+            console.log(this.popupText);
+            this.currentBox[1].userComment = this.popupText;
             this.popupVisible = false;
             this.currentBox = null;
             this.currentIndex = null;
+            // console.log(this.currentBox[1]);
         },
         cancelEdit() {
             this.popupVisible = false;

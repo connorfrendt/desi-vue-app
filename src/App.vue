@@ -5,7 +5,7 @@
         </div>
 
         <div style="display: flex; justify-content: center;">
-            <div id="open-window" v-if="buttonClicked" style="text-align: center;">
+            <div id="open-window" v-if="buttonClicked" style="text-align: center; z-index: 20;">
                 <label for="extension">Extension number to add:</label> 
                 <input id="extension" type="text" v-model="tempExtension" />
                 
@@ -42,8 +42,9 @@
                     <div>Extension</div>
                     <div>Model</div>
                 </div>
-                <div style="display: grid; grid-template-columns: 1fr 1fr;"
+                <div style="display: grid; grid-template-columns: 1fr 1fr; background-color: green; margin: 10px;"
                     v-for="extAndModel in extAndModelNames" :key="extAndModel.ext"
+                    @click="myFunc"
                 >
                     <div>{{ extAndModel.ext }}</div>
                     <div>{{ extAndModel.modelName }}</div>
@@ -134,6 +135,9 @@ export default {
             const option = this.$el.querySelector(`option[value="${value}"]`);
             // return option ? option.innerHTML : value;
             return option.innerHTML;
+        },
+        myFunc() {
+            console.log('Clicked');
         }
     }
 }
