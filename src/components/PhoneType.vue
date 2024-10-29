@@ -9,19 +9,21 @@
                             :style="getBoxStyles(box[1])"
                             v-html="box[1].editable ? box[1].userComment : box[1].defaultText"
                             style="list-style-type: none;"
-                            :contenteditable="box[1].editable ? 'true' : 'false'"
-                            @click="showPopUp(box, index)"
+                            @click="box[1].editable ? showPopUp(box, index) : ''"
                         ></li>
                     </ul>
                 </div>
             </div>
+            <!-- <div>:contenteditable="box[1].editable ? 'true' : 'false'"</div> -->
             <button type="submit">Submit</button>
         </form>
 
         <div v-if="popupVisible" class="popup">
             <textarea v-model="popupText"></textarea>
-            <button @click="confirmEdit">OK</button>
-            <button @click="cancelEdit">Cancel</button>
+            <div>
+                <button @click="confirmEdit">OK</button>
+                <button @click="cancelEdit">Cancel</button>
+            </div>
         </div>
     </div>
 </template>
@@ -111,13 +113,10 @@ export default {
             this.currentIndex = index;
         },
         confirmEdit() {
-            console.log(this.currentBox[1]);
-            console.log(this.popupText);
             this.currentBox[1].userComment = this.popupText;
             this.popupVisible = false;
             this.currentBox = null;
             this.currentIndex = null;
-            // console.log(this.currentBox[1]);
         },
         cancelEdit() {
             this.popupVisible = false;
