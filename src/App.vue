@@ -30,19 +30,20 @@
                 </div>
 
                 <div>
-                    <button @click="clickOK" :disabled="!tempExtension || !tempSelectedValue">OK</button>
+                    <button @click="clickOK" :disabled="!tempExtension || !tempSelectedValue || !tempModel">OK</button>
                     <button @click="clickCancel">Cancel</button>
                 </div>
             </div>
         </div>
 
+        <!-- SIDE BAR -->
         <div style="display: flex;">
             <div id="draggable-side-bar" ref="draggableDiv">
                 <div style="display: flex; justify-content: space-around; background-color: lightgray;">
                     <div>Extension</div>
                     <div>Model</div>
                 </div>
-                <div style="display: grid; grid-template-columns: 1fr 1fr; background-color: green; margin: 10px;"
+                <div style="display: grid; grid-template-columns: 1fr 1fr; background-color: lightgray; margin: 10px;"
                     v-for="extAndModel in extAndModelNames" :key="extAndModel.ext"
                     @click="myFunc"
                 >
@@ -112,7 +113,13 @@ export default {
                 this.buttonClicked = false;
             }
             this.getModelNumber(this.selectedValue);
-            this.extAndModelNames.push({ "ext": this.extension, "modelName": this.getOptionText(this.model) + ' (' + this.getOptionText(this.selectedValue) + ')' });
+            this.extAndModelNames.push({
+                "ext": this.extension,
+                "modelName": this.getOptionText(this.model) + ' (' + this.getOptionText(this.selectedValue) + ')'
+            });
+            this.tempExtension = '';
+            this.tempSelectedValue = '';
+            this.tempModel = '';
         },
         clickCancel() {
             this.buttonClicked = false;

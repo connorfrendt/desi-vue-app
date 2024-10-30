@@ -10,21 +10,22 @@
                             v-html="box[1].editable ? box[1].userComment : box[1].defaultText"
                             style="list-style-type: none;"
                             @click="box[1].editable ? showPopUp(box, index) : ''"
+                            
                         ></li>
                     </ul>
                 </div>
             </div>
             <!-- <div>:contenteditable="box[1].editable ? 'true' : 'false'"</div> -->
-            <button type="submit">Submit</button>
         </form>
 
         <div v-if="popupVisible" class="popup">
-            <textarea v-model="popupText"></textarea>
+            <textarea ref="popupInput" v-model="popupText"></textarea>
             <div>
                 <button @click="confirmEdit">OK</button>
                 <button @click="cancelEdit">Cancel</button>
             </div>
         </div>
+        <button @click="myFunc">See Data</button>
     </div>
 </template>
 
@@ -61,22 +62,33 @@ export default {
         updatePhone(data) {
             // Origins - top left corner of the phone's outer box
             this.origins = data.origins;
-            this.modelName = data.description + ' (' + data.group + ')';
+            // this.modelName = data.description + ' (' + data.group + ')';
             
             this.userInput = [];
             this.userInput.push(data);
+            // console.log('USER INPUT: ', this.userInput);
             
             this.outerContainerStyles = {
                 position: 'absolute',
-                left: this.twipsToPixels(data.origins[0][0]) + 500 + 'px',
-                top: this.twipsToPixels(data.origins[0][1]) + 'px',
-                width: this.twipsToPixels(data.width) + 'px',
-                height: this.twipsToPixels(data.height) + 'px',
+                left: this.twipsToPixels(this.userInput[0].origins[0][0]) + 500 + 'px',
+                top: this.twipsToPixels(this.userInput[0].origins[0][1]) + 'px',
+                width: this.twipsToPixels(this.userInput[0].width) + 'px',
+                height: this.twipsToPixels(this.userInput[0].height) + 'px',
                 backgroundColor: 'lightgray'
             }
-
-            this.boxes = Object.entries(this.userInput[0].objects);
             
+
+            // this.boxes makes it so that the CSS can be applied
+            this.boxes = Object.entries(this.userInput[0].objects);
+
+            this.$nextTick(() => {
+                this.gatherUserComments();
+            });
+
+            // Passes the userInputObject up to the parent component "App.vue"
+            this.$emit('user-input-object', this.userInputObjectData);
+            
+            //Perhaps call the gatherUserComments method here
         },
         getBoxStyles(box) {
             let styles = {
@@ -102,21 +114,27 @@ export default {
                 }
             }
             this.userInputObject = { ...this.userInput };
+            console.log('USER INPUT OBJECT: ', this.userInputObject);
 
             // Passes the userInputObject up to the parent component "App.vue"
             this.$emit('user-input-object', this.userInputObject);
         },
         showPopUp(box, index) {
             this.popupVisible = true;
-            this.popupText = box[1].defaultText;
+            this.popupText = box[1].userComment;
             this.currentBox = box;
             this.currentIndex = index;
+            this.$nextTick(() => {
+                this.$refs.popupInput.focus();
+            });
+            console.log(this.currentBox, this.userInputObject);
         },
         confirmEdit() {
             this.currentBox[1].userComment = this.popupText;
             this.popupVisible = false;
             this.currentBox = null;
             this.currentIndex = null;
+            
         },
         cancelEdit() {
             this.popupVisible = false;
@@ -127,6 +145,9 @@ export default {
             let numTwips = num / 1440; // 1440 twips per inch
             let twipsToPixels = numTwips * 96; // 96 pixels per inch
             return twipsToPixels;
+        },
+        myFunc() {
+            console.log('user input object: ', this.userInputObject);
         }
     },
     watch: {
