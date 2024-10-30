@@ -83,12 +83,10 @@ export default {
 
             this.$nextTick(() => {
                 this.gatherUserComments();
+                console.log('USER INPUT OBJECT DATA: ', this.userInputObject);
+                // Passes the userInputObject up to the parent component "App.vue"
+                this.$emit('user-input-object', this.userInputObject);
             });
-
-            // Passes the userInputObject up to the parent component "App.vue"
-            this.$emit('user-input-object', this.userInputObjectData);
-            
-            //Perhaps call the gatherUserComments method here
         },
         getBoxStyles(box) {
             let styles = {

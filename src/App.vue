@@ -120,6 +120,10 @@ export default {
             this.tempExtension = '';
             this.tempSelectedValue = '';
             this.tempModel = '';
+            
+            console.log('**********', this.userInputObjectData, typeof this.userInputObjectData);
+            
+            // this.addPhone(this.selectedValue);
         },
         clickCancel() {
             this.buttonClicked = false;
