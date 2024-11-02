@@ -43,12 +43,15 @@
                     <div>Extension</div>
                     <div>Model</div>
                 </div>
-                <div style="display: grid; grid-template-columns: 1fr 1fr; background-color: lightgray; margin: 10px;"
+                <div style="margin: 10px;"
+                    class="phone-list"
                     v-for="extAndModel in extAndModelNames" :key="extAndModel.ext"
-                    @click="myFunc"
+                    @click="myFunc($event)"
                 >
-                    <div>{{ extAndModel.ext }}</div>
-                    <div>{{ extAndModel.modelName }}</div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr;">
+                        <div>{{ extAndModel.ext }}</div>
+                        <div>{{ extAndModel.modelName }}</div>
+                    </div>
                 </div>
             </div>
             <PhoneType
@@ -83,6 +86,7 @@ export default {
             extAndModelNames: [],
             phones: [],
             modelNum: '',
+            phoneClicked: false
         }
     },
     components: {
@@ -121,9 +125,9 @@ export default {
             this.tempSelectedValue = '';
             this.tempModel = '';
             
-            console.log('**********', this.userInputObjectData, typeof this.userInputObjectData);
+            // console.log('**********', this.userInputObjectData, typeof this.userInputObjectData);
             
-            // this.addPhone(this.selectedValue);
+            this.addPhone(this.selectedValue);
         },
         clickCancel() {
             this.buttonClicked = false;
@@ -136,10 +140,10 @@ export default {
         },
         addPhone(phone) {
             this.phones.push(phone);
-            this.savePhones();
+            this.savePhones(phone);
         },
-        savePhones() {
-            localStorage.setItem(this.extension + '-' + this.modelNum, JSON.stringify(this.phones));
+        savePhones(phone) {
+            localStorage.setItem(this.extension + '-' + this.modelNum, JSON.stringify(phone));
         },
         getOptionText(value) {
             console.log('Value: ', value);
@@ -147,8 +151,11 @@ export default {
             // return option ? option.innerHTML : value;
             return option.innerHTML;
         },
-        myFunc() {
-            console.log('Clicked');
+        myFunc(event) {
+            console.log('Event: ', event);
+            let clickedDiv = event.target;
+            console.log('Clicked Div: ', clickedDiv);
+            
         }
     }
 }
@@ -173,4 +180,5 @@ body {
     background-color: slategrey;
     position: relative;
 }
+
 </style>
