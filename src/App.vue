@@ -45,12 +45,12 @@
                 </div>
                 <div style="margin: 10px;"
                     class="phone-list"
-                    v-for="extAndModel in extAndModelNames" :key="extAndModel.ext"
+                    v-for="phone in phoneList" :key="phone.ext"
                     @click="myFunc($event)"
                 >
                     <div style="display: grid; grid-template-columns: 1fr 1fr;">
-                        <div>{{ extAndModel.ext }}</div>
-                        <div>{{ extAndModel.modelName }}</div>
+                        <div>{{ phone.ext }}</div>
+                        <div>{{ phone.modelName }}</div>
                     </div>
                 </div>
             </div>
@@ -70,21 +70,19 @@ export default {
     name: 'App',
     data() {
         return {
-            message: '',
-
             tempSelectedValue: '',
             selectedValue: '',
             
             tempModel: '',
             model: '',
             
-            data: {},
-            buttonClicked: false,
             tempExtension: '',
             extension: '',
+
+            data: {},
+            buttonClicked: false,
             userInputObjectData: {},
-            extAndModelNames: [],
-            phones: [],
+            phoneList: [],
             modelNum: '',
             phoneClicked: false
         }
@@ -117,17 +115,16 @@ export default {
                 this.buttonClicked = false;
             }
             this.getModelNumber(this.selectedValue);
-            this.extAndModelNames.push({
+            this.phoneList.push({
                 "ext": this.extension,
-                "modelName": this.getOptionText(this.model) + ' (' + this.getOptionText(this.selectedValue) + ')'
+                "modelName": this.getOptionText(this.model) + ' (' + this.getOptionText(this.selectedValue) + ')',
+                "value": this.selectedValue
             });
             this.tempExtension = '';
             this.tempSelectedValue = '';
             this.tempModel = '';
             
-            // console.log('**********', this.userInputObjectData, typeof this.userInputObjectData);
-            
-            this.addPhone(this.selectedValue);
+            console.log('HERE****', this.phoneList);
         },
         clickCancel() {
             this.buttonClicked = false;
@@ -139,7 +136,7 @@ export default {
             this.modelNum = file.split('.')[0];
         },
         addPhone(phone) {
-            this.phones.push(phone);
+            this.phoneList.push(phone);
             this.savePhones(phone);
         },
         savePhones(phone) {
@@ -149,13 +146,23 @@ export default {
             console.log('Value: ', value);
             const option = this.$el.querySelector(`option[value="${value}"]`);
             // return option ? option.innerHTML : value;
-            return option.innerHTML;
+            return option ? option.innerHTML : value;
         },
         myFunc(event) {
-            console.log('Event: ', event);
             let clickedDiv = event.target;
-            console.log('Clicked Div: ', clickedDiv);
+            let parentDiv = clickedDiv.parentElement;
+            parentDiv.style.backgroundColor = 'lightblue';
             
+            //returns 223, etc.
+            console.log('Parent Div: ', parentDiv.querySelector('div:first-child').innerHTML);
+            // I need to match whatever ext I clicked on with the extension of the object. Take the value of the object and put it through fetchPhoneType
+            for(let i = 0; i < this.phoneList.length; i++) {
+                if(this.phoneList[i].ext === parentDiv.querySelector('div:first-child').innerHTML) {
+                    this.fetchPhoneType(this.phoneList[i].value);
+                }
+            } 
+            // this.fetchPhoneType();
+            return parentDiv;
         }
     }
 }
