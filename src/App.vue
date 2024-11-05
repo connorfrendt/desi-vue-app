@@ -134,15 +134,16 @@ export default {
         },
         currentBoxUpdate(data) {
             this.currentBox = data;
-            // let boxesToGoThrough = Object.entries(this.userInputObjectData[0].objects);
+            let boxesToGoThrough = Object.entries(this.userInputObjectData[0].objects);
             // console.log('overall object: ', Object.entries(this.userInputObjectData[0].objects));
             // console.log('current box: ', this.currentBox);
 
             // From here, you can loop through the object.entries and to find the number that matches up with the number of the current box and update it
-            // if(boxesToGoThrough.find(box => box[0] === this.currentBox[0])) {
-            //     console.log('found it', boxesToGoThrough[0], this.currentBox[0]);
+            // if(boxesToGoThrough.find(element => element[0] === this.currentBox[0])) {
+            //     console.log('found it', this.currentBox[0]);
             // }
-            // boxesToGoThrough.find(element => element[0] === this.currentBox[0]).then()
+            let foo = boxesToGoThrough.find(element => element[0] === this.currentBox[0]);
+            console.log(foo[0], foo[1]);
         },
         getModelNumber(file) {
             this.modelNum = file.split('.')[0];
@@ -169,7 +170,7 @@ export default {
                 this.fetchPhoneType(phone.value);
             }
 
-            console.log('FOOBAR', this.userInputObjectData);
+            // console.log('FOOBAR', this.userInputObjectData);
         }
     }
 }
