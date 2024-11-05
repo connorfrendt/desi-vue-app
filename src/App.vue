@@ -57,6 +57,7 @@
             <PhoneType
                 :data="data"
                 @user-input-object="userInputObjectUpdate"
+                @current-box-input="currentBoxUpdate"
             />
         </div>
 
@@ -118,19 +119,30 @@ export default {
             this.phoneList.push({
                 "ext": this.extension,
                 "modelName": this.getOptionText(this.model) + ' (' + this.getOptionText(this.selectedValue) + ')',
-                "value": this.selectedValue
+                "value": this.selectedValue,
+                "userData": this.userInputObjectData
             });
             this.tempExtension = '';
             this.tempSelectedValue = '';
             this.tempModel = '';
-            
-            console.log('HERE****', this.phoneList);
         },
         clickCancel() {
             this.buttonClicked = false;
         },
         userInputObjectUpdate(data) {
             this.userInputObjectData = data;
+        },
+        currentBoxUpdate(data) {
+            this.currentBox = data;
+            // let boxesToGoThrough = Object.entries(this.userInputObjectData[0].objects);
+            // console.log('overall object: ', Object.entries(this.userInputObjectData[0].objects));
+            // console.log('current box: ', this.currentBox);
+
+            // From here, you can loop through the object.entries and to find the number that matches up with the number of the current box and update it
+            // if(boxesToGoThrough.find(box => box[0] === this.currentBox[0])) {
+            //     console.log('found it', boxesToGoThrough[0], this.currentBox[0]);
+            // }
+            // boxesToGoThrough.find(element => element[0] === this.currentBox[0]).then()
         },
         getModelNumber(file) {
             this.modelNum = file.split('.')[0];
@@ -143,26 +155,21 @@ export default {
             localStorage.setItem(this.extension + '-' + this.modelNum, JSON.stringify(phone));
         },
         getOptionText(value) {
-            console.log('Value: ', value);
             const option = this.$el.querySelector(`option[value="${value}"]`);
-            // return option ? option.innerHTML : value;
             return option ? option.innerHTML : value;
         },
         myFunc(event) {
             let clickedDiv = event.target;
             let parentDiv = clickedDiv.parentElement;
-            parentDiv.style.backgroundColor = 'lightblue';
+            // parentDiv.style.backgroundColor = 'lightblue';
             
-            //returns 223, etc.
-            console.log('Parent Div: ', parentDiv.querySelector('div:first-child').innerHTML);
             // I need to match whatever ext I clicked on with the extension of the object. Take the value of the object and put it through fetchPhoneType
-            for(let i = 0; i < this.phoneList.length; i++) {
-                if(this.phoneList[i].ext === parentDiv.querySelector('div:first-child').innerHTML) {
-                    this.fetchPhoneType(this.phoneList[i].value);
-                }
-            } 
-            // this.fetchPhoneType();
-            return parentDiv;
+            const phone = this.phoneList.find(phone => phone.ext === parentDiv.querySelector('div:first-child').innerHTML);
+            if (phone) {
+                this.fetchPhoneType(phone.value);
+            }
+
+            console.log('FOOBAR', this.userInputObjectData);
         }
     }
 }
@@ -187,5 +194,4 @@ body {
     background-color: slategrey;
     position: relative;
 }
-
 </style>

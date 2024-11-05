@@ -25,7 +25,7 @@
                 <button @click="cancelEdit">Cancel</button>
             </div>
         </div>
-        <button @click="myFunc">See Data</button>
+        <!-- <button @click="myFunc">See Data</button> -->
     </div>
 </template>
 
@@ -83,7 +83,6 @@ export default {
 
             this.$nextTick(() => {
                 this.gatherUserComments();
-                console.log('USER INPUT OBJECT DATA: ', this.userInputObject);
                 // Passes the userInputObject up to the parent component "App.vue"
                 this.$emit('user-input-object', this.userInputObject);
             });
@@ -112,7 +111,6 @@ export default {
                 }
             }
             this.userInputObject = { ...this.userInput };
-            console.log('USER INPUT OBJECT: ', this.userInputObject);
 
             // Passes the userInputObject up to the parent component "App.vue"
             this.$emit('user-input-object', this.userInputObject);
@@ -125,14 +123,13 @@ export default {
             this.$nextTick(() => {
                 this.$refs.popupInput.focus();
             });
-            console.log(this.currentBox, this.userInputObject);
         },
         confirmEdit() {
             this.currentBox[1].userComment = this.popupText;
+            this.$emit('current-box-input', this.currentBox);
             this.popupVisible = false;
             this.currentBox = null;
             this.currentIndex = null;
-            
         },
         cancelEdit() {
             this.popupVisible = false;
@@ -144,9 +141,9 @@ export default {
             let twipsToPixels = numTwips * 96; // 96 pixels per inch
             return twipsToPixels;
         },
-        myFunc() {
-            console.log('user input object: ', this.userInputObject);
-        }
+        // myFunc() {
+        //     console.log('user input object: ', this.userInputObject);
+        // }
     },
     watch: {
         data(newValue) {
