@@ -81,10 +81,10 @@ export default {
             // this.boxes makes it so that the CSS can be applied
             this.boxes = Object.entries(this.userInput[0].objects);
 
+            console.log('2');
             this.$nextTick(() => {
+                console.log('3');
                 this.gatherUserComments();
-                // Passes the userInputObject up to the parent component "App.vue"
-                this.$emit('user-input-object', this.userInputObject);
             });
         },
         getBoxStyles(box) {
@@ -102,6 +102,7 @@ export default {
             return styles;
         },
         gatherUserComments() {
+            console.log('4');
             let userInputObjects = Object.entries(this.userInput[0].objects);
             for(let i = 0; i < userInputObjects.length; i++) {
                 let obj = userInputObjects[i][1];
@@ -141,12 +142,10 @@ export default {
             let twipsToPixels = numTwips * 96; // 96 pixels per inch
             return twipsToPixels;
         },
-        // myFunc() {
-        //     console.log('user input object: ', this.userInputObject);
-        // }
     },
     watch: {
         data(newValue) {
+            console.log('1');
             this.updatePhone(newValue);
         }
     }

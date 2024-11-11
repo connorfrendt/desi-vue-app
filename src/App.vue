@@ -46,7 +46,7 @@
                 <div style="margin: 10px;"
                     class="phone-list"
                     v-for="phone in phoneList" :key="phone.ext"
-                    @click="myFunc($event)"
+                    @click="phoneClickedFunc($event)"
                 >
                     <div style="display: grid; grid-template-columns: 1fr 1fr;">
                         <div>{{ phone.ext }}</div>
@@ -60,7 +60,8 @@
                 @current-box-input="currentBoxUpdate"
             />
         </div>
-
+        <button @click="showPhoneOne">Phone 1</button>
+        <button @click="showPhoneTwo">Phone 2</button>
     </div>
 </template>
 
@@ -85,7 +86,12 @@ export default {
             userInputObjectData: {},
             phoneList: [],
             modelNum: '',
-            phoneClicked: false
+            phoneClicked: false,
+            currentPhoneIndexClicked: '',
+            previousPhoneClicked: '',
+
+            innerModelText: '',
+            innerProdFamText: ''
         }
     },
     components: {
@@ -115,35 +121,33 @@ export default {
                 this.fetchPhoneType(this.selectedValue);
                 this.buttonClicked = false;
             }
-            this.getModelNumber(this.selectedValue);
-            this.phoneList.push({
-                "ext": this.extension,
-                "modelName": this.getOptionText(this.model) + ' (' + this.getOptionText(this.selectedValue) + ')',
-                "value": this.selectedValue,
-                "userData": this.userInputObjectData
-            });
-            this.tempExtension = '';
-            this.tempSelectedValue = '';
-            this.tempModel = '';
+            
+            this.innerModelText = this.getOptionText(this.model);
+            this.innerProdFamText = this.getOptionText(this.selectedValue);
         },
         clickCancel() {
             this.buttonClicked = false;
         },
         userInputObjectUpdate(data) {
+            console.log('5', data);
             this.userInputObjectData = data;
+            const userDataCopy = JSON.parse(JSON.stringify(this.userInputObjectData));
+            
+            console.log('userDataCopy', userDataCopy);
+            
+            this.phoneList.push({
+                "ext": this.extension,
+                "modelName": this.innerModelText + ' (' + this.innerProdFamText + ')',
+                "value": this.selectedValue,
+                "userData": userDataCopy,
+            });
+            
+            this.tempExtension = '';
+            this.tempSelectedValue = '';
+            this.tempModel = '';
         },
         currentBoxUpdate(data) {
             this.currentBox = data;
-            let boxesToGoThrough = Object.entries(this.userInputObjectData[0].objects);
-            // console.log('overall object: ', Object.entries(this.userInputObjectData[0].objects));
-            // console.log('current box: ', this.currentBox);
-
-            // From here, you can loop through the object.entries and to find the number that matches up with the number of the current box and update it
-            // if(boxesToGoThrough.find(element => element[0] === this.currentBox[0])) {
-            //     console.log('found it', this.currentBox[0]);
-            // }
-            let foo = boxesToGoThrough.find(element => element[0] === this.currentBox[0]);
-            console.log(foo[0], foo[1]);
         },
         getModelNumber(file) {
             this.modelNum = file.split('.')[0];
@@ -159,20 +163,31 @@ export default {
             const option = this.$el.querySelector(`option[value="${value}"]`);
             return option ? option.innerHTML : value;
         },
-        myFunc(event) {
+        phoneClickedFunc(event) {
             let clickedDiv = event.target;
             let parentDiv = clickedDiv.parentElement;
-            // parentDiv.style.backgroundColor = 'lightblue';
             
             // I need to match whatever ext I clicked on with the extension of the object. Take the value of the object and put it through fetchPhoneType
-            const phone = this.phoneList.find(phone => phone.ext === parentDiv.querySelector('div:first-child').innerHTML);
-            if (phone) {
-                this.fetchPhoneType(phone.value);
-            }
-
-            // console.log('FOOBAR', this.userInputObjectData);
+            let phoneIndex = this.phoneList.findIndex(phone => phone.ext === parentDiv.querySelector('div:first-child').innerHTML);
+            
+            this.currentPhoneIndexClicked = phoneIndex;
+            console.log(this.phoneList[phoneIndex].userData);
+            // this.data = this.phoneList[phoneIndex].userData;
+            console.log('DATA: ', this.data);
+            console.log(this.phoneList);
+        },
+        showPhoneOne() {
+            console.log(this.phoneList);
+            console.log(this.phoneList[0].userData[0].objects["76096"].userComment);
+        },
+        showPhoneTwo() {
+            console.log(this.phoneList[1].userData[0].objects["76096"].userComment);
+        },
+        showPhoneThree() {
+            console.log(this.phoneList[2].userData[0].objects["76096"].userComment);
         }
-    }
+    },
+
 }
 </script>
 
