@@ -91,7 +91,9 @@ export default {
             previousPhoneClicked: '',
 
             innerModelText: '',
-            innerProdFamText: ''
+            innerProdFamText: '',
+
+            currentBox: ''
         }
     },
     components: {
@@ -128,26 +130,35 @@ export default {
         clickCancel() {
             this.buttonClicked = false;
         },
-        userInputObjectUpdate(data) {
+        userInputObjectUpdate(data, event) {
             console.log('5', data);
             this.userInputObjectData = data;
             const userDataCopy = JSON.parse(JSON.stringify(this.userInputObjectData));
             
-            console.log('userDataCopy', userDataCopy);
+            // console.log('userDataCopy', userDataCopy);
+            if(event) {
+                console.log(event.target.parentElement.querySelector('div:first-child').innerHTML);
+            }
+            // if(this.phoneList.find(phone => phone.ext === event.target.parentElement.querySelector('div:first-child').innerHTML)) {
+                // console.log('Phone already exists');
+            // }
+            // else {
+                this.phoneList.push({
+                    "ext": this.extension,
+                    "modelName": this.innerModelText + ' (' + this.innerProdFamText + ')',
+                    "value": this.selectedValue,
+                    "userData": userDataCopy,
+                });
+                this.tempExtension = '';
+                this.tempSelectedValue = '';
+                this.tempModel = '';
+            // }
             
-            this.phoneList.push({
-                "ext": this.extension,
-                "modelName": this.innerModelText + ' (' + this.innerProdFamText + ')',
-                "value": this.selectedValue,
-                "userData": userDataCopy,
-            });
-            
-            this.tempExtension = '';
-            this.tempSelectedValue = '';
-            this.tempModel = '';
         },
-        currentBoxUpdate(data) {
-            this.currentBox = data;
+        currentBoxUpdate() {
+            // this.currentBox = data;
+            console.log(this.userInputObjectData[0].objects["76096"]);
+            console.log('Current Box Update: ', this.currentBox);
         },
         getModelNumber(file) {
             this.modelNum = file.split('.')[0];
@@ -169,12 +180,11 @@ export default {
             
             // I need to match whatever ext I clicked on with the extension of the object. Take the value of the object and put it through fetchPhoneType
             let phoneIndex = this.phoneList.findIndex(phone => phone.ext === parentDiv.querySelector('div:first-child').innerHTML);
-            
+            console.log('PHONE INDEX: ', phoneIndex);
             this.currentPhoneIndexClicked = phoneIndex;
-            console.log(this.phoneList[phoneIndex].userData);
-            // this.data = this.phoneList[phoneIndex].userData;
-            console.log('DATA: ', this.data);
             console.log(this.phoneList);
+            // this.data = this.phoneList[phoneIndex].userData;
+            this.fetchPhoneType(this.phoneList[phoneIndex].value);
         },
         showPhoneOne() {
             console.log(this.phoneList);
