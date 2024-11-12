@@ -56,7 +56,7 @@
             </div>
             <PhoneType
                 :data="data"
-                @user-input-object="userInputObjectUpdate"
+                @user-input-object="userInputObjectUpdate($event)"
                 @current-box-input="currentBoxUpdate"
             />
         </div>
@@ -93,7 +93,7 @@ export default {
             innerModelText: '',
             innerProdFamText: '',
 
-            currentBox: ''
+            currentBox: '',
         }
     },
     components: {
@@ -130,29 +130,30 @@ export default {
         clickCancel() {
             this.buttonClicked = false;
         },
-        userInputObjectUpdate(data, event) {
+        userInputObjectUpdate(data) {
+            console.log('PHONE UPDATED');
             console.log('5', data);
             this.userInputObjectData = data;
+
+            // Check to see if the phone exists
+            let phoneExists = this.phoneList.some(phone => phone.ext === this.extension);
+            console.log('ext: ', this.extension);
+            console.log('exists: ', phoneExists);
             const userDataCopy = JSON.parse(JSON.stringify(this.userInputObjectData));
-            
-            // console.log('userDataCopy', userDataCopy);
-            if(event) {
-                console.log(event.target.parentElement.querySelector('div:first-child').innerHTML);
-            }
-            // if(this.phoneList.find(phone => phone.ext === event.target.parentElement.querySelector('div:first-child').innerHTML)) {
-                // console.log('Phone already exists');
-            // }
-            // else {
+            if(!phoneExists) {
                 this.phoneList.push({
                     "ext": this.extension,
                     "modelName": this.innerModelText + ' (' + this.innerProdFamText + ')',
                     "value": this.selectedValue,
                     "userData": userDataCopy,
                 });
-                this.tempExtension = '';
-                this.tempSelectedValue = '';
-                this.tempModel = '';
-            // }
+            }
+
+            // if(this.phoneList.find(phone => phone.ext === event.target.parentElement.querySelector('div:first-child').innerHTML)) {
+            
+            this.tempExtension = '';
+            this.tempSelectedValue = '';
+            this.tempModel = '';
             
         },
         currentBoxUpdate() {
@@ -177,14 +178,13 @@ export default {
         phoneClickedFunc(event) {
             let clickedDiv = event.target;
             let parentDiv = clickedDiv.parentElement;
-            
+            console.log('PHONE CLICKED');
             // I need to match whatever ext I clicked on with the extension of the object. Take the value of the object and put it through fetchPhoneType
             let phoneIndex = this.phoneList.findIndex(phone => phone.ext === parentDiv.querySelector('div:first-child').innerHTML);
-            console.log('PHONE INDEX: ', phoneIndex);
+            
             this.currentPhoneIndexClicked = phoneIndex;
-            console.log(this.phoneList);
-            // this.data = this.phoneList[phoneIndex].userData;
-            this.fetchPhoneType(this.phoneList[phoneIndex].value);
+            
+            this.data = this.phoneList[phoneIndex].userData[0];
         },
         showPhoneOne() {
             console.log(this.phoneList);
