@@ -42,15 +42,17 @@
                 <div style="display: flex; justify-content: space-around; background-color: lightgray;">
                     <div>Extension</div>
                     <div>Model</div>
+                    <div style="width: 20px;"></div>
                 </div>
                 <div style="margin: 10px;"
                     class="phone-list"
                     v-for="phone in phoneList" :key="phone.ext"
                     @click="phoneClickedFunc($event)"
                 >
-                    <div style="display: grid; grid-template-columns: 1fr 1fr;">
+                    <div style="display: grid; grid-template-columns: 1fr 1fr 20px;">
                         <div>{{ phone.ext }}</div>
                         <div>{{ phone.modelName }}</div>
+                        <button @click="deletePhone($event)">DEL</button>
                     </div>
                 </div>
             </div>
@@ -164,13 +166,13 @@ export default {
         getModelNumber(file) {
             this.modelNum = file.split('.')[0];
         },
-        addPhone(phone) {
-            this.phoneList.push(phone);
-            this.savePhones(phone);
-        },
-        savePhones(phone) {
-            localStorage.setItem(this.extension + '-' + this.modelNum, JSON.stringify(phone));
-        },
+        // addPhone(phone) {
+        //     this.phoneList.push(phone);
+        //     this.savePhones(phone);
+        // },
+        // savePhones(phone) {
+        //     localStorage.setItem(this.extension + '-' + this.modelNum, JSON.stringify(phone));
+        // },
         getOptionText(value) {
             const option = this.$el.querySelector(`option[value="${value}"]`);
             return option ? option.innerHTML : value;
@@ -195,6 +197,16 @@ export default {
         },
         showPhoneThree() {
             console.log(this.phoneList[2].userData[0].objects["76096"].userComment);
+        },
+        deletePhone(event) {
+            let clickedDiv = event.target;
+            let parentDiv = clickedDiv.parentElement;
+
+            // Finds the index of the phone in the phoneList that was clicked on
+            this.phoneIndex = this.phoneList.findIndex(phone => phone.ext === parentDiv.querySelector('div:first-child').innerHTML);
+            
+            // Removes the phone from the phoneList
+            this.phoneList.splice(this.phoneIndex, 1);
         }
     },
 
@@ -214,7 +226,7 @@ body {
 
 #draggable-side-bar {
     height: 75vh;
-    width: 250px;
+    width: 270px;
     min-width: 215px;
     max-width: 400px;
     background-color: slategrey;
