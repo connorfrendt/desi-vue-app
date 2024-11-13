@@ -131,8 +131,6 @@ export default {
             this.buttonClicked = false;
         },
         userInputObjectUpdate(data) {
-            console.log('PHONE UPDATED');
-            console.log('5', data);
             this.userInputObjectData = data;
 
             // Check to see if the phone exists
@@ -140,6 +138,7 @@ export default {
             console.log('ext: ', this.extension);
             console.log('exists: ', phoneExists);
             const userDataCopy = JSON.parse(JSON.stringify(this.userInputObjectData));
+            console.log(userDataCopy);
             if(!phoneExists) {
                 this.phoneList.push({
                     "ext": this.extension,
@@ -149,17 +148,16 @@ export default {
                 });
             }
 
-            // if(this.phoneList.find(phone => phone.ext === event.target.parentElement.querySelector('div:first-child').innerHTML)) {
-            
             this.tempExtension = '';
             this.tempSelectedValue = '';
             this.tempModel = '';
             
         },
-        currentBoxUpdate() {
-            // this.currentBox = data;
-            console.log(this.userInputObjectData[0].objects["76096"]);
-            console.log('Current Box Update: ', this.currentBox);
+        currentBoxUpdate(data) {
+            this.currentBox = data;
+            console.log('USER INPUT', this.userInputObjectData[0].objects["76096"]);
+            console.log('Phone List', this.phoneList[0].userData[0].objects["76096"]);
+            this.phoneList[0].userData[0].objects["76096"] = this.userInputObjectData[0].objects["76096"];
         },
         getModelNumber(file) {
             this.modelNum = file.split('.')[0];
@@ -178,7 +176,7 @@ export default {
         phoneClickedFunc(event) {
             let clickedDiv = event.target;
             let parentDiv = clickedDiv.parentElement;
-            console.log('PHONE CLICKED');
+            
             // I need to match whatever ext I clicked on with the extension of the object. Take the value of the object and put it through fetchPhoneType
             let phoneIndex = this.phoneList.findIndex(phone => phone.ext === parentDiv.querySelector('div:first-child').innerHTML);
             
@@ -187,8 +185,8 @@ export default {
             this.data = this.phoneList[phoneIndex].userData[0];
         },
         showPhoneOne() {
-            console.log(this.phoneList);
-            console.log(this.phoneList[0].userData[0].objects["76096"].userComment);
+            // console.log('List', this.phoneList);
+            console.log('Comment', this.phoneList[0].userData[0].objects["76096"].userComment);
         },
         showPhoneTwo() {
             console.log(this.phoneList[1].userData[0].objects["76096"].userComment);

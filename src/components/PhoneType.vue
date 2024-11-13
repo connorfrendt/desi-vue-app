@@ -62,11 +62,9 @@ export default {
         updatePhone(data) {
             // Origins - top left corner of the phone's outer box
             this.origins = data.origins;
-            // this.modelName = data.description + ' (' + data.group + ')';
             
             this.userInput = [];
             this.userInput.push(data);
-            // console.log('USER INPUT: ', this.userInput);
             
             this.outerContainerStyles = {
                 position: 'absolute',
@@ -81,9 +79,7 @@ export default {
             // this.boxes makes it so that the CSS can be applied
             this.boxes = Object.entries(this.userInput[0].objects);
 
-            console.log('2');
             this.$nextTick(() => {
-                console.log('3');
                 this.gatherUserComments();
             });
         },
@@ -111,6 +107,7 @@ export default {
                     obj.userComment = userComment;
                 }
             }
+            
             this.userInputObject = { ...this.userInput };
 
             // Passes the userInputObject up to the parent component "App.vue"
@@ -145,7 +142,6 @@ export default {
     },
     watch: {
         data(newValue) {
-            console.log('1');
             this.updatePhone(newValue);
         }
     }
