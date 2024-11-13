@@ -98,8 +98,8 @@ export default {
             return styles;
         },
         gatherUserComments() {
-            console.log('4');
             let userInputObjects = Object.entries(this.userInput[0].objects);
+            
             for(let i = 0; i < userInputObjects.length; i++) {
                 let obj = userInputObjects[i][1];
                 if(obj.editable) {
@@ -113,6 +113,7 @@ export default {
             // Passes the userInputObject up to the parent component "App.vue"
             this.$emit('user-input-object', this.userInputObject);
         },
+        // This shows the popup box to edit the text inside an editable box on the phone label
         showPopUp(box, index) {
             this.popupVisible = true;
             this.popupText = box[1].userComment;
@@ -122,6 +123,7 @@ export default {
                 this.$refs.popupInput.focus();
             });
         },
+        // This is confirming the text changes in the popup box
         confirmEdit() {
             this.currentBox[1].userComment = this.popupText;
             this.$emit('current-box-input', this.currentBox);

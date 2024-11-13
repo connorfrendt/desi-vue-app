@@ -84,7 +84,10 @@ export default {
             data: {},
             buttonClicked: false,
             userInputObjectData: {},
+            
             phoneList: [],
+            phoneIndex: 0,
+            
             modelNum: '',
             phoneClicked: false,
             currentPhoneIndexClicked: '',
@@ -135,10 +138,9 @@ export default {
 
             // Check to see if the phone exists
             let phoneExists = this.phoneList.some(phone => phone.ext === this.extension);
-            console.log('ext: ', this.extension);
-            console.log('exists: ', phoneExists);
+            
             const userDataCopy = JSON.parse(JSON.stringify(this.userInputObjectData));
-            console.log(userDataCopy);
+
             if(!phoneExists) {
                 this.phoneList.push({
                     "ext": this.extension,
@@ -153,11 +155,11 @@ export default {
             this.tempModel = '';
             
         },
-        currentBoxUpdate(data) {
-            this.currentBox = data;
-            console.log('USER INPUT', this.userInputObjectData[0].objects["76096"]);
-            console.log('Phone List', this.phoneList[0].userData[0].objects["76096"]);
-            this.phoneList[0].userData[0].objects["76096"] = this.userInputObjectData[0].objects["76096"];
+        currentBoxUpdate(currentBox) {
+            this.currentBox = currentBox;
+            
+            // This takes the current boxes information of the userInputObjectData, and updates the current box's information in the phoneList
+            this.phoneList[this.phoneIndex].userData[0].objects[this.currentBox[0]] = this.userInputObjectData[0].objects[this.currentBox[0]];
         },
         getModelNumber(file) {
             this.modelNum = file.split('.')[0];
@@ -178,11 +180,11 @@ export default {
             let parentDiv = clickedDiv.parentElement;
             
             // I need to match whatever ext I clicked on with the extension of the object. Take the value of the object and put it through fetchPhoneType
-            let phoneIndex = this.phoneList.findIndex(phone => phone.ext === parentDiv.querySelector('div:first-child').innerHTML);
+            this.phoneIndex = this.phoneList.findIndex(phone => phone.ext === parentDiv.querySelector('div:first-child').innerHTML);
             
-            this.currentPhoneIndexClicked = phoneIndex;
+            this.currentPhoneIndexClicked = this.phoneIndex;
             
-            this.data = this.phoneList[phoneIndex].userData[0];
+            this.data = this.phoneList[this.phoneIndex].userData[0];
         },
         showPhoneOne() {
             // console.log('List', this.phoneList);
