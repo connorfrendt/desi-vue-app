@@ -64,8 +64,6 @@
                 @current-box-input="currentBoxUpdate"
             />
         </div>
-        <button @click="showPhoneOne">Phone 1</button>
-        <button @click="showPhoneTwo">Phone 2</button>
     </div>
 </template>
 
@@ -190,16 +188,6 @@ export default {
             
             this.data = this.phoneList[this.phoneIndex].userData[0];
         },
-        showPhoneOne() {
-            // console.log('List', this.phoneList);
-            console.log('Comment', this.phoneList[0].userData[0].objects["76096"].userComment);
-        },
-        showPhoneTwo() {
-            console.log(this.phoneList[1].userData[0].objects["76096"].userComment);
-        },
-        showPhoneThree() {
-            console.log(this.phoneList[2].userData[0].objects["76096"].userComment);
-        },
         deletePhone(event) {
             if(confirm('Are you sure you want to delete this phone?')) {
                 let clickedDiv = event.target;
@@ -241,4 +229,5 @@ body {
 .icon-button:hover {
     background-color: lightgray;
 }
+
 </style>

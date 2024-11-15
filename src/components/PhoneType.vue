@@ -10,7 +10,7 @@
                             v-html="box[1].editable ? box[1].userComment : box[1].defaultText"
                             style="list-style-type: none;"
                             @click="box[1].editable ? showPopUp(box, index) : ''"
-                            
+                            :class="getTextClasses(box[1])"
                         ></li>
                     </ul>
                 </div>
@@ -19,11 +19,11 @@
         </form>
 
         <div v-if="popupVisible" class="popup">
-            <textarea ref="popupInput" v-model="popupText"></textarea>
+            <textarea ref="popupInput" v-model="popupText" :class="{ bold: isBold, italics: isItalics, underline: isUnderline }"></textarea>
             <div>
-                <button>Bold</button>
-                <button>Italicize</button>
-                <button>Underline</button>
+                <button @click="makeBold">Bold</button>
+                <button @click="makeItalicize">Italicize</button>
+                <button @click="makeUnderline">Underline</button>
                 <button @click="confirmEdit">OK</button>
                 <button @click="cancelEdit">Cancel</button>
             </div>
@@ -49,10 +49,15 @@ export default {
                 zIndex: ''
             },
             modelName: '',
+            currentBox: null,
+            currentIndex: null,
+            
             popupVisible: false,
             popupText: '',
-            currentBox: null,
-            currentIndex: null
+
+            isBold: false,
+            isItalics: false,
+            isUnderline: false
         }
     },
     props: {
@@ -100,6 +105,13 @@ export default {
             }
             return styles;
         },
+        getTextClasses(box) {
+            return {
+                bold: box.isBold,
+                italics: box.isItalics,
+                underline: box.isUnderline
+            }
+        },
         gatherUserComments() {
             let userInputObjects = Object.entries(this.userInput[0].objects);
             
@@ -108,6 +120,9 @@ export default {
                 if(obj.editable) {
                     let userComment = document.getElementById(`input-box-${i}`).innerText;
                     obj.userComment = userComment;
+                    obj.isBold = false;
+                    obj.isItalics = false;
+                    obj.isUnderline = false;
                 }
             }
             
@@ -120,8 +135,12 @@ export default {
         showPopUp(box, index) {
             this.popupVisible = true;
             this.popupText = box[1].userComment;
+            
             this.currentBox = box;
             this.currentIndex = index;
+            this.isBold = box[1].isBold;
+            this.isItalics = box[1].isItalics;
+            this.isUnderline = box[1].isUnderline;
             this.$nextTick(() => {
                 this.$refs.popupInput.focus();
             });
@@ -129,6 +148,9 @@ export default {
         // This is confirming the text changes in the popup box
         confirmEdit() {
             this.currentBox[1].userComment = this.popupText;
+            this.currentBox[1].isBold = this.isBold;
+            this.currentBox[1].isItalics = this.isItalics;
+            this.currentBox[1].isUnderline = this.isUnderline;
             this.$emit('current-box-input', this.currentBox);
             this.popupVisible = false;
             this.currentBox = null;
@@ -139,14 +161,14 @@ export default {
             this.currentBox = null;
             this.currentIndex = null;
         },
-        bold() {
-            
+        makeBold() {
+            this.isBold = !this.isBold;
         },
-        italicize() {
-            
+        makeItalicize() {
+            this.isItalics = !this.isItalics;
         },
-        underline() {
-
+        makeUnderline() {
+            this.isUnderline = !this.isUnderline;
         },
         twipsToPixels(num) {
             let numTwips = num / 1440; // 1440 twips per inch
@@ -172,5 +194,19 @@ export default {
     border: 1px solid #ccc;
     padding: 20px;
     z-index: 100;
+}
+
+.bold {
+    font-weight: bold;
+    /* color: green;
+    background-color: red; */
+}
+
+.italics {
+    font-style: italic;
+}
+
+.underline {
+    text-decoration: underline;
 }
 </style>
