@@ -19,13 +19,20 @@
         </form>
 
         <div v-if="popupVisible" class="popup">
-            <textarea ref="popupInput" v-model="popupText" :class="{ bold: isBold, italics: isItalics, underline: isUnderline }"></textarea>
+            <textarea
+                ref="popupInput"
+                v-model="popupText"
+                :class="{ bold: isBold, italics: isItalics, underline: isUnderline }"
+                style="width: 195px; height: 100px;"
+            ></textarea>
             <div>
-                <button @click="makeBold">Bold</button>
-                <button @click="makeItalicize">Italicize</button>
-                <button @click="makeUnderline">Underline</button>
-                <button @click="confirmEdit">OK</button>
-                <button @click="cancelEdit">Cancel</button>
+                <div class="popup-button" @click="makeBold">Bold</div>
+                <div class="popup-button" @click="makeItalicize">Italicize</div>
+                <div class="popup-button" @click="makeUnderline">Underline</div>
+                <div class="popup-button" style="display: flex; justify-content: space-around; padding-top: 100px;">
+                    <div class="popup-button" @click="confirmEdit">OK</div>
+                    <div class="popup-button" @click="cancelEdit">Cancel</div>
+                </div>
             </div>
         </div>
         <!-- <button @click="myFunc">See Data</button> -->
@@ -57,7 +64,8 @@ export default {
 
             isBold: false,
             isItalics: false,
-            isUnderline: false
+            isUnderline: false,
+            textAlign: 'center',
         }
     },
     props: {
@@ -123,6 +131,7 @@ export default {
                     obj.isBold = false;
                     obj.isItalics = false;
                     obj.isUnderline = false;
+                    obj.textAlign = 'center';
                 }
             }
             
@@ -151,7 +160,9 @@ export default {
             this.currentBox[1].isBold = this.isBold;
             this.currentBox[1].isItalics = this.isItalics;
             this.currentBox[1].isUnderline = this.isUnderline;
+
             this.$emit('current-box-input', this.currentBox);
+            
             this.popupVisible = false;
             this.currentBox = null;
             this.currentIndex = null;
@@ -187,9 +198,11 @@ export default {
 <style>
 .popup {
     position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+    top: 0;
+    right: 0;
+    height: 100vh;
+    width: 200px;
+    /* transform: translate(-50%, -50%); */
     background-color: white;
     border: 1px solid #ccc;
     padding: 20px;
@@ -208,5 +221,24 @@ export default {
 
 .underline {
     text-decoration: underline;
+}
+
+.text-align-left {
+    text-align: left;
+}
+
+.text-align-center {
+    text-align: center;
+}
+
+.text-align-right {
+    text-align: right;
+}
+
+.popup-button {
+    background-color: red;
+}
+.popup-button:hover {
+    background-color: green;
 }
 </style>
