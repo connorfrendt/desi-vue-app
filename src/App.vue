@@ -50,9 +50,11 @@
                     @click="phoneClickedFunc($event)"
                 >
                     <div style="display: grid; grid-template-columns: 1fr 1fr 20px;">
-                        <div>{{ phone.ext }}</div>
-                        <div>{{ phone.modelName }}</div>
-                        <button @click="deletePhone($event)">DEL</button>
+                        <div style="display: flex; align-items: center;">{{ phone.ext }}</div>
+                        <div style="display: flex; align-items: center;">{{ phone.modelName }}</div>
+                        <div @click="deletePhone($event)" style="display: flex; align-items: center;" class="icon-button">
+                            <font-awesome-icon icon="fa-regular fa-trash-can" @click="deletePhone($event)" style="pointer-events: none; margin: 0 auto;" />
+                        </div>
                     </div>
                 </div>
             </div>
@@ -199,14 +201,17 @@ export default {
             console.log(this.phoneList[2].userData[0].objects["76096"].userComment);
         },
         deletePhone(event) {
-            let clickedDiv = event.target;
-            let parentDiv = clickedDiv.parentElement;
+            if(confirm('Are you sure you want to delete this phone?')) {
+                let clickedDiv = event.target;
+                let parentDiv = clickedDiv.parentElement;
+    
+                // Finds the index of the phone in the phoneList that was clicked on
+                this.phoneIndex = this.phoneList.findIndex(phone => phone.ext === parentDiv.querySelector('div:first-child').innerHTML);
+                
+                // Removes the phone from the phoneList
+                this.phoneList.splice(this.phoneIndex, 1);
 
-            // Finds the index of the phone in the phoneList that was clicked on
-            this.phoneIndex = this.phoneList.findIndex(phone => phone.ext === parentDiv.querySelector('div:first-child').innerHTML);
-            
-            // Removes the phone from the phoneList
-            this.phoneList.splice(this.phoneIndex, 1);
+            }
         }
     },
 
@@ -231,5 +236,9 @@ body {
     max-width: 400px;
     background-color: slategrey;
     position: relative;
+}
+
+.icon-button:hover {
+    background-color: lightgray;
 }
 </style>

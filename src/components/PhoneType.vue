@@ -21,6 +21,9 @@
         <div v-if="popupVisible" class="popup">
             <textarea ref="popupInput" v-model="popupText"></textarea>
             <div>
+                <button>Bold</button>
+                <button>Italicize</button>
+                <button>Underline</button>
                 <button @click="confirmEdit">OK</button>
                 <button @click="cancelEdit">Cancel</button>
             </div>
@@ -135,6 +138,15 @@ export default {
             this.popupVisible = false;
             this.currentBox = null;
             this.currentIndex = null;
+        },
+        bold() {
+            
+        },
+        italicize() {
+            
+        },
+        underline() {
+
         },
         twipsToPixels(num) {
             let numTwips = num / 1440; // 1440 twips per inch
