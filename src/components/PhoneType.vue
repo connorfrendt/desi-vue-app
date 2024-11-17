@@ -22,20 +22,31 @@
             <textarea
                 ref="popupInput"
                 v-model="popupText"
-                :class="{ bold: isBold, italics: isItalics, underline: isUnderline }"
+                :class="{
+                    bold: isBold,
+                    italics: isItalics,
+                    underline: isUnderline,
+                    'text-align-left': textAlign === 'left',
+                    'text-align-center': textAlign === 'center',
+                    'text-align-right': textAlign === 'right'
+                }"
                 style="width: 195px; height: 100px;"
             ></textarea>
             <div>
-                <div class="popup-button" :class="{ active: isBold}" @click="makeBold">Bold</div>
+                <div class="popup-button" :class="{ active: isBold }" @click="makeBold">Bold</div>
                 <div class="popup-button" :class="{ active: isItalics }" @click="makeItalicize">Italicize</div>
                 <div class="popup-button" :class="{ active: isUnderline }" @click="makeUnderline">Underline</div>
+                <div>
+                    <div class="popup-button" :class="{ active: textAlign === 'left' }" @click="setTextAlign('left')">Left</div>
+                    <div class="popup-button" :class="{ active: textAlign === 'center' }" @click="setTextAlign('center')">Center</div>
+                    <div class="popup-button" :class="{ active: textAlign === 'right' }" @click="setTextAlign('right')">Right</div>
+                </div>
                 <div class="" style="display: flex; justify-content: space-around; margin-top: 100px;">
                     <div class="popup-button" @click="confirmEdit">OK</div>
                     <div class="popup-button" @click="cancelEdit">Cancel</div>
                 </div>
             </div>
         </div>
-        <!-- <button @click="myFunc">See Data</button> -->
     </div>
 </template>
 
@@ -117,7 +128,8 @@ export default {
             return {
                 bold: box.isBold,
                 italics: box.isItalics,
-                underline: box.isUnderline
+                underline: box.isUnderline,
+                textAlign: box.textAlign
             }
         },
         gatherUserComments() {
@@ -181,6 +193,11 @@ export default {
         makeUnderline() {
             this.isUnderline = !this.isUnderline;
         },
+        setTextAlign(align) {
+            console.log('Text Align: ', this.textAlign);
+            this.textAlign = align;
+            console.log('Text Align: ', this.textAlign);
+        },
         twipsToPixels(num) {
             let numTwips = num / 1440; // 1440 twips per inch
             let twipsToPixels = numTwips * 96; // 96 pixels per inch
@@ -195,7 +212,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 .popup {
     position: absolute;
     top: 0;
