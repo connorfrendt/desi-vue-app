@@ -19,24 +19,28 @@
         </form>
 
         <div v-if="popupVisible" class="popup">
-            <textarea
-                ref="popupInput"
-                v-model="popupText"
-                :class="{
-                    bold: isBold,
-                    italics: isItalics,
-                    underline: isUnderline,
-                    'text-align-left': textAlign === 'left',
-                    'text-align-center': textAlign === 'center',
-                    'text-align-right': textAlign === 'right'
-                }"
-                style="width: 195px; height: 100px;"
-            ></textarea>
+            <div class="textarea-container">
+                <textarea
+                    ref="popupInput"
+                    v-model="popupText"
+                    :class="{
+                        bold: isBold,
+                        italics: isItalics,
+                        underline: isUnderline,
+                        'text-left': textAlign === 'left',
+                        'text-center': textAlign === 'center',
+                        'text-right': textAlign === 'right'
+                    }"
+                    style="width: 195px; height: 100px;"
+                ></textarea>
+            </div>
             <div>
+                <div style="text-align: center; margin-top: 10px;">STYLE</div>
                 <div class="popup-button" :class="{ active: isBold }" @click="makeBold">Bold</div>
                 <div class="popup-button" :class="{ active: isItalics }" @click="makeItalicize">Italicize</div>
                 <div class="popup-button" :class="{ active: isUnderline }" @click="makeUnderline">Underline</div>
-                <div>
+                <div style="text-align: center; margin-top: 20px;">ALIGNMENT</div>
+                <div style="display: flex; justify-content: space-evenly;">
                     <div class="popup-button" :class="{ active: textAlign === 'left' }" @click="setTextAlign('left')">Left</div>
                     <div class="popup-button" :class="{ active: textAlign === 'center' }" @click="setTextAlign('center')">Center</div>
                     <div class="popup-button" :class="{ active: textAlign === 'right' }" @click="setTextAlign('right')">Right</div>
@@ -129,7 +133,9 @@ export default {
                 bold: box.isBold,
                 italics: box.isItalics,
                 underline: box.isUnderline,
-                textAlign: box.textAlign
+                'text-left': box.textAlign === 'left',
+                'text-center': box.textAlign === 'center',
+                'text-right': box.textAlign === 'right'
             }
         },
         gatherUserComments() {
@@ -159,9 +165,12 @@ export default {
             
             this.currentBox = box;
             this.currentIndex = index;
+
             this.isBold = box[1].isBold;
             this.isItalics = box[1].isItalics;
             this.isUnderline = box[1].isUnderline;
+            this.textAlign = box[1].textAlign || 'center';
+
             this.$nextTick(() => {
                 this.$refs.popupInput.focus();
             });
@@ -172,6 +181,7 @@ export default {
             this.currentBox[1].isBold = this.isBold;
             this.currentBox[1].isItalics = this.isItalics;
             this.currentBox[1].isUnderline = this.isUnderline;
+            this.currentBox[1].textAlign = this.textAlign;
 
             this.$emit('current-box-input', this.currentBox);
             
@@ -194,9 +204,7 @@ export default {
             this.isUnderline = !this.isUnderline;
         },
         setTextAlign(align) {
-            console.log('Text Align: ', this.textAlign);
             this.textAlign = align;
-            console.log('Text Align: ', this.textAlign);
         },
         twipsToPixels(num) {
             let numTwips = num / 1440; // 1440 twips per inch
@@ -225,6 +233,12 @@ export default {
     z-index: 100;
 }
 
+.textarea-container {
+    display: flex;
+    align-items: center;
+    height: 100px;
+}
+
 .bold {
     font-weight: bold;
 }
@@ -237,15 +251,15 @@ export default {
     text-decoration: underline;
 }
 
-.text-align-left {
+.text-left {
     text-align: left;
 }
 
-.text-align-center {
+.text-center {
     text-align: center;
 }
 
-.text-align-right {
+.text-right {
     text-align: right;
 }
 
