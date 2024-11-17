@@ -26,10 +26,10 @@
                 style="width: 195px; height: 100px;"
             ></textarea>
             <div>
-                <div class="popup-button" @click="makeBold">Bold</div>
-                <div class="popup-button" @click="makeItalicize">Italicize</div>
-                <div class="popup-button" @click="makeUnderline">Underline</div>
-                <div class="popup-button" style="display: flex; justify-content: space-around; padding-top: 100px;">
+                <div class="popup-button" :class="{ active: isBold}" @click="makeBold">Bold</div>
+                <div class="popup-button" :class="{ active: isItalics }" @click="makeItalicize">Italicize</div>
+                <div class="popup-button" :class="{ active: isUnderline }" @click="makeUnderline">Underline</div>
+                <div class="" style="display: flex; justify-content: space-around; margin-top: 100px;">
                     <div class="popup-button" @click="confirmEdit">OK</div>
                     <div class="popup-button" @click="cancelEdit">Cancel</div>
                 </div>
@@ -202,7 +202,6 @@ export default {
     right: 0;
     height: 100vh;
     width: 200px;
-    /* transform: translate(-50%, -50%); */
     background-color: white;
     border: 1px solid #ccc;
     padding: 20px;
@@ -211,8 +210,6 @@ export default {
 
 .bold {
     font-weight: bold;
-    /* color: green;
-    background-color: red; */
 }
 
 .italics {
@@ -236,9 +233,18 @@ export default {
 }
 
 .popup-button {
-    background-color: red;
+    background-color: lightgray;
+    padding: 5px;
+    margin: 5px;
+    text-align: center;
+    border-radius: 5px;
 }
 .popup-button:hover {
-    background-color: green;
+    background-color: gray;
+    cursor: pointer;
+}
+.popup-button.active {
+    background-color: gray;
+    cursor: pointer;
 }
 </style>
