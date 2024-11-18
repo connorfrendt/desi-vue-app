@@ -233,10 +233,9 @@ export default {
     z-index: 100;
 }
 
-.textarea-container {
-    display: flex;
-    align-items: center;
-    height: 100px;
+textarea {
+    resize: none;
+    
 }
 
 .bold {
