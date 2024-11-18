@@ -15,7 +15,6 @@
                     </ul>
                 </div>
             </div>
-            <!-- <div>:contenteditable="box[1].editable ? 'true' : 'false'"</div> -->
         </form>
 
         <div v-if="popupVisible" class="popup">
@@ -23,14 +22,15 @@
                 <textarea
                     ref="popupInput"
                     v-model="popupText"
-                    :class="{
-                        bold: isBold,
-                        italics: isItalics,
-                        underline: isUnderline,
-                        'text-left': textAlign === 'left',
-                        'text-center': textAlign === 'center',
-                        'text-right': textAlign === 'right'
-                    }"
+                    :class="[
+                        {
+                            bold: isBold,
+                            italics: isItalics,
+                            underline: isUnderline
+                        },
+                        `text-${textAlign}`,
+                        `text-${textColor}`
+                    ]"
                     style="width: 195px; height: 100px;"
                 ></textarea>
             </div>
@@ -44,6 +44,15 @@
                     <div class="popup-button" :class="{ active: textAlign === 'left' }" @click="setTextAlign('left')">Left</div>
                     <div class="popup-button" :class="{ active: textAlign === 'center' }" @click="setTextAlign('center')">Center</div>
                     <div class="popup-button" :class="{ active: textAlign === 'right' }" @click="setTextAlign('right')">Right</div>
+                </div>
+                <div style="text-align: center; margin-top: 10px;">
+                    COLOR
+                </div>
+                <div>
+                    <div class="popup-button-black" :class="{ active: textColor === 'black' }" @click="setTextColor('black')">Black</div>
+                    <div class="popup-button-red" :class="{ active: textColor === 'red' }" @click="setTextColor('red')">Red</div>
+                    <div class="popup-button-orange" :class="{ active: textColor === 'orange' }" @click="setTextColor('orange')">Orange</div>
+                    <div class="popup-button-yellow" :class="{ active: textColor === 'yellow' }" @click="setTextColor('yellow')">Yellow</div>
                 </div>
                 <div class="" style="display: flex; justify-content: space-around; margin-top: 100px;">
                     <div class="popup-button" @click="confirmEdit">OK</div>
@@ -81,6 +90,7 @@ export default {
             isItalics: false,
             isUnderline: false,
             textAlign: 'center',
+            textColor: 'black'
         }
     },
     props: {
@@ -135,7 +145,11 @@ export default {
                 underline: box.isUnderline,
                 'text-left': box.textAlign === 'left',
                 'text-center': box.textAlign === 'center',
-                'text-right': box.textAlign === 'right'
+                'text-right': box.textAlign === 'right',
+                'text-black': box.textColor === 'black',
+                'text-red': box.textColor === 'red',
+                'text-orange': box.textColor === 'orange',
+                'text-yellow': box.textColor === 'yellow'
             }
         },
         gatherUserComments() {
@@ -150,6 +164,7 @@ export default {
                     obj.isItalics = false;
                     obj.isUnderline = false;
                     obj.textAlign = 'center';
+                    obj.textColor = 'black';
                 }
             }
             
@@ -170,6 +185,7 @@ export default {
             this.isItalics = box[1].isItalics;
             this.isUnderline = box[1].isUnderline;
             this.textAlign = box[1].textAlign || 'center';
+            this.textColor = box[1].textColor || 'orange';
 
             this.$nextTick(() => {
                 this.$refs.popupInput.focus();
@@ -182,6 +198,7 @@ export default {
             this.currentBox[1].isItalics = this.isItalics;
             this.currentBox[1].isUnderline = this.isUnderline;
             this.currentBox[1].textAlign = this.textAlign;
+            this.currentBox[1].textColor = this.textColor;
 
             this.$emit('current-box-input', this.currentBox);
             
@@ -205,6 +222,13 @@ export default {
         },
         setTextAlign(align) {
             this.textAlign = align;
+
+            this.$nextTick(() => {
+                this.$refs.popupInput.focus();
+            });
+        },
+        setTextColor(color) {
+            this.textColor = color;
         },
         twipsToPixels(num) {
             let numTwips = num / 1440; // 1440 twips per inch
@@ -235,29 +259,37 @@ export default {
 
 textarea {
     resize: none;
-    
 }
 
 .bold {
     font-weight: bold;
 }
-
 .italics {
     font-style: italic;
 }
-
 .underline {
     text-decoration: underline;
+}
+
+.text-black {
+    color: black;
+}
+.text-red {
+    color: red;
+}
+.text-orange {
+    color: yellow;
+}
+.text-yellow {
+    color: yellow;
 }
 
 .text-left {
     text-align: left;
 }
-
 .text-center {
     text-align: center;
 }
-
 .text-right {
     text-align: right;
 }
@@ -275,6 +307,72 @@ textarea {
 }
 .popup-button.active {
     background-color: gray;
+    cursor: pointer;
+}
+
+.popup-button-red {
+    background-color: lightgray;
+    padding: 5px;
+    margin: 5px;
+    text-align: center;
+    border-radius: 5px;
+}
+.popup-button-red:hover {
+    background-color: red;
+    cursor: pointer;
+}
+.popup-button-red.active {
+    background-color: red;
+    cursor: pointer;
+}
+
+.popup-button-orange {
+    background-color: lightgray;
+    padding: 5px;
+    margin: 5px;
+    text-align: center;
+    border-radius: 5px;
+}
+.popup-button-orange:hover {
+    background-color: orange;
+    cursor: pointer;
+}
+.popup-button-orange.active {
+    background-color: orange;
+    cursor: pointer;
+}
+
+.popup-button-yellow {
+    background-color: lightgray;
+    padding: 5px;
+    margin: 5px;
+    text-align: center;
+    border-radius: 5px;
+}
+.popup-button-yellow:hover {
+    background-color: yellow;
+    cursor: pointer;
+}
+.popup-button-yellow.active {
+    background-color: yellow;
+    cursor: pointer;
+}
+
+.popup-button-black {
+    background-color: lightgray;
+    padding: 5px;
+    margin: 5px;
+    text-align: center;
+    border-radius: 5px;
+}
+.popup-button-black:hover {
+    background-color: black;
+    color: white;
+    cursor: pointer;
+}
+.popup-button-black.active {
+    background-color: black;
+    color: white;
     cursor: pointer;
 }
 </style>
