@@ -31,7 +31,7 @@
                         `text-${textAlign}`,
                         `text-${textColor}`
                     ]"
-                    style="width: 195px; height: 100px;"
+                    style="width: 195px; height: 100px; background-color: lightgray;"
                 ></textarea>
             </div>
             <div>
@@ -48,11 +48,14 @@
                 <div style="text-align: center; margin-top: 10px;">
                     COLOR
                 </div>
-                <div>
-                    <div class="popup-button-black" :class="{ active: textColor === 'black' }" @click="setTextColor('black')">Black</div>
-                    <div class="popup-button-red" :class="{ active: textColor === 'red' }" @click="setTextColor('red')">Red</div>
-                    <div class="popup-button-orange" :class="{ active: textColor === 'orange' }" @click="setTextColor('orange')">Orange</div>
-                    <div class="popup-button-yellow" :class="{ active: textColor === 'yellow' }" @click="setTextColor('yellow')">Yellow</div>
+                <div style="display: grid; grid-template-columns: repeat(4, 1fr); justify-items: center;">
+                    <div class="popup-button-black" :class="{ active: textColor === 'black' }" @click="setTextColor('black')"></div>
+                    <div class="popup-button-red" :class="{ active: textColor === 'red' }" @click="setTextColor('red')"></div>
+                    <div class="popup-button-orange" :class="{ active: textColor === 'orange' }" @click="setTextColor('orange')"></div>
+                    <div class="popup-button-yellow" :class="{ active: textColor === 'yellow' }" @click="setTextColor('yellow')"></div>
+                    <div class="popup-button-green" :class="{ active: textColor === 'green' }" @click="setTextColor('green')"></div>
+                    <div class="popup-button-blue" :class="{ active: textColor === 'blue' }" @click="setTextColor('blue')"></div>
+                    <div class="popup-button-purple" :class="{ active: textColor === 'purple' }" @click="setTextColor('purple')"></div>
                 </div>
                 <div class="" style="display: flex; justify-content: space-around; margin-top: 100px;">
                     <div class="popup-button" @click="confirmEdit">OK</div>
@@ -116,7 +119,6 @@ export default {
                 backgroundColor: 'lightgray'
             }
             
-
             // this.boxes makes it so that the CSS can be applied
             this.boxes = Object.entries(this.userInput[0].objects);
 
@@ -149,7 +151,10 @@ export default {
                 'text-black': box.textColor === 'black',
                 'text-red': box.textColor === 'red',
                 'text-orange': box.textColor === 'orange',
-                'text-yellow': box.textColor === 'yellow'
+                'text-yellow': box.textColor === 'yellow',
+                'text-green': box.textColor === 'green',
+                'text-blue': box.textColor === 'blue',
+                'text-purple': box.textColor === 'purple',
             }
         },
         gatherUserComments() {
@@ -185,11 +190,9 @@ export default {
             this.isItalics = box[1].isItalics;
             this.isUnderline = box[1].isUnderline;
             this.textAlign = box[1].textAlign || 'center';
-            this.textColor = box[1].textColor || 'orange';
+            this.textColor = box[1].textColor || 'black';
 
-            this.$nextTick(() => {
-                this.$refs.popupInput.focus();
-            });
+            this.resetFocus();
         },
         // This is confirming the text changes in the popup box
         confirmEdit() {
@@ -213,28 +216,34 @@ export default {
         },
         makeBold() {
             this.isBold = !this.isBold;
+            this.resetFocus();
         },
         makeItalicize() {
             this.isItalics = !this.isItalics;
+            this.resetFocus();
         },
         makeUnderline() {
             this.isUnderline = !this.isUnderline;
+            this.resetFocus();
         },
         setTextAlign(align) {
             this.textAlign = align;
-
-            this.$nextTick(() => {
-                this.$refs.popupInput.focus();
-            });
+            this.resetFocus();
         },
         setTextColor(color) {
             this.textColor = color;
+            this.resetFocus();
         },
         twipsToPixels(num) {
             let numTwips = num / 1440; // 1440 twips per inch
             let twipsToPixels = numTwips * 96; // 96 pixels per inch
             return twipsToPixels;
         },
+        resetFocus() {
+            this.$nextTick(() => {
+                this.$refs.popupInput.focus();
+            })
+        }
     },
     watch: {
         data(newValue) {
@@ -278,10 +287,19 @@ textarea {
     color: red;
 }
 .text-orange {
-    color: yellow;
+    color: orange;
 }
 .text-yellow {
     color: yellow;
+}
+.text-green {
+    color: green;
+}
+.text-blue {
+    color: blue;
+}
+.text-purple {
+    color: purple;
 }
 
 .text-left {
@@ -301,78 +319,98 @@ textarea {
     text-align: center;
     border-radius: 5px;
 }
-.popup-button:hover {
-    background-color: gray;
-    cursor: pointer;
-}
+.popup-button:hover,
 .popup-button.active {
     background-color: gray;
     cursor: pointer;
 }
 
-.popup-button-red {
-    background-color: lightgray;
+.popup-button-black,
+.popup-button-red,
+.popup-button-orange,
+.popup-button-yellow,
+.popup-button-green,
+.popup-button-blue,
+.popup-button-purple {
+    height: 10px;
+    width: 10px;
     padding: 5px;
     margin: 5px;
     text-align: center;
     border-radius: 5px;
+    border: 2px solid transparent;
+    transition: border 0.3s;
 }
-.popup-button-red:hover {
-    background-color: red;
+
+
+.popup-button-black {
+    background-color: black;
+}
+.popup-button-black:hover,
+.popup-button-black.active {
+    border: 2px solid lightblue;
+    color: white;
     cursor: pointer;
 }
+
+.popup-button-red {
+    background-color: red;
+}
+.popup-button-red:hover,
 .popup-button-red.active {
+    border: 2px solid lightblue;
     background-color: red;
     cursor: pointer;
 }
 
 .popup-button-orange {
-    background-color: lightgray;
-    padding: 5px;
-    margin: 5px;
-    text-align: center;
-    border-radius: 5px;
-}
-.popup-button-orange:hover {
     background-color: orange;
-    cursor: pointer;
 }
+.popup-button-orange:hover,
 .popup-button-orange.active {
+    border: 2px solid lightblue;
     background-color: orange;
     cursor: pointer;
 }
 
 .popup-button-yellow {
-    background-color: lightgray;
-    padding: 5px;
-    margin: 5px;
-    text-align: center;
-    border-radius: 5px;
-}
-.popup-button-yellow:hover {
     background-color: yellow;
-    cursor: pointer;
 }
+.popup-button-yellow:hover,
 .popup-button-yellow.active {
+    border: 2px solid lightblue;
     background-color: yellow;
     cursor: pointer;
 }
 
-.popup-button-black {
-    background-color: lightgray;
-    padding: 5px;
-    margin: 5px;
-    text-align: center;
-    border-radius: 5px;
+.popup-button-green {
+    background-color: green;
 }
-.popup-button-black:hover {
-    background-color: black;
-    color: white;
+.popup-button-green:hover,
+.popup-button-green.active {
+    border: 2px solid lightblue;
+    background-color: green;
     cursor: pointer;
 }
-.popup-button-black.active {
-    background-color: black;
-    color: white;
+
+.popup-button-blue {
+    background-color: blue;
+}
+.popup-button-blue:hover,
+.popup-button-blue.active {
+    border: 2px solid lightblue;
+    background-color: blue;
     cursor: pointer;
 }
+
+.popup-button-purple {
+    background-color: purple;
+}
+.popup-button-purple:hover,
+.popup-button-purple.active {
+    border: 2px solid lightblue;
+    background-color: purple;
+    cursor: pointer;
+}
+
 </style>
