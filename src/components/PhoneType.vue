@@ -163,6 +163,7 @@ export default {
             for(let i = 0; i < userInputObjects.length; i++) {
                 let obj = userInputObjects[i][1];
                 if(obj.editable) {
+                    // console.log('OBJECT: ', obj)
                     let userComment = document.getElementById(`input-box-${i}`).innerText;
                     obj.userComment = userComment;
                     obj.isBold = false;
