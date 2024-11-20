@@ -36,10 +36,18 @@
                             'text-yellow': textColor === 'yellow',
                             'text-green': textColor === 'green',
                             'text-blue': textColor === 'blue',
-                            'text-purple': textColor === 'purple'
+                            'text-purple': textColor === 'purple',
+                            'font-size-12': fontSize === 12,
+                            'font-size-15': fontSize === 15,
+                            'font-size-24': fontSize === 24,
                         },
                     ]"
-                    style="width: 195px; height: 100px; background-color: lightgray;"
+                    :style="{
+                        fontSize: fontSize + 'px',
+                        width: '195px',
+                        height: '100px',
+                        backgroundColor: 'lightgray'
+                    }"
                 ></textarea>
             </div>
             <div>
@@ -68,12 +76,12 @@
                 <div style="text-align: center; margin-top: 10px;">
                     <label>FONT SIZE</label>
                 </div>
-                <div>
-                    <select v-model="tempFontSize">
+                <div style="text-align: center;">
+                    <select v-model="fontSize" @change="setFontSize">
                         <option value=""></option>
-                        <option value="12">12</option>
-                        <option value="15">15</option>
-                        <option value="24">24</option>
+                        <option :class="{ active: fontSize === 12 }" value="12">12</option>
+                        <option :class="{ active: fontSize === 15 }" value="15">15</option>
+                        <option :class="{ active: fontSize === 24 }" value="24">24</option>
                     </select>
                 </div>
                 <div class="" style="display: flex; justify-content: space-around; margin-top: 100px;">
@@ -114,8 +122,7 @@ export default {
             textAlign: 'center',
             textColor: 'black',
 
-            tempFontSize: '12px',
-            fontSize: '12px'
+            fontSize: 0
         }
     },
     props: {
@@ -177,6 +184,9 @@ export default {
                 'text-green': box.textColor === 'green',
                 'text-blue': box.textColor === 'blue',
                 'text-purple': box.textColor === 'purple',
+                'font-size-12': box.fontSize === 12,
+                'font-size-15': box.fontSize === 15,
+                'font-size-24': box.fontSize === 24
             }
         },
         gatherUserComments() {
@@ -189,11 +199,13 @@ export default {
                     let userComment = document.getElementById(`input-box-${i}`).innerText;
                     obj.userComment = userComment;
                     
+                    // After the || is the default values for the editable boxes
                     obj.isBold = obj.isBold || false;
                     obj.isItalics = obj.isItalics || false;
                     obj.isUnderline = obj.isUnderline || false;
                     obj.textAlign = obj.textAlign || 'center';
                     obj.textColor = obj.textColor || 'black';
+                    obj.fontSize = obj.fontSize || 12;
                 }
             }
             
@@ -215,6 +227,7 @@ export default {
             this.isUnderline = box[1].isUnderline;
             this.textAlign = box[1].textAlign;
             this.textColor = box[1].textColor;
+            this.fontSize = box[1].fontSize;
 
             this.resetFocus();
         },
@@ -226,7 +239,7 @@ export default {
             this.currentBox[1].isUnderline = this.isUnderline;
             this.currentBox[1].textAlign = this.textAlign;
             this.currentBox[1].textColor = this.textColor;
-            console.log('CURRENT INDEX: ', this.currentIndex);
+            this.currentBox[1].fontSize = this.fontSize;
 
             console.log('userInputObject: ', this.userInputObject);
             this.$emit('current-box-input', this.currentBox);
@@ -258,6 +271,11 @@ export default {
         },
         setTextColor(color) {
             this.textColor = color;
+            this.resetFocus();
+        },
+        setFontSize(event) {
+            console.log(event.target.value, typeof parseInt(event.target.value));
+            this.fontSize = parseInt(event.target.value);
             this.resetFocus();
         },
         twipsToPixels(num) {
@@ -437,6 +455,16 @@ textarea {
     border: 2px solid lightblue;
     background-color: purple;
     cursor: pointer;
+}
+
+.font-size-12 {
+    font-size: 12px;
+}
+.font-size-15 {
+    font-size: 15px;
+}
+.font-size-24 {
+    font-size: 24px;
 }
 
 </style>

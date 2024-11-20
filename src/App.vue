@@ -22,7 +22,6 @@
                 <div><label>Model:</label></div>
                 <div style="display: flex; justify-content: center;">
                     <select v-model="tempModel">
-                        <option value=""></option>
                         <option id="value1" value="20-button-phone">20 Button Phone</option>
                         <option id="value2" value="260">2603E, 2604, 2604E, 2606</option>
                         <option id="value3" value="Inter-Tel">Inter-Tel Axxess 8000 Series</option>
