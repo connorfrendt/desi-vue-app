@@ -171,15 +171,15 @@ export default {
             for(let i = 0; i < userInputObjects.length; i++) {
                 let obj = userInputObjects[i][1];
                 if(obj.editable) {
-                    // console.log('OBJECT: ', obj)
+                    
                     let userComment = document.getElementById(`input-box-${i}`).innerText;
                     obj.userComment = userComment;
-                    // console.log(obj.isBold);
+                    
                     obj.isBold = obj.isBold || false;
                     obj.isItalics = obj.isItalics || false;
                     obj.isUnderline = obj.isUnderline || false;
                     obj.textAlign = obj.textAlign || 'center';
-                    obj.textColor = obj.textAlign || 'black';
+                    obj.textColor = obj.textColor || 'black';
                 }
             }
             
