@@ -26,10 +26,18 @@
                         {
                             bold: isBold,
                             italics: isItalics,
-                            underline: isUnderline
+                            underline: isUnderline,
+                            'text-left': textAlign === 'left',
+                            'text-center': textAlign === 'center',
+                            'text-right': textAlign === 'right',
+                            'text-black': textColor === 'black',
+                            'text-red': textColor === 'red',
+                            'text-orange': textColor === 'orange',
+                            'text-yellow': textColor === 'yellow',
+                            'text-green': textColor === 'green',
+                            'text-blue': textColor === 'blue',
+                            'text-purple': textColor === 'purple'
                         },
-                        `text-${textAlign}`,
-                        `text-${textColor}`
                     ]"
                     style="width: 195px; height: 100px; background-color: lightgray;"
                 ></textarea>
@@ -166,11 +174,12 @@ export default {
                     // console.log('OBJECT: ', obj)
                     let userComment = document.getElementById(`input-box-${i}`).innerText;
                     obj.userComment = userComment;
-                    obj.isBold = false;
-                    obj.isItalics = false;
-                    obj.isUnderline = false;
-                    obj.textAlign = 'center';
-                    obj.textColor = 'black';
+                    // console.log(obj.isBold);
+                    obj.isBold = obj.isBold || false;
+                    obj.isItalics = obj.isItalics || false;
+                    obj.isUnderline = obj.isUnderline || false;
+                    obj.textAlign = obj.textAlign || 'center';
+                    obj.textColor = obj.textAlign || 'black';
                 }
             }
             
@@ -190,8 +199,8 @@ export default {
             this.isBold = box[1].isBold;
             this.isItalics = box[1].isItalics;
             this.isUnderline = box[1].isUnderline;
-            this.textAlign = box[1].textAlign || 'center';
-            this.textColor = box[1].textColor || 'black';
+            this.textAlign = box[1].textAlign;
+            this.textColor = box[1].textColor;
 
             this.resetFocus();
         },
@@ -203,7 +212,9 @@ export default {
             this.currentBox[1].isUnderline = this.isUnderline;
             this.currentBox[1].textAlign = this.textAlign;
             this.currentBox[1].textColor = this.textColor;
+            console.log('CURRENT INDEX: ', this.currentIndex);
 
+            console.log('userInputObject: ', this.userInputObject);
             this.$emit('current-box-input', this.currentBox);
             
             this.popupVisible = false;

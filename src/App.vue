@@ -128,6 +128,8 @@ export default {
                 this.fetchPhoneType(this.selectedValue);
                 this.buttonClicked = false;
             }
+            // this.phoneIndex = this.phoneList.findIndex(phone => phone.ext === this.extension);
+            // this.phoneIndex = this.phoneList.length - 1;
             
             this.innerModelText = this.getOptionText(this.model);
             this.innerProdFamText = this.getOptionText(this.selectedValue);
@@ -150,8 +152,10 @@ export default {
                     "value": this.selectedValue,
                     "userData": userDataCopy,
                 });
+                console.log('phoneIndex: ', this.phoneIndex);
+                this.phoneIndex = this.phoneList.length - 1;
+                console.log('phoneIndex: ', this.phoneIndex);
             }
-
             this.tempExtension = '';
             this.tempSelectedValue = '';
             this.tempModel = '';
@@ -159,7 +163,8 @@ export default {
         },
         currentBoxUpdate(currentBox) {
             this.currentBox = currentBox;
-            
+            console.log('currentBox: ', this.currentBox);
+            console.log('phoneIndex: ', this.phoneIndex);
             // This takes the current boxes information of the userInputObjectData, and updates the current box's information in the phoneList
             this.phoneList[this.phoneIndex].userData[0].objects[this.currentBox[0]] = this.userInputObjectData[0].objects[this.currentBox[0]];
         },
@@ -185,7 +190,8 @@ export default {
             this.phoneIndex = this.phoneList.findIndex(phone => phone.ext === parentDiv.querySelector('div:first-child').innerHTML);
             
             this.currentPhoneIndexClicked = this.phoneIndex;
-            
+            console.log('phoneIndex: ', this.phoneIndex);
+            console.log('phone list: ', this.phoneList);
             this.data = this.phoneList[this.phoneIndex].userData[0];
         },
         deletePhone(event) {
@@ -198,7 +204,7 @@ export default {
                 
                 // Removes the phone from the phoneList
                 this.phoneList.splice(this.phoneIndex, 1);
-
+                
             }
         }
     },
