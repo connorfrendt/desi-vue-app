@@ -30,16 +30,8 @@
                             'text-left': textAlign === 'left',
                             'text-center': textAlign === 'center',
                             'text-right': textAlign === 'right',
-                            'text-black': textColor === 'black',
-                            'text-red': textColor === 'red',
-                            'text-orange': textColor === 'orange',
-                            'text-yellow': textColor === 'yellow',
-                            'text-green': textColor === 'green',
-                            'text-blue': textColor === 'blue',
-                            'text-purple': textColor === 'purple',
-                            'font-size-12': fontSize === 12,
-                            'font-size-15': fontSize === 15,
-                            'font-size-24': fontSize === 24,
+                            [`text-${textColor}`]: true,
+                            [`font-size-${fontSize}`]: true
                         },
                     ]"
                     :style="{
@@ -78,10 +70,18 @@
                 </div>
                 <div style="text-align: center;">
                     <select v-model="fontSize" @change="setFontSize">
-                        <option value=""></option>
-                        <option :class="{ active: fontSize === 12 }" value="12">12</option>
-                        <option :class="{ active: fontSize === 15 }" value="15">15</option>
-                        <option :class="{ active: fontSize === 24 }" value="24">24</option>
+                        <option value="10">10</option>
+                        <option value="11">11</option>
+                        <option value="12">12</option>
+                        <option value="13">13</option>
+                        <option value="14">14</option>
+                        <option value="15">15</option>
+                        <option value="16">16</option>
+                        <option value="17">17</option>
+                        <option value="18">18</option>
+                        <option value="19">19</option>
+                        <option value="20">20</option>
+                        <option value="24">24</option>
                     </select>
                 </div>
                 <div class="" style="display: flex; justify-content: space-around; margin-top: 100px;">
@@ -178,16 +178,8 @@ export default {
                 'text-left': box.textAlign === 'left',
                 'text-center': box.textAlign === 'center',
                 'text-right': box.textAlign === 'right',
-                'text-black': box.textColor === 'black',
-                'text-red': box.textColor === 'red',
-                'text-orange': box.textColor === 'orange',
-                'text-yellow': box.textColor === 'yellow',
-                'text-green': box.textColor === 'green',
-                'text-blue': box.textColor === 'blue',
-                'text-purple': box.textColor === 'purple',
-                'font-size-12': box.fontSize === 12,
-                'font-size-15': box.fontSize === 15,
-                'font-size-24': box.fontSize === 24
+                [`text-${box.textColor}`]: true,
+                [`font-size-${box.fontSize}`]: true
             }
         },
         gatherUserComments() {
@@ -232,7 +224,7 @@ export default {
 
             this.resetFocus();
         },
-        // This is confirming the text changes in the popup box
+        // This is confirming the text changes in the popup box and makes them appear on the phone label
         confirmEdit() {
             this.currentBox[1].userComment = this.popupText;
             this.currentBox[1].isBold = this.isBold;
@@ -240,7 +232,6 @@ export default {
             this.currentBox[1].isUnderline = this.isUnderline;
             this.currentBox[1].textAlign = this.textAlign;
             this.currentBox[1].textColor = this.textColor;
-            console.log('font size: ', this.fontSize);
             this.currentBox[1].fontSize = this.fontSize;
 
             console.log('userInputObject: ', this.userInputObject);
@@ -276,7 +267,6 @@ export default {
             this.resetFocus();
         },
         setFontSize(event) {
-            console.log(event.target.value, typeof parseInt(event.target.value));
             this.fontSize = parseInt(event.target.value);
             this.resetFocus();
         },
@@ -459,11 +449,38 @@ textarea {
     cursor: pointer;
 }
 
+.font-size-10 {
+    font-size: 10px;
+}
+.font-size-11 {
+    font-size: 11px;
+}
 .font-size-12 {
     font-size: 12px;
 }
+.font-size-13 {
+    font-size: 13px;
+}
+.font-size-14 {
+    font-size: 14px;
+}
 .font-size-15 {
     font-size: 15px;
+}
+.font-size-16 {
+    font-size: 16px;
+}
+.font-size-17 {
+    font-size: 17px;
+}
+.font-size-18 {
+    font-size: 18px;
+}
+.font-size-19 {
+    font-size: 19px;
+}
+.font-size-20 {
+    font-size: 20px;
 }
 .font-size-24 {
     font-size: 24px;
