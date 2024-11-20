@@ -170,6 +170,7 @@ export default {
             return styles;
         },
         getTextClasses(box) {
+            // Applies classes to each individual editable box. Each class gets applied when the following value is "true"
             return {
                 bold: box.isBold,
                 italics: box.isItalics,
@@ -239,6 +240,7 @@ export default {
             this.currentBox[1].isUnderline = this.isUnderline;
             this.currentBox[1].textAlign = this.textAlign;
             this.currentBox[1].textColor = this.textColor;
+            console.log('font size: ', this.fontSize);
             this.currentBox[1].fontSize = this.fontSize;
 
             console.log('userInputObject: ', this.userInputObject);
