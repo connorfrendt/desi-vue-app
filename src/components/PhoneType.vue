@@ -65,6 +65,17 @@
                     <div class="popup-button-blue" :class="{ active: textColor === 'blue' }" @click="setTextColor('blue')"></div>
                     <div class="popup-button-purple" :class="{ active: textColor === 'purple' }" @click="setTextColor('purple')"></div>
                 </div>
+                <div style="text-align: center; margin-top: 10px;">
+                    <label>FONT SIZE</label>
+                </div>
+                <div>
+                    <select v-model="tempFontSize">
+                        <option value=""></option>
+                        <option value="12">12</option>
+                        <option value="15">15</option>
+                        <option value="24">24</option>
+                    </select>
+                </div>
                 <div class="" style="display: flex; justify-content: space-around; margin-top: 100px;">
                     <div class="popup-button" @click="confirmEdit">OK</div>
                     <div class="popup-button" @click="cancelEdit">Cancel</div>
@@ -101,7 +112,10 @@ export default {
             isItalics: false,
             isUnderline: false,
             textAlign: 'center',
-            textColor: 'black'
+            textColor: 'black',
+
+            tempFontSize: '12px',
+            fontSize: '12px'
         }
     },
     props: {
