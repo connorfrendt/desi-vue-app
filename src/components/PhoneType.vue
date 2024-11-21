@@ -27,11 +27,10 @@
                             bold: isBold,
                             italics: isItalics,
                             underline: isUnderline,
-                            'text-left': textAlign === 'left',
-                            'text-center': textAlign === 'center',
-                            'text-right': textAlign === 'right',
+                            [`text-${textAlign}`]: true,
                             [`text-${textColor}`]: true,
-                            [`font-size-${fontSize}`]: true
+                            [`font-size-${fontSize}`]: true,
+                            [`font-${fontStyle}`]: true
                         },
                     ]"
                     :style="{
@@ -53,6 +52,7 @@
                     <div class="popup-button" :class="{ active: textAlign === 'center' }" @click="setTextAlign('center')">Center</div>
                     <div class="popup-button" :class="{ active: textAlign === 'right' }" @click="setTextAlign('right')">Right</div>
                 </div>
+
                 <div style="text-align: center; margin-top: 10px;">
                     COLOR
                 </div>
@@ -65,6 +65,20 @@
                     <div class="popup-button-blue" :class="{ active: textColor === 'blue' }" @click="setTextColor('blue')"></div>
                     <div class="popup-button-purple" :class="{ active: textColor === 'purple' }" @click="setTextColor('purple')"></div>
                 </div>
+
+                <div style="text-align: center; margin-top: 10px;">
+                    <label>FONT</label>
+                </div>
+                <div style="text-align: center;">
+                    <select v-model="fontStyle" @change="setFontStyle">
+                        <option value="Arial">Arial</option>
+                        <option value="Courier New">Courier New</option>
+                        <option value="Georgia">Georgia</option>
+                        <option value="Times New Roman">Times New Roman</option>
+                        <option value="Verdana">Verdana</option>
+                    </select>
+                </div>
+
                 <div style="text-align: center; margin-top: 10px;">
                     <label>FONT SIZE</label>
                 </div>
@@ -84,6 +98,7 @@
                         <option value="24">24</option>
                     </select>
                 </div>
+
                 <div class="" style="display: flex; justify-content: space-around; margin-top: 100px;">
                     <div class="popup-button" @click="confirmEdit">OK</div>
                     <div class="popup-button" @click="cancelEdit">Cancel</div>
@@ -122,7 +137,8 @@ export default {
             textAlign: 'center',
             textColor: 'black',
 
-            fontSize: 0
+            fontSize: 0,
+            fontStyle: 'Arial'
         }
     },
     props: {
@@ -179,7 +195,8 @@ export default {
                 'text-center': box.textAlign === 'center',
                 'text-right': box.textAlign === 'right',
                 [`text-${box.textColor}`]: true,
-                [`font-size-${box.fontSize}`]: true
+                [`font-size-${box.fontSize}`]: true,
+                [`font-${box.fontStyle}`]: true
             }
         },
         gatherUserComments() {
@@ -199,6 +216,7 @@ export default {
                     obj.textAlign = obj.textAlign || 'center';
                     obj.textColor = obj.textColor || 'black';
                     obj.fontSize = obj.fontSize || 12;
+                    obj.fontStyle = obj.fontStyle || 'Arial';
                 }
             }
             
@@ -221,6 +239,7 @@ export default {
             this.textAlign = box[1].textAlign;
             this.textColor = box[1].textColor;
             this.fontSize = box[1].fontSize;
+            this.fontStyle = box[1].fontStyle;
 
             this.resetFocus();
         },
@@ -233,6 +252,7 @@ export default {
             this.currentBox[1].textAlign = this.textAlign;
             this.currentBox[1].textColor = this.textColor;
             this.currentBox[1].fontSize = this.fontSize;
+            this.currentBox[1].fontStyle = this.fontStyle;
 
             console.log('userInputObject: ', this.userInputObject);
             this.$emit('current-box-input', this.currentBox);
@@ -268,6 +288,15 @@ export default {
         },
         setFontSize(event) {
             this.fontSize = parseInt(event.target.value);
+            this.resetFocus();
+        },
+        setFontStyle(event) {
+            let targetedFont = event.target.value;
+            console.log('TARGETED FONT: ', targetedFont);
+            let fontLowerCase = targetedFont.toLowerCase();
+            let font = fontLowerCase.split(' ').join('-');
+            console.log('FONT: ', font);
+            this.fontStyle = font;
             this.resetFocus();
         },
         twipsToPixels(num) {
@@ -306,6 +335,7 @@ textarea {
     resize: none;
 }
 
+/* ----------------- BOLD, ITALICS, UNDERLINE ----------------- */
 .bold {
     font-weight: bold;
 }
@@ -316,6 +346,7 @@ textarea {
     text-decoration: underline;
 }
 
+/* ----------------- TEXT COLORS ----------------- */
 .text-black {
     color: black;
 }
@@ -348,6 +379,7 @@ textarea {
     text-align: right;
 }
 
+/* ----------------- POP UP BUTTONS ----------------- */
 .popup-button {
     background-color: lightgray;
     padding: 5px;
@@ -377,7 +409,6 @@ textarea {
     border: 2px solid transparent;
     transition: border 0.3s;
 }
-
 
 .popup-button-black {
     background-color: black;
@@ -449,6 +480,7 @@ textarea {
     cursor: pointer;
 }
 
+/* ----------------- FONT SIZES ----------------- */
 .font-size-10 {
     font-size: 10px;
 }
@@ -486,4 +518,20 @@ textarea {
     font-size: 24px;
 }
 
+/* ----------------- FONT STYLES ----------------- */
+.font-aria {
+    font-family: Arial;
+}
+.font-courier-new {
+    font-family: Courier New;
+}
+.font-georgia {
+    font-family: Georgia;
+}
+.font-times-new-roman {
+    font-family: Times New Roman;
+}
+.font-verdana {
+    font-family: Verdana;
+}
 </style>

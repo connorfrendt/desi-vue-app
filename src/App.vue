@@ -1,15 +1,16 @@
 <template>
     <div id="app">
-        <div style="text-align: center; background-color: slategray">
+        <div style="text-align: center; background-color: slategray;">
             <button @click="addButton">+ Add</button>
         </div>
 
-        <div style="display: flex; justify-content: center;">
+        <!-- ADD PHONE WINDOW -->
+        <div id="add-phone-window">
             <div id="open-window" v-if="buttonClicked" style="text-align: center; z-index: 20;">
-                <label for="extension">Extension number to add:</label> 
+                <label for="extension" style="margin-top: 10px;">Extension number to add:</label> 
                 <input id="extension" type="text" v-model="tempExtension" />
                 
-                <div><label>Product Family:</label></div>
+                <div style="margin-top: 20px;"><label>Product Family:</label></div>
                 <div style="display: flex; justify-content: center;">
                     <select id="dropdown" v-model="tempSelectedValue">
                         <option value=""></option>
@@ -19,7 +20,7 @@
                     </select>
                 </div>
                 
-                <div><label>Model:</label></div>
+                <div style="margin-top: 20px;"><label>Model:</label></div>
                 <div style="display: flex; justify-content: center;">
                     <select v-model="tempModel">
                         <option id="value1" value="20-button-phone">20 Button Phone</option>
@@ -41,18 +42,19 @@
                 <div style="display: flex; justify-content: space-around; background-color: lightgray;">
                     <div>Extension</div>
                     <div>Model</div>
-                    <div style="width: 20px;"></div>
                 </div>
                 <div style="margin: 10px;"
                     class="phone-list"
-                    v-for="phone in phoneList" :key="phone.ext"
-                    @click="phoneClickedFunc($event)"
+                    v-for="(phone, index) in phoneList" :key="phone.ext"
+                    
                 >
-                    <div style="display: grid; grid-template-columns: 1fr 1fr 20px;">
-                        <div style="display: flex; align-items: center;">{{ phone.ext }}</div>
-                        <div style="display: flex; align-items: center;">{{ phone.modelName }}</div>
-                        <div @click="deletePhone($event)" style="display: flex; align-items: center;" class="icon-button">
-                            <font-awesome-icon icon="fa-regular fa-trash-can" @click="deletePhone($event)" style="pointer-events: none; margin: 0 auto;" />
+                    <div @click="phoneClickedFunc($event, index)" :class="{ active: index === currentPhoneIndexClicked }" class="phone-listing">
+                        <div style="display: flex; justify-content: center; align-items: center;">{{ phone.ext }}</div>
+                        <div style="display: flex; justify-content: center; align-items: center;">
+                            {{ phone.modelName }}
+                            <div @click.stop="deletePhone($event)" style="display: flex; align-items: center;" class="trash-button">
+                                <font-awesome-icon icon="fa-regular fa-trash-can" @click.stop="deletePhone($event)" style="pointer-events: none; margin: 0 auto;" />
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -63,6 +65,7 @@
                 @current-box-input="currentBoxUpdate"
             />
         </div>
+        <button @click="myFunc">HERE</button>
     </div>
 </template>
 
@@ -87,12 +90,11 @@ export default {
             userInputObjectData: {},
             
             phoneList: [],
+
             phoneIndex: 0,
+            currentPhoneIndexClicked: 0,
             
             modelNum: '',
-            phoneClicked: false,
-            currentPhoneIndexClicked: '',
-            previousPhoneClicked: '',
 
             innerModelText: '',
             innerProdFamText: '',
@@ -127,8 +129,6 @@ export default {
                 this.fetchPhoneType(this.selectedValue);
                 this.buttonClicked = false;
             }
-            // this.phoneIndex = this.phoneList.findIndex(phone => phone.ext === this.extension);
-            // this.phoneIndex = this.phoneList.length - 1;
             
             this.innerModelText = this.getOptionText(this.model);
             this.innerProdFamText = this.getOptionText(this.selectedValue);
@@ -151,9 +151,7 @@ export default {
                     "value": this.selectedValue,
                     "userData": userDataCopy,
                 });
-                console.log('phoneIndex: ', this.phoneIndex);
                 this.phoneIndex = this.phoneList.length - 1;
-                console.log('phoneIndex: ', this.phoneIndex);
             }
             this.tempExtension = '';
             this.tempSelectedValue = '';
@@ -162,8 +160,7 @@ export default {
         },
         currentBoxUpdate(currentBox) {
             this.currentBox = currentBox;
-            console.log('currentBox: ', this.currentBox);
-            console.log('phoneIndex: ', this.phoneIndex);
+
             // This takes the current boxes information of the userInputObjectData, and updates the current box's information in the phoneList
             this.phoneList[this.phoneIndex].userData[0].objects[this.currentBox[0]] = this.userInputObjectData[0].objects[this.currentBox[0]];
         },
@@ -181,30 +178,39 @@ export default {
             const option = this.$el.querySelector(`option[value="${value}"]`);
             return option ? option.innerHTML : value;
         },
-        phoneClickedFunc(event) {
+        phoneClickedFunc(event, index) {
+            console.log('****************');
             let clickedDiv = event.target;
             let parentDiv = clickedDiv.parentElement;
             
             // I need to match whatever ext I clicked on with the extension of the object. Take the value of the object and put it through fetchPhoneType
             this.phoneIndex = this.phoneList.findIndex(phone => phone.ext === parentDiv.querySelector('div:first-child').innerHTML);
             
-            this.currentPhoneIndexClicked = this.phoneIndex;
-            console.log('phoneIndex: ', this.phoneIndex);
-            console.log('phone list: ', this.phoneList);
+            // this.currentPhoneIndexClicked = this.phoneIndex;
+            
+            this.currentPhoneIndexClicked = index;
+            console.log('User Data', this.phoneList[this.phoneIndex]);
+
             this.data = this.phoneList[this.phoneIndex].userData[0];
+            console.log('****************');
         },
         deletePhone(event) {
+            event.stopPropagation();
             if(confirm('Are you sure you want to delete this phone?')) {
-                let clickedDiv = event.target;
-                let parentDiv = clickedDiv.parentElement;
-    
+                // Finds the parent div of the trash can icon
+                let parentDiv = event.target.parentElement.parentElement;
+                
                 // Finds the index of the phone in the phoneList that was clicked on
                 this.phoneIndex = this.phoneList.findIndex(phone => phone.ext === parentDiv.querySelector('div:first-child').innerHTML);
-                
+
                 // Removes the phone from the phoneList
                 this.phoneList.splice(this.phoneIndex, 1);
                 
             }
+        },
+        myFunc() {
+            console.log('Index', this.phoneIndex);
+            console.log('Current Index', this.currentPhoneIndexClicked);
         }
     },
 
@@ -220,19 +226,49 @@ body {
     background-color: lightgray;
     height: 200px;
     width: 300px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2);
+    font-size: 16px;
+}
+
+#add-phone-window {
+    display: flex;
+    justify-content: center;
+    position: absolute;
+    top: 10%;
+    left: 50%;
+    transform: translate(-50%, 0%);
+    z-index: 20;
 }
 
 #draggable-side-bar {
     height: 75vh;
-    width: 270px;
-    min-width: 215px;
-    max-width: 400px;
+    width: 300px;
     background-color: slategrey;
-    position: relative;
 }
 
-.icon-button:hover {
+.trash-button{
+    background-color: gray;
+    border-radius: 5px;
+    padding: 10px;
+}
+.trash-button:hover {
     background-color: lightgray;
+    border-radius: 5px;
+    padding: 10px;
 }
 
+.phone-listing {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    background-color: lightgray;
+    padding: 5px;
+    border: 2px solid lightgray;
+    border-radius: 5px;
+    cursor: pointer;
+}
+.phone-listing.active {
+    border: 2px solid blue;
+    border-radius: 5px;
+}
 </style>
