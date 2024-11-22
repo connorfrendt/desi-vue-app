@@ -48,7 +48,7 @@
                     v-for="(phone, index) in phoneList" :key="phone.ext"
                     
                 >
-                    <div @click="phoneClickedFunc($event, index)" :class="{ active: index === currentPhoneIndexClicked }" class="phone-listing">
+                    <div @click="phoneClickedFunc($event, index)" :class="{ active: index === currentPhoneIndexClicked || index === phoneIndex }" class="phone-listing">
                         <div style="display: flex; justify-content: center; align-items: center;">{{ phone.ext }}</div>
                         <div style="display: flex; justify-content: center; align-items: center;">
                             {{ phone.modelName }}
@@ -65,7 +65,6 @@
                 @current-box-input="currentBoxUpdate"
             />
         </div>
-        <button @click="myFunc">HERE</button>
     </div>
 </template>
 
@@ -92,7 +91,7 @@ export default {
             phoneList: [],
 
             phoneIndex: 0,
-            currentPhoneIndexClicked: 0,
+            currentPhoneIndexClicked: -1,
             
             modelNum: '',
 
@@ -179,7 +178,6 @@ export default {
             return option ? option.innerHTML : value;
         },
         phoneClickedFunc(event, index) {
-            console.log('****************');
             let clickedDiv = event.target;
             let parentDiv = clickedDiv.parentElement;
             
@@ -189,10 +187,8 @@ export default {
             // this.currentPhoneIndexClicked = this.phoneIndex;
             
             this.currentPhoneIndexClicked = index;
-            console.log('User Data', this.phoneList[this.phoneIndex]);
 
             this.data = this.phoneList[this.phoneIndex].userData[0];
-            console.log('****************');
         },
         deletePhone(event) {
             event.stopPropagation();
@@ -208,10 +204,6 @@ export default {
                 
             }
         },
-        myFunc() {
-            console.log('Index', this.phoneIndex);
-            console.log('Current Index', this.currentPhoneIndexClicked);
-        }
     },
 
 }
