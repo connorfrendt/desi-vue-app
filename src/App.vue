@@ -43,14 +43,15 @@
                     <div>Extension</div>
                     <div>Model</div>
                 </div>
+                
                 <div style="margin: 10px;"
                     class="phone-list"
                     v-for="(phone, index) in phoneList" :key="phone.ext"
                     
                 >
                     <div @click="phoneClickedFunc($event, index)" :class="{ active: index === currentPhoneIndexClicked || index === phoneIndex }" class="phone-listing">
-                        <div style="display: flex; justify-content: center; align-items: center;">{{ phone.ext }}</div>
-                        <div style="display: flex; justify-content: center; align-items: center;">
+                        <div class="true-center">{{ phone.ext }}</div>
+                        <div class="true-center">
                             {{ phone.modelName }}
                             <div @click.stop="deletePhone($event)" style="display: flex; align-items: center;" class="trash-button">
                                 <font-awesome-icon icon="fa-regular fa-trash-can" @click.stop="deletePhone($event)" style="pointer-events: none; margin: 0 auto;" />
@@ -58,6 +59,7 @@
                         </div>
                     </div>
                 </div>
+                <div id="drag-handle" @mousedown="startResize" style="display: flex; flex-direction: column; cursor: ew-resize; height: 100%; width: 10px; background-color: darkgray;"></div>
             </div>
             <PhoneType
                 :data="data"
@@ -99,6 +101,10 @@ export default {
             innerProdFamText: '',
 
             currentBox: '',
+
+            isResizing: false,
+            initialWidth: 0,
+            initialX: 0
         }
     },
     components: {
@@ -204,6 +210,24 @@ export default {
                 
             }
         },
+        startResize(event) {
+            this.isResizing = true;
+            this.initialWidth = this.$refs.draggableDiv.offsetWidth;
+            this.initialX = event.clientX;
+            document.addEventListener('mousemove', this.resize);
+            document.addEventListener('mouseup', this.stopResize);
+        },
+        resize(event) {
+            if(this.isResizing) {
+                const newWidth = this.initialWidth + (event.clientX - this.initialX);
+                this.$refs.draggableDiv.style.width = `${newWidth}px`;
+            }
+        },
+        stopResize() {
+            this.isResizing = false;
+            document.removeEventListener('mousemove', this.resize);
+            document.removeEventListener('mouseup', this.stopResize);
+        }
     },
 
 }
@@ -233,10 +257,21 @@ body {
     z-index: 20;
 }
 
+#drag-handle {
+    cursor: ew-resize;
+    width: 10px;
+    background-color: darkgray;
+}
+
 #draggable-side-bar {
-    height: 75vh;
-    width: 300px;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    width: 250px;
+    min-width: 200px;
+    max-width: 400px;
     background-color: slategrey;
+    position: relative;
 }
 
 .trash-button{
@@ -262,5 +297,11 @@ body {
 .phone-listing.active {
     border: 2px solid blue;
     border-radius: 5px;
+}
+
+.true-center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 </style>
