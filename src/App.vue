@@ -39,6 +39,7 @@
         <!-- SIDE BAR -->
         <div style="display: flex;">
             <div id="draggable-side-bar" ref="draggableDiv">
+
                 <div style="display: flex; justify-content: space-around; background-color: lightgray;">
                     <div>Extension</div>
                     <div>Model</div>
@@ -47,7 +48,6 @@
                 <div style="margin: 10px;"
                     class="phone-list"
                     v-for="(phone, index) in phoneList" :key="phone.ext"
-                    
                 >
                     <div @click="phoneClickedFunc($event, index)" :class="{ active: index === currentPhoneIndexClicked || index === phoneIndex }" class="phone-listing">
                         <div class="true-center">{{ phone.ext }}</div>
@@ -59,8 +59,10 @@
                         </div>
                     </div>
                 </div>
-                <div id="drag-handle" @mousedown="startResize" style="display: flex; flex-direction: column; cursor: ew-resize; height: 100%; width: 10px; background-color: darkgray;"></div>
             </div>
+
+            <div id="drag-handle" @mousedown="startResize" style="cursor: ew-resize; height: 96vh; width: 10px; background-color: darkgray;"></div>
+            
             <PhoneType
                 :data="data"
                 @user-input-object="userInputObjectUpdate($event)"
@@ -266,7 +268,7 @@ body {
 #draggable-side-bar {
     display: flex;
     flex-direction: column;
-    height: 100vh;
+    height: 96vh;
     width: 250px;
     min-width: 200px;
     max-width: 400px;
