@@ -67,7 +67,7 @@
                     >
                         <div class="phone-listing-ext" ref="extensionDivs">{{ phone.ext }}</div>
                         <div class="phone-listing-model">
-                            <div class="model-name" style="">{{ phone.modelName }}</div>
+                            <div class="model-name" ref="modelDivs">{{ phone.modelName }}</div>
                             <!-- <div @click.stop="deletePhone($event)" class="trash-button">
                                 <font-awesome-icon icon="fa-regular fa-trash-can" @click.stop="deletePhone($event)" class="trash-icon" style="float: right; z-index: 2;" />
                             </div> -->
@@ -283,6 +283,9 @@ export default {
             if(this.isResizing) {
                 const newWidth = this.initialWidth + (event.clientX - this.initialX);
                 this.$refs.draggableModelDiv.style.width = `${newWidth}px`;
+                this.$refs.modelDivs.forEach(div => {
+                    div.style.width = `${newWidth}px`;
+                });
             }
         },
         stopModelResize() {
