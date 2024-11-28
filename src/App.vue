@@ -1,7 +1,10 @@
 <template>
     <div id="app">
         <div style="text-align: center; background-color: slategray;">
-            <button @click="addButton">+ Add</button>
+            <div class="simple-button true-center" @click="addButton">
+                <font-awesome-icon icon="fa-solid fa-plus" style="margin-right: 5px;" />
+                Add
+            </div>
         </div>
 
         <!-- ADD PHONE WINDOW -->
@@ -20,18 +23,24 @@
                     </select>
                 </div>
                 
-                <div style="margin-top: 20px;"><label>Model:</label></div>
+                <div style="margin-top: 20px; "><label>Model:</label></div>
                 <div style="display: flex; justify-content: center;">
                     <select v-model="tempModel">
+                        <option value=""></option>
                         <option id="value1" value="20-button-phone">20 Button Phone</option>
                         <option id="value2" value="260">2603E, 2604, 2604E, 2606</option>
                         <option id="value3" value="Inter-Tel">Inter-Tel Axxess 8000 Series</option>
                     </select>
                 </div>
 
-                <div>
-                    <button @click="clickOK" :disabled="!tempExtension || !tempSelectedValue || !tempModel">OK</button>
-                    <button @click="clickCancel">Cancel</button>
+                <div style="display: flex; padding-top: 15px;">
+                    <button
+                        class="simple-button true-center" style="background-color: white;"
+                        @click="clickOK" :class="{ disabled: tempExtension === '' || tempSelectedValue === '' || tempModel === '' }"
+                        :disabled="tempExtension === '' || tempSelectedValue === '' || tempModel === ''">
+                        OK
+                    </button>
+                    <button class="simple-button true-center" style="background-color: white;" @click="clickCancel">Cancel</button>
                 </div>
             </div>
         </div>
@@ -40,28 +49,34 @@
         <div style="display: flex;">
             <div id="draggable-side-bar" ref="draggableDiv">
 
-                <div style="display: flex; justify-content: space-around; background-color: lightgray;">
-                    <div>Extension</div>
-                    <div>Model</div>
+                <div class="ext-model-header" style="display: flex; background-color: lightgray;">
+                    <div id="extension-header-side-bar" ref="draggableExtDiv" style="min-width: 50px; text-overflow: ellipsis;">Extension</div>
+                    <div class="draggable-header" @mousedown="startExtResize"></div>
+                    <div id="model-header-side-bar" ref="draggableModelDiv">Model</div>
+                    <div class="draggable-header" @mousedown="startModelResize"></div>
                 </div>
                 
-                <div style="margin: 10px;"
+                <div style="margin: 10px 0;"
                     class="phone-list"
                     v-for="(phone, index) in phoneList" :key="phone.ext"
                 >
-                    <div @click="phoneClickedFunc($event, index)" :class="{ active: index === currentPhoneIndexClicked || index === phoneIndex }" class="phone-listing">
-                        <div class="true-center">{{ phone.ext }}</div>
-                        <div class="true-center">
-                            {{ phone.modelName }}
-                            <div @click.stop="deletePhone($event)" style="display: flex; align-items: center;" class="trash-button">
-                                <font-awesome-icon icon="fa-regular fa-trash-can" @click.stop="deletePhone($event)" style="pointer-events: none; margin: 0 auto;" />
-                            </div>
+                    <div
+                        @click="phoneClickedFunc($event, index)"
+                        :class="{ active: index === currentPhoneIndexClicked || index === phoneIndex }"
+                        class="phone-listing"
+                    >
+                        <div class="phone-listing-ext" ref="extensionDivs">{{ phone.ext }}</div>
+                        <div class="phone-listing-model">
+                            <div class="model-name" style="">{{ phone.modelName }}</div>
+                            <!-- <div @click.stop="deletePhone($event)" class="trash-button">
+                                <font-awesome-icon icon="fa-regular fa-trash-can" @click.stop="deletePhone($event)" class="trash-icon" style="float: right; z-index: 2;" />
+                            </div> -->
                         </div>
                     </div>
                 </div>
             </div>
 
-            <div id="drag-handle" @mousedown="startResize" style="cursor: ew-resize; height: 96vh; width: 10px; background-color: darkgray;"></div>
+            <div id="drag-handle" @mousedown="startResize" style="cursor: ew-resize; height: 96vh; width: 5px; background-color: darkgray;"></div>
             
             <PhoneType
                 :data="data"
@@ -209,9 +224,10 @@ export default {
 
                 // Removes the phone from the phoneList
                 this.phoneList.splice(this.phoneIndex, 1);
-                
             }
         },
+
+        /** *********** SIDEBAR RESIZING *********** */
         startResize(event) {
             this.isResizing = true;
             this.initialWidth = this.$refs.draggableDiv.offsetWidth;
@@ -229,7 +245,51 @@ export default {
             this.isResizing = false;
             document.removeEventListener('mousemove', this.resize);
             document.removeEventListener('mouseup', this.stopResize);
-        }
+        },
+
+        /** *********** EXTENSION RESIZING *********** */
+        startExtResize(event) {
+            this.isResizing = true;
+            this.initialWidth = this.$refs.draggableExtDiv.offsetWidth;
+            this.initialX = event.clientX;
+            document.addEventListener('mousemove', this.resizeExt);
+            document.addEventListener('mouseup', this.stopExtResize);
+        },
+        resizeExt(event) {
+            if(this.isResizing) {
+                const newWidth = this.initialWidth + (event.clientX - this.initialX);
+                this.$refs.draggableExtDiv.style.width = `${newWidth}px`;
+                this.$refs.extensionDivs.forEach(div => {
+                    div.style.width = `${newWidth}px`;
+                });
+            }
+        },
+        stopExtResize() {
+            this.isResizing = false;
+            document.removeEventListener('mousemove', this.resizeExt);
+            document.removeEventListener('mouseup', this.stopExtResize);
+        },
+        
+
+        /** *********** MODEL RESIZING *********** */
+        startModelResize(event) {
+            this.isResizing = true;
+            this.initialWidth = this.$refs.draggableModelDiv.offsetWidth;
+            this.initialX = event.clientX;
+            document.addEventListener('mousemove', this.resizeModel);
+            document.addEventListener('mouseup', this.stopModelResize);
+        },
+        resizeModel(event) {
+            if(this.isResizing) {
+                const newWidth = this.initialWidth + (event.clientX - this.initialX);
+                this.$refs.draggableModelDiv.style.width = `${newWidth}px`;
+            }
+        },
+        stopModelResize() {
+            this.isResizing = false;
+            document.removeEventListener('mousemove', this.resizeModel);
+            document.removeEventListener('mouseup', this.stopModelResize);
+        },
     },
 
 }
@@ -240,9 +300,31 @@ body {
     background-color: gray;
 }
 
+.simple-button {
+    width: 70px;
+    height: 40px;
+    background-color: lightgray;
+    margin: 0 auto;
+    cursor: pointer;
+    border-radius: 5px;
+}
+.simple-button:active {
+    background-color: gray;
+}
+.simple-button.disabled {
+    color: rgba(0, 0, 0, 0.2);
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
+.disabled {
+    color: rgba(0, 0, 0, 0.2);
+    cursor: not-allowed;
+}
+
 #open-window {
     background-color: lightgray;
-    height: 200px;
+    height: 235px;
     width: 300px;
     border-radius: 5px;
     box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2);
@@ -259,6 +341,23 @@ body {
     z-index: 20;
 }
 
+.ext-model-header {
+    display: flex;
+    background-color: lightgray;
+    padding: 5px;
+}
+#extension-header-side-bar {
+    width: 150px;
+}
+#model-header-side-bar {
+    width: 150px;
+}
+.draggable-header {
+    width: 3px;
+    background-color: black;
+    cursor: ew-resize;
+}
+
 #drag-handle {
     cursor: ew-resize;
     width: 10px;
@@ -270,40 +369,66 @@ body {
     flex-direction: column;
     height: 96vh;
     width: 250px;
-    min-width: 200px;
-    max-width: 400px;
     background-color: slategrey;
     position: relative;
+    overflow: hidden;
 }
 
 .trash-button{
+    display: flex;
+    align-items: center;
     background-color: gray;
     border-radius: 5px;
     padding: 10px;
+    flex-shrink: 0;
 }
 .trash-button:hover {
     background-color: lightgray;
     border-radius: 5px;
     padding: 10px;
 }
+.trash-icon {
+    pointer-events: none;
+    margin: 0 auto;
+    flex-shrink: 0;
+}
 
 .phone-listing {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
+    display: flex;
     background-color: lightgray;
     padding: 5px;
     border: 2px solid lightgray;
     border-radius: 5px;
     cursor: pointer;
+    white-space: nowrap;
+    overflow: hidden;
 }
 .phone-listing.active {
     border: 2px solid blue;
     border-radius: 5px;
+}
+.phone-listing-ext {
+    display: flex;
+    align-items: center;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.phone-listing-model {
+    display: flex;
+    align-items: center;
+    overflow: hidden;
 }
 
 .true-center {
     display: flex;
     justify-content: center;
     align-items: center;
+}
+
+.model-name {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 </style>

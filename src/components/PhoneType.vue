@@ -54,9 +54,7 @@
                     <div class="popup-button" :class="{ active: textAlign === 'right' }" @click="setTextAlign('right')">Right</div>
                 </div>
 
-                <div style="text-align: center; margin-top: 10px;">
-                    COLOR
-                </div>
+                <div style="text-align: center; margin-top: 10px;">COLOR</div>
                 <div style="display: grid; grid-template-columns: repeat(4, 1fr); justify-items: center;">
                     <div class="popup-button-black" :class="{ active: textColor === 'black' }" @click="setTextColor('black')"></div>
                     <div class="popup-button-red" :class="{ active: textColor === 'red' }" @click="setTextColor('red')"></div>
