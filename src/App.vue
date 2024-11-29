@@ -50,7 +50,7 @@
             <div id="draggable-side-bar" ref="draggableDiv">
 
                 <div class="ext-model-header" style="display: flex; background-color: lightgray;">
-                    <div id="extension-header-side-bar" ref="draggableExtDiv" style="min-width: 50px; text-overflow: ellipsis;">Extension</div>
+                    <div id="extension-header-side-bar" ref="draggableExtDiv" style="min-width: 50px;">Extension</div>
                     <div class="draggable-header" @mousedown="startExtResize"></div>
                     <div id="model-header-side-bar" ref="draggableModelDiv">Model</div>
                     <div class="draggable-header" @mousedown="startModelResize"></div>
@@ -126,6 +126,9 @@ export default {
     },
     components: {
         PhoneType
+    },
+    mounted() {
+        this.setModelWidths();
     },
     methods: {
         fetchPhoneType(phone) {
@@ -259,9 +262,11 @@ export default {
             if(this.isResizing) {
                 const newWidth = this.initialWidth + (event.clientX - this.initialX);
                 this.$refs.draggableExtDiv.style.width = `${newWidth}px`;
-                this.$refs.extensionDivs.forEach(div => {
-                    div.style.width = `${newWidth}px`;
-                });
+                if(this.$refs.extensionDivs) {
+                    this.$refs.extensionDivs.forEach(div => {
+                        div.style.width = `${newWidth}px`;
+                    });
+                }
             }
         },
         stopExtResize() {
@@ -283,15 +288,24 @@ export default {
             if(this.isResizing) {
                 const newWidth = this.initialWidth + (event.clientX - this.initialX);
                 this.$refs.draggableModelDiv.style.width = `${newWidth}px`;
-                this.$refs.modelDivs.forEach(div => {
-                    div.style.width = `${newWidth}px`;
-                });
+                if(this.$refs.modelDivs) {
+                    this.$refs.modelDivs.forEach(div => {
+                        div.style.width = `${newWidth}px`;
+                    });
+                }
             }
         },
         stopModelResize() {
             this.isResizing = false;
             document.removeEventListener('mousemove', this.resizeModel);
             document.removeEventListener('mouseup', this.stopModelResize);
+        },
+        setModelWidths() {
+            console.log('Mounted');
+            const modelHeaderWidth = this.$refs.draggableModelDiv.offsetWidth;
+            this.$refs.modelDivs.forEach(div => {
+                div.style.width = `${modelHeaderWidth}px`;
+            });
         },
     },
 
