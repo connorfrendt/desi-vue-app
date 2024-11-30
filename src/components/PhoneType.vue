@@ -253,7 +253,6 @@ export default {
             this.currentBox[1].fontSize = this.fontSize;
             this.currentBox[1].fontStyle = this.fontStyle;
 
-            console.log('userInputObject: ', this.userInputObject);
             this.$emit('current-box-input', this.currentBox);
             
             this.popupVisible = false;

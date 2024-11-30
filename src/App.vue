@@ -7,15 +7,15 @@
             </div>
         </div>
 
-        <!-- ADD PHONE WINDOW -->
+        <!--================ ADD PHONE WINDOW ================-->
         <div id="add-phone-window">
             <div id="open-window" v-if="buttonClicked" style="text-align: center; z-index: 20;">
                 <label for="extension" style="margin-top: 10px;">Extension number to add:</label> 
-                <input id="extension" type="text" v-model="tempExtension" />
+                <input id="extension" type="text" v-model="tempExtension" style="width: 265px;" />
                 
                 <div style="margin-top: 20px;"><label>Product Family:</label></div>
                 <div style="display: flex; justify-content: center;">
-                    <select id="dropdown" v-model="tempSelectedValue">
+                    <select id="dropdown" v-model="tempSelectedValue" style="width: 265px;">
                         <option value=""></option>
                         <option value="10075.json">Toshiba DKT 2000</option>
                         <option value="10130.json">Vodavi Starplus II</option>
@@ -23,14 +23,19 @@
                     </select>
                 </div>
                 
-                <div style="margin-top: 20px; "><label>Model:</label></div>
+                <div style="margin-top: 20px;"><label>Model:</label></div>
                 <div style="display: flex; justify-content: center;">
-                    <select v-model="tempModel">
+                    <select v-model="tempModel" style="width: 265px;">
                         <option value=""></option>
                         <option id="value1" value="20-button-phone">20 Button Phone</option>
                         <option id="value2" value="260">2603E, 2604, 2604E, 2606</option>
                         <option id="value3" value="Inter-Tel">Inter-Tel Axxess 8000 Series</option>
                     </select>
+                </div>
+
+                <div style="margin-top: 20px;"><label>Person's Name (optional)</label></div>
+                <div>
+                    <input type="text" v-model="tempName" style="width: 265px;" />
                 </div>
 
                 <div style="display: flex; padding-top: 15px;">
@@ -45,15 +50,16 @@
             </div>
         </div>
 
-        <!-- SIDE BAR -->
+        <!--================ SIDE BAR ================-->
         <div style="display: flex;">
-            <div id="draggable-side-bar" ref="draggableDiv">
+            <div id="draggable-side-bar" ref="draggableDiv" style="min-width: 100px;">
 
                 <div class="ext-model-header" style="display: flex; background-color: lightgray;">
-                    <div id="extension-header-side-bar" ref="draggableExtDiv" style="min-width: 50px;">Extension</div>
+                    <div class="ext-model-header-side-bar" ref="draggableExtDiv">Extension</div>
                     <div class="draggable-header" @mousedown="startExtResize"></div>
-                    <div id="model-header-side-bar" ref="draggableModelDiv">Model</div>
+                    <div class="ext-model-header-side-bar" ref="draggableModelDiv">Model</div>
                     <div class="draggable-header" @mousedown="startModelResize"></div>
+                    <div class="ext-model-header-side-bar">Name</div>
                 </div>
                 
                 <div style="margin: 10px 0;"
@@ -65,12 +71,13 @@
                         :class="{ active: index === currentPhoneIndexClicked || index === phoneIndex }"
                         class="phone-listing"
                     >
-                        <div class="phone-listing-ext" ref="extensionDivs">{{ phone.ext }}</div>
-                        <div class="phone-listing-model">
-                            <div class="model-name" ref="modelDivs">{{ phone.modelName }}</div>
-                            <!-- <div @click.stop="deletePhone($event)" class="trash-button">
-                                <font-awesome-icon icon="fa-regular fa-trash-can" @click.stop="deletePhone($event)" class="trash-icon" style="float: right; z-index: 2;" />
-                            </div> -->
+                        <div class="phone-listing-ext" ref="extensionDivs" style="width: 150px;">{{ phone.ext }}</div>
+                        <div class="phone-listing-model" ref="modelDivs" style="">{{ phone.modelName }}</div>
+                        <div class="true-center" style="width: 150px;">
+                            {{ phone.name }}
+                            <div @click.stop="deletePhone($event)" class="trash-button">
+                                <font-awesome-icon icon="fa-regular fa-trash-can" @click.stop="deletePhone($event)" class="trash-icon" style="z-index: 2;" />
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -103,6 +110,9 @@ export default {
             tempExtension: '',
             extension: '',
 
+            tempName: '',
+            name: '',
+
             data: {},
             buttonClicked: false,
             userInputObjectData: {},
@@ -127,9 +137,6 @@ export default {
     components: {
         PhoneType
     },
-    mounted() {
-        this.setModelWidths();
-    },
     methods: {
         fetchPhoneType(phone) {
             return fetch(`./json/${phone}`)
@@ -150,6 +157,7 @@ export default {
             this.extension = this.tempExtension;
             this.selectedValue = this.tempSelectedValue;
             this.model = this.tempModel;
+            this.name = this.tempName;
             if(this.selectedValue) {
                 this.fetchPhoneType(this.selectedValue);
                 this.buttonClicked = false;
@@ -174,6 +182,7 @@ export default {
                     "ext": this.extension,
                     "modelName": this.innerModelText + ' (' + this.innerProdFamText + ')',
                     "value": this.selectedValue,
+                    "name": this.name,
                     "userData": userDataCopy,
                 });
                 this.phoneIndex = this.phoneList.length - 1;
@@ -181,6 +190,7 @@ export default {
             this.tempExtension = '';
             this.tempSelectedValue = '';
             this.tempModel = '';
+            this.tempName = '';
             
         },
         currentBoxUpdate(currentBox) {
@@ -205,15 +215,15 @@ export default {
         },
         phoneClickedFunc(event, index) {
             let clickedDiv = event.target;
-            let parentDiv = clickedDiv.parentElement;
+            let parentDiv = clickedDiv.closest('.phone-listing');
             
             // I need to match whatever ext I clicked on with the extension of the object. Take the value of the object and put it through fetchPhoneType
             this.phoneIndex = this.phoneList.findIndex(phone => phone.ext === parentDiv.querySelector('div:first-child').innerHTML);
-            
+            console.log('parentDiv', parentDiv, parentDiv.querySelector('div:first-child'));
             // this.currentPhoneIndexClicked = this.phoneIndex;
             
             this.currentPhoneIndexClicked = index;
-
+            console.log('here', this.phoneList, this.phoneIndex);
             this.data = this.phoneList[this.phoneIndex].userData[0];
         },
         deletePhone(event) {
@@ -286,6 +296,7 @@ export default {
         },
         resizeModel(event) {
             if(this.isResizing) {
+                console.log('here');
                 const newWidth = this.initialWidth + (event.clientX - this.initialX);
                 this.$refs.draggableModelDiv.style.width = `${newWidth}px`;
                 if(this.$refs.modelDivs) {
@@ -300,13 +311,13 @@ export default {
             document.removeEventListener('mousemove', this.resizeModel);
             document.removeEventListener('mouseup', this.stopModelResize);
         },
-        setModelWidths() {
-            console.log('Mounted');
-            const modelHeaderWidth = this.$refs.draggableModelDiv.offsetWidth;
-            this.$refs.modelDivs.forEach(div => {
-                div.style.width = `${modelHeaderWidth}px`;
-            });
-        },
+        // setModelWidths() {
+        //     const modelHeaderWidth = this.$refs.draggableModelDiv.offsetWidth;
+        //     console.log(modelHeaderWidth);
+        //     this.$refs.modelDivs.forEach(div => {
+        //         div.style.width = `${modelHeaderWidth}px`;
+        //     });
+        // },
     },
 
 }
@@ -341,7 +352,7 @@ body {
 
 #open-window {
     background-color: lightgray;
-    height: 235px;
+    height: 280px;
     width: 300px;
     border-radius: 5px;
     box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2);
@@ -363,11 +374,12 @@ body {
     background-color: lightgray;
     padding: 5px;
 }
-#extension-header-side-bar {
+.ext-model-header-side-bar {
     width: 150px;
-}
-#model-header-side-bar {
-    width: 150px;
+    padding: 5px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
 }
 .draggable-header {
     width: 3px;
@@ -385,7 +397,7 @@ body {
     display: flex;
     flex-direction: column;
     height: 96vh;
-    width: 250px;
+    width: 350px;
     background-color: slategrey;
     position: relative;
     overflow: hidden;
@@ -425,15 +437,26 @@ body {
     border-radius: 5px;
 }
 .phone-listing-ext {
-    display: flex;
-    align-items: center;
+    /* display: flex;
+    align-items: center; */
+    padding: 10px 0;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
 }
 .phone-listing-model {
-    display: flex;
-    align-items: center;
+    /* display: flex;
+    align-items: center; */
+    padding: 10px 0;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    width: 150px;
+    min-width: 0;
+}
+.phone-listing-name {
+    /* display: flex;
+    align-items: center; */
     overflow: hidden;
 }
 
@@ -441,11 +464,5 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-}
-
-.model-name {
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
 }
 </style>
