@@ -43,7 +43,7 @@
                 <div v-if="templateCheckBox">
                     <select style="width: 265px;">
                         <option v-if="phoneList.length === 0" value="">No Template</option>
-                        <option v-for="phone in phoneList" :key="phone.ext" :value="phone.ext">{{ phone.ext }}</option>
+                        <option v-for="phone in phoneList" :key="phone.ext" :value="phone.ext">{{ phone.ext }} <span v-if="phone.name">({{ phone.name }})</span></option>
                     </select>
                     
                 </div>
