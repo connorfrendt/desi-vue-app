@@ -69,7 +69,7 @@
                     <label>FONT</label>
                 </div>
                 <div style="text-align: center;">
-                    <select v-model="fontStyle" @change="setFontStyle(event)">
+                    <select v-model="fontStyle" @change="setFontStyle">
                         <option value="font-arial">Arial</option>
                         <option value="font-courier-new">Courier New</option>
                         <option value="font-georgia">Georgia</option>
@@ -288,13 +288,8 @@ export default {
             this.fontSize = parseInt(event.target.value);
             this.resetFocus();
         },
-        setFontStyle(event) {
-            let targetedFont = event.target.value;
-            console.log('tar font: ', targetedFont);
+        setFontStyle() {
             this.resetFocus();
-            // let fontLowerCase = targetedFont.toLowerCase();
-            // let font = fontLowerCase.split(' ').join('-');
-            // this.fontStyle = font;
         },
         twipsToPixels(num) {
             let numTwips = num / 1440; // 1440 twips per inch

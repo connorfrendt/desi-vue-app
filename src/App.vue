@@ -41,9 +41,9 @@
 
                 <div id="template-checkbox"><input type="checkbox" v-model="templateCheckBox" />Show Templating Options</div>
                 <div v-if="templateCheckBox">
-                    <select>
-                        <option value=""></option>
-                        <option value="hello">world</option>
+                    <select style="width: 265px;">
+                        <option v-if="phoneList.length === 0" value="">No Template</option>
+                        <option v-for="phone in phoneList" :key="phone.ext" :value="phone.ext">{{ phone.ext }}</option>
                     </select>
                     
                 </div>
