@@ -10,7 +10,8 @@
         <!--================ ADD PHONE WINDOW ================-->
         <div id="add-phone-window">
             <div id="open-window" v-if="buttonClicked" style="text-align: center; z-index: 20;">
-                <label for="extension" style="margin-top: 10px;">Extension number to add:</label> 
+                <label for="extension" style="margin-top: 10px;">Extension number to add:</label>
+                <br />
                 <input id="extension" type="text" v-model="tempExtension" style="width: 265px;" />
                 
                 <div style="margin-top: 20px;"><label>Product Family:</label></div>
@@ -38,6 +39,17 @@
                     <input type="text" v-model="tempName" style="width: 265px;" />
                 </div>
 
+                <div id="template-checkbox"><input type="checkbox" v-model="templateCheckBox" />Show Templating Options</div>
+                <div v-if="templateCheckBox">
+                    <select>
+                        <option value=""></option>
+                        <option value="hello">world</option>
+                    </select>
+                    
+                </div>
+                
+
+                <!--================ Okay/Cancel Buttons ================-->
                 <div style="display: flex; padding-top: 15px;">
                     <button
                         class="simple-button true-center" style="background-color: white;"
@@ -47,6 +59,7 @@
                     </button>
                     <button class="simple-button true-center" style="background-color: white;" @click="clickCancel">Cancel</button>
                 </div>
+
             </div>
         </div>
 
@@ -131,7 +144,9 @@ export default {
 
             isResizing: false,
             initialWidth: 0,
-            initialX: 0
+            initialX: 0,
+
+            templateCheckBox: false,
         }
     },
     components: {
@@ -152,6 +167,9 @@ export default {
         },
         addButton() {
             this.buttonClicked = !this.buttonClicked;
+        },
+        templateButton() {
+            this.templateCheckBox = !this.templateCheckBox;
         },
         clickOK() {
             this.extension = this.tempExtension;
@@ -352,8 +370,7 @@ body {
 
 #open-window {
     background-color: lightgray;
-    height: 280px;
-    width: 300px;
+    padding: 20px;
     border-radius: 5px;
     box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2);
     font-size: 16px;
@@ -464,5 +481,9 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
+}
+
+#template-checkbox {
+    margin-top: 20px;
 }
 </style>

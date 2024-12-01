@@ -31,7 +31,7 @@
                             [`text-${textAlign}`]: true,
                             [`text-${textColor}`]: true,
                             [`font-size-${fontSize}`]: true,
-                            [`font-${fontStyle}`]: true
+                            [`${fontStyle}`]: true
                         },
                     ]"
                     :style="{
@@ -69,12 +69,12 @@
                     <label>FONT</label>
                 </div>
                 <div style="text-align: center;">
-                    <select v-model="fontStyle" @change="setFontStyle">
-                        <option value="Arial">Arial</option>
-                        <option value="Courier New">Courier New</option>
-                        <option value="Georgia">Georgia</option>
-                        <option value="Times New Roman">Times New Roman</option>
-                        <option value="Verdana">Verdana</option>
+                    <select v-model="fontStyle" @change="setFontStyle(event)">
+                        <option value="font-arial">Arial</option>
+                        <option value="font-courier-new">Courier New</option>
+                        <option value="font-georgia">Georgia</option>
+                        <option value="font-times-new-roman">Times New Roman</option>
+                        <option value="font-verdana">Verdana</option>
                     </select>
                 </div>
 
@@ -137,7 +137,7 @@ export default {
             textColor: 'black',
 
             fontSize: 0,
-            fontStyle: 'Arial'
+            fontStyle: 'font-arial'
         }
     },
     props: {
@@ -195,7 +195,7 @@ export default {
                 'text-right': box.textAlign === 'right',
                 [`text-${box.textColor}`]: true,
                 [`font-size-${box.fontSize}`]: true,
-                [`font-${box.fontStyle}`]: true
+                [`${box.fontStyle}`]: true
             }
         },
         gatherUserComments() {
@@ -215,7 +215,7 @@ export default {
                     obj.textAlign = obj.textAlign || 'center';
                     obj.textColor = obj.textColor || 'black';
                     obj.fontSize = obj.fontSize || 12;
-                    obj.fontStyle = obj.fontStyle || 'Arial';
+                    obj.fontStyle = obj.fontStyle || 'font-arial';
                 }
             }
             
@@ -290,12 +290,11 @@ export default {
         },
         setFontStyle(event) {
             let targetedFont = event.target.value;
-            console.log('TARGETED FONT: ', targetedFont);
-            let fontLowerCase = targetedFont.toLowerCase();
-            let font = fontLowerCase.split(' ').join('-');
-            console.log('FONT: ', font);
-            this.fontStyle = font;
+            console.log('tar font: ', targetedFont);
             this.resetFocus();
+            // let fontLowerCase = targetedFont.toLowerCase();
+            // let font = fontLowerCase.split(' ').join('-');
+            // this.fontStyle = font;
         },
         twipsToPixels(num) {
             let numTwips = num / 1440; // 1440 twips per inch
