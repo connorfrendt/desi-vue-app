@@ -39,7 +39,7 @@
                     <input type="text" v-model="tempName" style="width: 265px;" />
                 </div>
 
-                <div id="template-checkbox"><input type="checkbox" v-model="templateCheckBox" />Show Templating Options</div>
+                <div id="template-checkbox"><input :disabled="tempSelectedValue === '' || tempModel === ''" type="checkbox" v-model="templateCheckBox" @change="onlyShowExtensionsForCurrentProductFamily" />Show Templating Options</div>
                 <div v-if="templateCheckBox">
                     <select style="width: 265px;">
                         <option v-if="phoneList.length === 0" value="">No Template</option>
@@ -152,6 +152,10 @@ export default {
     components: {
         PhoneType
     },
+    created() {
+        console.log('Created');
+        // return fetch()
+    },
     methods: {
         fetchPhoneType(phone) {
             return fetch(`./json/${phone}`)
@@ -209,6 +213,7 @@ export default {
             this.tempSelectedValue = '';
             this.tempModel = '';
             this.tempName = '';
+            this.templateCheckBox = false;
             
         },
         currentBoxUpdate(currentBox) {
@@ -237,11 +242,9 @@ export default {
             
             // I need to match whatever ext I clicked on with the extension of the object. Take the value of the object and put it through fetchPhoneType
             this.phoneIndex = this.phoneList.findIndex(phone => phone.ext === parentDiv.querySelector('div:first-child').innerHTML);
-            console.log('parentDiv', parentDiv, parentDiv.querySelector('div:first-child'));
             // this.currentPhoneIndexClicked = this.phoneIndex;
             
             this.currentPhoneIndexClicked = index;
-            console.log('here', this.phoneList, this.phoneIndex);
             this.data = this.phoneList[this.phoneIndex].userData[0];
         },
         deletePhone(event) {
@@ -314,7 +317,6 @@ export default {
         },
         resizeModel(event) {
             if(this.isResizing) {
-                console.log('here');
                 const newWidth = this.initialWidth + (event.clientX - this.initialX);
                 this.$refs.draggableModelDiv.style.width = `${newWidth}px`;
                 if(this.$refs.modelDivs) {
@@ -329,13 +331,10 @@ export default {
             document.removeEventListener('mousemove', this.resizeModel);
             document.removeEventListener('mouseup', this.stopModelResize);
         },
-        // setModelWidths() {
-        //     const modelHeaderWidth = this.$refs.draggableModelDiv.offsetWidth;
-        //     console.log(modelHeaderWidth);
-        //     this.$refs.modelDivs.forEach(div => {
-        //         div.style.width = `${modelHeaderWidth}px`;
-        //     });
-        // },
+        onlyShowExtensionsForCurrentProductFamily() {
+            // loop through phoneList, and make a list of all current selectedValues and their corresponding extensions, and return a list of extensions
+            console.log('asdfasdf', this.phoneList);
+        }
     },
 
 }
