@@ -75,7 +75,7 @@
                     <div class="ext-model-header-side-bar">Name</div>
                 </div>
                 
-                <div style="margin: 10px 0;"
+                <div style="margin: 10px 0; display: flex;"
                     class="phone-list"
                     v-for="(phone, index) in phoneList" :key="phone.ext"
                 >
@@ -84,26 +84,25 @@
                         :class="{ active: index === currentPhoneIndexClicked || index === phoneIndex }"
                         class="phone-listing"
                     >
-                        <div class="phone-listing-ext" ref="extensionDivs" style="width: 150px;">{{ phone.ext }}</div>
-                        <div class="phone-listing-model" ref="modelDivs" style="">{{ phone.modelName }}</div>
-                        <div class="true-center" style="width: 150px;">
-                            {{ phone.name }}
-                            <div @click.stop="deletePhone($event)" class="trash-button">
-                                <font-awesome-icon icon="fa-regular fa-trash-can" @click.stop="deletePhone($event)" class="trash-icon" style="z-index: 2;" />
-                            </div>
-                        </div>
+                        <div class="phone-listing-ext" ref="extensionDivs">{{ phone.ext }}</div>
+                        <div class="phone-listing-model" ref="modelDivs">{{ phone.modelName }}</div>
+                        <div class="true-center" style="width: 150px;">{{ phone.name }}</div>
+                    </div>
+                    <div v-if="index === currentPhoneIndexClicked || index === phoneIndex" @click.stop="deletePhone($event)" class="trash-button">
+                        <font-awesome-icon icon="fa-regular fa-trash-can" @click.stop="deletePhone($event)" class="trash-icon" style="z-index: 2;" />
                     </div>
                 </div>
             </div>
 
             <div id="drag-handle" @mousedown="startResize" style="cursor: ew-resize; height: 96vh; width: 5px; background-color: darkgray;"></div>
             
-            <PhoneType
-                :data="data"
-                @user-input-object="userInputObjectUpdate($event)"
-                @current-box-input="currentBoxUpdate"
-            />
         </div>
+
+        <PhoneType
+            :data="data"
+            @user-input-object="userInputObjectUpdate($event)"
+            @current-box-input="currentBoxUpdate"
+        />
     </div>
 </template>
 
@@ -208,6 +207,7 @@ export default {
                     "userData": userDataCopy,
                 });
                 this.phoneIndex = this.phoneList.length - 1;
+                this.currentPhoneIndexClicked = this.phoneIndex;
             }
             this.tempExtension = '';
             this.tempSelectedValue = '';
@@ -251,11 +251,11 @@ export default {
             event.stopPropagation();
             if(confirm('Are you sure you want to delete this phone?')) {
                 // Finds the parent div of the trash can icon
-                let parentDiv = event.target.parentElement.parentElement;
-                
+                let parentDiv = event.target.closest('.phone-list');
+                console.log(parentDiv);
                 // Finds the index of the phone in the phoneList that was clicked on
-                this.phoneIndex = this.phoneList.findIndex(phone => phone.ext === parentDiv.querySelector('div:first-child').innerHTML);
-
+                this.phoneIndex = this.phoneList.findIndex(phone => phone.ext === parentDiv.querySelector('.phone-listing-ext').innerHTML);
+                console.log(this.phoneIndex);
                 // Removes the phone from the phoneList
                 this.phoneList.splice(this.phoneIndex, 1);
             }
@@ -396,9 +396,10 @@ body {
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
+    flex-shrink: 0;
 }
 .draggable-header {
-    width: 3px;
+    min-width: 3px;
     background-color: black;
     cursor: ew-resize;
 }
@@ -417,6 +418,7 @@ body {
     background-color: slategrey;
     position: relative;
     overflow: hidden;
+    flex-shrink: 0;
 }
 
 .trash-button{
@@ -447,33 +449,21 @@ body {
     cursor: pointer;
     white-space: nowrap;
     overflow: hidden;
+    flex-shrink: 0;
 }
 .phone-listing.active {
     border: 2px solid blue;
     border-radius: 5px;
 }
-.phone-listing-ext {
-    /* display: flex;
-    align-items: center; */
-    padding: 10px 0;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-.phone-listing-model {
-    /* display: flex;
-    align-items: center; */
-    padding: 10px 0;
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-    width: 150px;
-    min-width: 0;
-}
+
+.phone-listing-ext,
+.phone-listing-model,
 .phone-listing-name {
-    /* display: flex;
-    align-items: center; */
+    padding: 10px 0;
+    width: 150px;
     overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
 }
 
 .true-center {
