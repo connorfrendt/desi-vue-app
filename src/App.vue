@@ -65,7 +65,7 @@
 
         <!--================ SIDE BAR ================-->
         <div style="display: flex;">
-            <div id="draggable-side-bar" ref="draggableDiv" style="min-width: 100px;">
+            <div id="draggable-side-bar" ref="draggableDiv" style="min-width: 100px; max-width: 90%;">
 
                 <div class="ext-model-header" style="display: flex; background-color: lightgray;">
                     <div class="ext-model-header-side-bar" ref="draggableExtDiv">Extension</div>
@@ -75,7 +75,7 @@
                     <div class="ext-model-header-side-bar">Name</div>
                 </div>
                 
-                <div style="margin: 10px 0; display: flex;"
+                <div style="margin: 10px 0;"
                     class="phone-list"
                     v-for="(phone, index) in phoneList" :key="phone.ext"
                 >
@@ -88,8 +88,13 @@
                         <div class="phone-listing-model" ref="modelDivs">{{ phone.modelName }}</div>
                         <div class="true-center" style="width: 150px;">{{ phone.name }}</div>
                     </div>
-                    <div v-if="index === currentPhoneIndexClicked || index === phoneIndex" @click.stop="deletePhone($event)" class="trash-button">
-                        <font-awesome-icon icon="fa-regular fa-trash-can" @click.stop="deletePhone($event)" class="trash-icon" style="z-index: 2;" />
+                    <div v-if="index === currentPhoneIndexClicked || index === phoneIndex" style="display: flex;">
+                        <div class="edit-button">
+                            <font-awesome-icon icon="fa-regular fa-pen-to-square" class="edit-icon" style="z-index: 2;" />
+                        </div>
+                        <div @click.stop="deletePhone($event)" class="trash-button">
+                            <font-awesome-icon icon="fa-regular fa-trash-can" @click.stop="deletePhone($event)" class="trash-icon" style="z-index: 2;" />
+                        </div>
                     </div>
                 </div>
             </div>
@@ -421,20 +426,40 @@ body {
     flex-shrink: 0;
 }
 
-.trash-button{
+.trash-button,
+.edit-button {
     display: flex;
     align-items: center;
-    background-color: gray;
+    width: 50%;
     border-radius: 5px;
-    padding: 10px;
+    padding: 10px 0;
     flex-shrink: 0;
+    cursor: pointer;
+}
+
+.trash-button {
+    background-color: red;
 }
 .trash-button:hover {
-    background-color: lightgray;
+    background-color: lightcoral;
     border-radius: 5px;
-    padding: 10px;
+    padding: 10px 0;
 }
 .trash-icon {
+    pointer-events: none;
+    margin: 0 auto;
+    flex-shrink: 0;
+}
+
+.edit-button {
+    background-color: green;
+}
+.edit-button:hover {
+    background-color: lightgreen;
+    border-radius: 5px;
+    padding: 10px 0;
+}
+.edit-icon {
     pointer-events: none;
     margin: 0 auto;
     flex-shrink: 0;
