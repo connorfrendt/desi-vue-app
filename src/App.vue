@@ -88,8 +88,8 @@
                         <div class="phone-listing-model" ref="modelDivs">{{ phone.modelName }}</div>
                         <div class="true-center" style="width: 150px;">{{ phone.name }}</div>
                     </div>
-                    <div v-if="index === currentPhoneIndexClicked || index === phoneIndex" style="display: flex;">
-                        <div class="edit-button">
+                    <div id="edit-trash-div" v-if="index === currentPhoneIndexClicked || index === phoneIndex" style="display: flex;">
+                        <div @click="editPhoneListing" class="edit-button">
                             <font-awesome-icon icon="fa-regular fa-pen-to-square" class="edit-icon" style="z-index: 2;" />
                         </div>
                         <div @click.stop="deletePhone($event)" class="trash-button">
@@ -251,6 +251,9 @@ export default {
             
             this.currentPhoneIndexClicked = index;
             this.data = this.phoneList[this.phoneIndex].userData[0];
+        },
+        editPhoneListing() {
+            console.log('here');
         },
         deletePhone(event) {
             event.stopPropagation();
@@ -430,9 +433,10 @@ body {
 .edit-button {
     display: flex;
     align-items: center;
-    width: 50%;
+    width: calc(50% - 20px);
     border-radius: 5px;
-    padding: 10px 0;
+    padding: 7px 0;
+    margin: 4px 10px;
     flex-shrink: 0;
     cursor: pointer;
 }
@@ -443,7 +447,7 @@ body {
 .trash-button:hover {
     background-color: lightcoral;
     border-radius: 5px;
-    padding: 10px 0;
+    padding: 7px 0;
 }
 .trash-icon {
     pointer-events: none;
@@ -457,7 +461,7 @@ body {
 .edit-button:hover {
     background-color: lightgreen;
     border-radius: 5px;
-    padding: 10px 0;
+    padding: 7px 0;
 }
 .edit-icon {
     pointer-events: none;
@@ -489,6 +493,7 @@ body {
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
+    flex-shrink: 0;
 }
 
 .true-center {
