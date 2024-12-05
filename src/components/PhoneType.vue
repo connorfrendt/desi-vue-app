@@ -6,7 +6,7 @@
                     <ul>
                         <li v-for="(box, index) in boxes" :key="box[0]"
                             :id="`input-box-${index}`"
-                            :style="getBoxStyles(box[1])"
+                            :style="[getBoxStyles(box[1]), selectedBox === index ? { border: '1px solid black' } : '']"
                             v-html="box[1].editable ? box[1].userComment : box[1].defaultText"
                             style="list-style-type: none;"
                             @click="box[1].editable ? showPopUp(box, index) : ''"
@@ -137,7 +137,9 @@ export default {
             textColor: 'black',
 
             fontSize: 0,
-            fontStyle: 'font-arial'
+            fontStyle: 'font-arial',
+
+            selectedBox: null,
         }
     },
     props: {
@@ -229,6 +231,10 @@ export default {
             this.popupVisible = true;
             this.popupText = box[1].userComment;
             
+            this.selectedBox = index;
+
+            console.log(box);
+            // box[1].
             this.currentBox = box;
             this.currentIndex = index;
 

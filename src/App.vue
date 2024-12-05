@@ -1,7 +1,7 @@
 <template>
     <div id="app">
         <div style="text-align: center; background-color: slategray;">
-            <div class="simple-button true-center" @click="addButton">
+            <div class="p-8 simple-button true-center" @click="addButton">
                 <font-awesome-icon icon="fa-solid fa-plus" style="margin-right: 5px;" />
                 Add
             </div>
@@ -39,7 +39,10 @@
                     <input type="text" v-model="tempName" style="width: 265px;" />
                 </div>
 
-                <div id="template-checkbox"><input :disabled="tempSelectedValue === '' || tempModel === ''" type="checkbox" v-model="templateCheckBox" @change="onlyShowExtensionsForCurrentProductFamily" />Show Templating Options</div>
+                <div id="template-checkbox">
+                    <input :disabled="tempSelectedValue === '' || tempModel === ''" type="checkbox" v-model="templateCheckBox" @change="onlyShowExtensionsForCurrentProductFamily" />
+                        Show Templating Options
+                </div>
                 <div v-if="templateCheckBox">
                     <select style="width: 265px;">
                         <option v-if="phoneList.length === 0" value="">No Template</option>
@@ -89,7 +92,7 @@
                         <div class="phone-listing-model">{{ phone.name }}</div>
                     </div>
                     <div id="edit-trash-div" v-if="index === currentPhoneIndexClicked || index === phoneIndex" style="display: flex;">
-                        <div @click="editPhoneListing" class="edit-button">
+                        <div @click="showEditPhoneListing" class="edit-button">
                             <font-awesome-icon icon="fa-regular fa-pen-to-square" class="edit-icon" style="z-index: 2;" />
                         </div>
                         <div @click.stop="deletePhone($event)" class="trash-button">
@@ -103,11 +106,26 @@
             
         </div>
 
+        <!--================ EDIT PHONE LISTING POPUP ================-->
         <div v-if="phoneListingClicked" class="edit-button-popup">
-            Hello World
+            <div style="display: grid; grid-template-columns: 1fr 2fr;">
+                <div>Extension ID:</div>
+                <div><input v-model="extPopup" type="text" style="width: 100%;" /></div>
+                
+                <div>Name:</div>
+                <div><input v-model="namePopup" type="text" style="width: 100%;" /></div>
+                
+                <div>Product Family:</div>
+                <div>asdf</div>
+                
+                <div>Model:</div>
+                <div>asdf</div>
+                
+                <div>TypeCode:</div>
+                <div>asdf</div>
+            </div>
 
-            <div>Extension ID:</div>
-            <div>Name:</div>
+
             <div class="edit-popup">
                 <div class="edit-popup-ok" @click="confirmEditPopup">OK</div>
                 <div class="edit-popup-cancel" @click="cancelEditPopup">Cancel</div>
@@ -163,6 +181,9 @@ export default {
 
             templateCheckBox: false,
             phoneListingClicked: false,
+
+            namePopup: '',
+            extPopup: '',
         }
     },
     components: {
@@ -264,25 +285,32 @@ export default {
             this.currentPhoneIndexClicked = index;
             this.data = this.phoneList[this.phoneIndex].userData[0];
         },
-        editPhoneListing() {
-            console.log('here', this.phoneList[this.phoneIndex]);
+
+        // ======================= PHONE LISTING POPUP =======================
+        showEditPhoneListing() {
             this.phoneListingClicked = true;
+            this.extPopup = this.phoneList[this.phoneIndex].ext;
+            this.namePopup = this.phoneList[this.phoneIndex].name;
         },
         confirmEditPopup() {
             this.phoneListingClicked = false;
+            this.phoneList[this.phoneIndex].ext = this.extPopup;
+            this.phoneList[this.phoneIndex].name = this.namePopup;
+            console.log(this.phoneList);
         },
         cancelEditPopup() {
             this.phoneListingClicked = false;
         },
+
         deletePhone(event) {
             event.stopPropagation();
             if(confirm('Are you sure you want to delete this phone?')) {
                 // Finds the parent div of the trash can icon
                 let parentDiv = event.target.closest('.phone-list');
-                console.log(parentDiv);
+                
                 // Finds the index of the phone in the phoneList that was clicked on
                 this.phoneIndex = this.phoneList.findIndex(phone => phone.ext === parentDiv.querySelector('.phone-listing-ext').innerHTML);
-                console.log(this.phoneIndex);
+                
                 // Removes the phone from the phoneList
                 this.phoneList.splice(this.phoneIndex, 1);
             }
@@ -529,12 +557,12 @@ body {
     position: absolute;
     top: 100px;
     left: 375px;
-    height: 150px;
-    width: 400px;
+    width: 350px;
     background-color: white;
     border: 1px solid #ccc;
     padding: 20px;
     z-index: 100;
+    box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2);
 }
 
 .edit-popup {
@@ -544,10 +572,18 @@ body {
 
 .edit-popup-ok,
 .edit-popup-cancel {
+    cursor: pointer;
     background-color: lightgray;
     padding: 5px;
     margin: 5px;
     text-align: center;
+    border: 2px solid lightgray;
     border-radius: 5px;
+}
+
+.edit-popup-ok:hover,
+.edit-popup-cancel:hover {
+    background-color: rgb(180, 180, 180);
+    border: 2px solid black;
 }
 </style>
