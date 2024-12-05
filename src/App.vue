@@ -86,7 +86,7 @@
                     >
                         <div class="phone-listing-ext" ref="extensionDivs">{{ phone.ext }}</div>
                         <div class="phone-listing-model" ref="modelDivs">{{ phone.modelName }}</div>
-                        <div class="true-center" style="width: 150px;">{{ phone.name }}</div>
+                        <div class="phone-listing-model">{{ phone.name }}</div>
                     </div>
                     <div id="edit-trash-div" v-if="index === currentPhoneIndexClicked || index === phoneIndex" style="display: flex;">
                         <div @click="editPhoneListing" class="edit-button">
@@ -101,6 +101,17 @@
 
             <div id="drag-handle" @mousedown="startResize" style="cursor: ew-resize; height: 96vh; width: 5px; background-color: darkgray;"></div>
             
+        </div>
+
+        <div v-if="phoneListingClicked" class="edit-button-popup">
+            Hello World
+
+            <div>Extension ID:</div>
+            <div>Name:</div>
+            <div class="edit-popup">
+                <div class="edit-popup-ok" @click="confirmEditPopup">OK</div>
+                <div class="edit-popup-cancel" @click="cancelEditPopup">Cancel</div>
+            </div>
         </div>
 
         <PhoneType
@@ -151,6 +162,7 @@ export default {
             initialX: 0,
 
             templateCheckBox: false,
+            phoneListingClicked: false,
         }
     },
     components: {
@@ -253,7 +265,14 @@ export default {
             this.data = this.phoneList[this.phoneIndex].userData[0];
         },
         editPhoneListing() {
-            console.log('here');
+            console.log('here', this.phoneList[this.phoneIndex]);
+            this.phoneListingClicked = true;
+        },
+        confirmEditPopup() {
+            this.phoneListingClicked = false;
+        },
+        cancelEditPopup() {
+            this.phoneListingClicked = false;
         },
         deletePhone(event) {
             event.stopPropagation();
@@ -399,7 +418,7 @@ body {
     padding: 5px;
 }
 .ext-model-header-side-bar {
-    width: 150px;
+    width: 100px;
     padding: 5px;
     overflow: hidden;
     white-space: nowrap;
@@ -488,8 +507,8 @@ body {
 .phone-listing-ext,
 .phone-listing-model,
 .phone-listing-name {
-    padding: 10px 0;
-    width: 150px;
+    padding: 5px;
+    width: 100px;
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
@@ -504,5 +523,31 @@ body {
 
 #template-checkbox {
     margin-top: 20px;
+}
+
+.edit-button-popup {
+    position: absolute;
+    top: 100px;
+    left: 375px;
+    height: 150px;
+    width: 400px;
+    background-color: white;
+    border: 1px solid #ccc;
+    padding: 20px;
+    z-index: 100;
+}
+
+.edit-popup {
+    display: flex;
+    justify-content: center;
+}
+
+.edit-popup-ok,
+.edit-popup-cancel {
+    background-color: lightgray;
+    padding: 5px;
+    margin: 5px;
+    text-align: center;
+    border-radius: 5px;
 }
 </style>
