@@ -40,7 +40,7 @@
                 </div>
 
                 <div id="template-checkbox">
-                    <input :disabled="tempSelectedValue === '' || tempModel === ''" type="checkbox" v-model="templateCheckBox" @change="onlyShowExtensionsForCurrentProductFamily" />
+                    <input :disabled="tempSelectedValue === '' || tempModel === ''" type="checkbox" v-model="templateCheckBox" @change="onlyShowExtensionsForCurrentPhoneModel" />
                         Show Templating Options
                 </div>
                 <div v-if="templateCheckBox">
@@ -116,13 +116,13 @@
                 <div><input v-model="namePopup" type="text" style="width: 100%;" /></div>
                 
                 <div>Product Family:</div>
-                <div>asdf</div>
+                <div>{{ prodFamEditPopup }}</div>
                 
                 <div>Model:</div>
-                <div>asdf</div>
+                <div>{{ modelEditPopup }}</div>
                 
                 <div>TypeCode:</div>
-                <div>asdf</div>
+                <div>{{ typeCodeEditPopup }}</div>
             </div>
 
 
@@ -164,6 +164,7 @@ export default {
             userInputObjectData: {},
             
             phoneList: [],
+            modelList: [],
 
             phoneIndex: 0,
             currentPhoneIndexClicked: -1,
@@ -184,6 +185,10 @@ export default {
 
             namePopup: '',
             extPopup: '',
+
+            prodFamEditPopup: '',
+            modelEditPopup: '',
+            typeCodeEditPopup: '',
         }
     },
     components: {
@@ -278,11 +283,15 @@ export default {
             let clickedDiv = event.target;
             let parentDiv = clickedDiv.closest('.phone-listing');
             
-            // I need to match whatever ext I clicked on with the extension of the object. Take the value of the object and put it through fetchPhoneType
+            /*
+                This takes the ext in the object of whatever phone was clicked on,
+                and tries to match with the ext in the phoneList that was clicked on.
+                If true, it finds the index and sets it to this.phoneIndex
+            */
             this.phoneIndex = this.phoneList.findIndex(phone => phone.ext === parentDiv.querySelector('div:first-child').innerHTML);
-            // this.currentPhoneIndexClicked = this.phoneIndex;
-            
             this.currentPhoneIndexClicked = index;
+
+            // This changes the data to be updated with the phone that was clicked on
             this.data = this.phoneList[this.phoneIndex].userData[0];
         },
 
@@ -291,6 +300,11 @@ export default {
             this.phoneListingClicked = true;
             this.extPopup = this.phoneList[this.phoneIndex].ext;
             this.namePopup = this.phoneList[this.phoneIndex].name;
+            let currentUserData = this.phoneList[this.phoneIndex].userData[0];
+            console.log(this.phoneList[this.phoneIndex].userData[0]);
+            this.prodFamEditPopup = currentUserData.group;
+            this.modelEditPopup = currentUserData.description;
+            this.typeCodeEditPopup = currentUserData.typeCode;
         },
         confirmEditPopup() {
             this.phoneListingClicked = false;
@@ -386,9 +400,12 @@ export default {
             document.removeEventListener('mousemove', this.resizeModel);
             document.removeEventListener('mouseup', this.stopModelResize);
         },
-        onlyShowExtensionsForCurrentProductFamily() {
-            // loop through phoneList, and make a list of all current selectedValues and their corresponding extensions, and return a list of extensions
-            console.log('asdfasdf', this.phoneList);
+        onlyShowExtensionsForCurrentPhoneModel() {
+            // loop through phoneList, and make a list of all current models and their corresponding extensions, and return a list of extensions
+            console.log('asdfasdf', this.model);
+            for(let i = 0; i < this.phoneList.length; i++) {
+                console.log(this.phoneList[i].modelName);
+            }
         }
     },
 
@@ -489,7 +506,7 @@ body {
 }
 
 .trash-button {
-    background-color: red;
+    background-color: rgb(128, 0, 0);
 }
 .trash-button:hover {
     background-color: lightcoral;
