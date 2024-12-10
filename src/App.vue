@@ -14,7 +14,9 @@
                 <br />
                 <input id="extension" type="text" v-model="tempExtension" style="width: 265px;" />
                 
-                <div style="margin-top: 20px;"><label>Product Family:</label></div>
+                <div style="margin-top: 20px;">
+                    <label>Product Family:</label>
+                </div>
                 <div style="display: flex; justify-content: center;">
                     <select id="dropdown" v-model="tempSelectedValue" style="width: 265px;">
                         <option value=""></option>
@@ -24,13 +26,15 @@
                     </select>
                 </div>
                 
-                <div style="margin-top: 20px;"><label>Model:</label></div>
+                <div style="margin-top: 20px;">
+                    <label>Model:</label>
+                </div>
                 <div style="display: flex; justify-content: center;">
                     <select v-model="tempModel" style="width: 265px;">
                         <option value=""></option>
-                        <option id="value1" value="20-button-phone">20 Button Phone</option>
-                        <option id="value2" value="260">2603E, 2604, 2604E, 2606</option>
-                        <option id="value3" value="Inter-Tel">Inter-Tel Axxess 8000 Series</option>
+                        <option value="20-button-phone">20 Button Phone</option>
+                        <option value="260">2603E, 2604, 2604E, 2606</option>
+                        <option value="Inter-Tel">Inter-Tel Axxess 8000 Series</option>
                     </select>
                 </div>
 
@@ -48,7 +52,6 @@
                         <option v-if="phoneList.length === 0" value="">No Template</option>
                         <option v-for="phone in phoneList" :key="phone.ext" :value="phone.ext">{{ phone.ext }} <span v-if="phone.name">({{ phone.name }})</span></option>
                     </select>
-                    
                 </div>
                 
 
@@ -88,7 +91,7 @@
                         class="phone-listing"
                     >
                         <div class="phone-listing-ext" ref="extensionDivs">{{ phone.ext }}</div>
-                        <div class="phone-listing-model" ref="modelDivs">{{ phone.modelName }}</div>
+                        <div class="phone-listing-model" ref="modelDivs">{{ phone.modelDisplayName }}</div>
                         <div class="phone-listing-model">{{ phone.name }}</div>
                     </div>
                     <div id="edit-trash-div" v-if="index === currentPhoneIndexClicked || index === phoneIndex" style="display: flex;">
@@ -244,7 +247,9 @@ export default {
             if(!phoneExists) {
                 this.phoneList.push({
                     "ext": this.extension,
-                    "modelName": this.innerModelText + ' (' + this.innerProdFamText + ')',
+                    "modelDisplayName": this.innerModelText + ' (' + this.innerProdFamText + ')',
+                    "productName": this.innerProdFamText,
+                    "modelName": this.innerModelText,
                     "value": this.selectedValue,
                     "name": this.name,
                     "userData": userDataCopy,
@@ -402,10 +407,7 @@ export default {
         },
         onlyShowExtensionsForCurrentPhoneModel() {
             // loop through phoneList, and make a list of all current models and their corresponding extensions, and return a list of extensions
-            console.log('asdfasdf', this.model);
-            for(let i = 0; i < this.phoneList.length; i++) {
-                console.log(this.phoneList[i].modelName);
-            }
+            console.log('asdfasdf', this.tempModel);
         }
     },
 
