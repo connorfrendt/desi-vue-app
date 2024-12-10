@@ -30,7 +30,7 @@
                     <label>Model:</label>
                 </div>
                 <div style="display: flex; justify-content: center;">
-                    <select v-model="tempModel" style="width: 265px;">
+                    <select class="model-selection" v-model="tempModel" style="width: 265px;">
                         <option value=""></option>
                         <option value="20-button-phone">20 Button Phone</option>
                         <option value="260">2603E, 2604, 2604E, 2606</option>
@@ -407,7 +407,16 @@ export default {
         },
         onlyShowExtensionsForCurrentPhoneModel() {
             // loop through phoneList, and make a list of all current models and their corresponding extensions, and return a list of extensions
-            console.log('asdfasdf', this.tempModel);
+
+            const selectedModelOption = document.querySelector('.model-selection option:checked');
+            const selectedModelInnerHTML = selectedModelOption ? selectedModelOption.innerHTML : '';
+            console.log('Selected Model: ', selectedModelInnerHTML);
+            for(let i = 0; i < this.phoneList.length; i++) {
+                if(selectedModelInnerHTML === this.phoneList[i].modelName) {
+                    // console.log('***HERE***: ', selectedModelInnerHTML, this.phoneList[i].modelName);
+                    
+                }
+            }
         }
     },
 
