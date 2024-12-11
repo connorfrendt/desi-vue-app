@@ -50,7 +50,7 @@
                 <div v-if="templateCheckBox">
                     <select style="width: 265px;">
                         <option v-if="phoneList.length === 0" value="">No Template</option>
-                        <option v-for="phone in phoneList" :key="phone.ext" :value="phone.ext">{{ phone.ext }} <span v-if="phone.name">({{ phone.name }})</span></option>
+                        <option v-for="phone in modelList" :key="phone.ext" :value="phone.ext">{{ phone.ext }} <span v-if="phone.name">({{ phone.name }})</span></option>
                     </select>
                 </div>
                 
@@ -407,16 +407,19 @@ export default {
         },
         onlyShowExtensionsForCurrentPhoneModel() {
             // loop through phoneList, and make a list of all current models and their corresponding extensions, and return a list of extensions
-
+            
+            // empty modelList
+            this.modelList = [];
             const selectedModelOption = document.querySelector('.model-selection option:checked');
             const selectedModelInnerHTML = selectedModelOption ? selectedModelOption.innerHTML : '';
-            console.log('Selected Model: ', selectedModelInnerHTML);
+            
             for(let i = 0; i < this.phoneList.length; i++) {
                 if(selectedModelInnerHTML === this.phoneList[i].modelName) {
                     // console.log('***HERE***: ', selectedModelInnerHTML, this.phoneList[i].modelName);
-                    
+                    this.modelList.push(this.phoneList[i]);
                 }
             }
+            console.log('Model List: ', this.modelList);
         }
     },
 
