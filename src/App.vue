@@ -1,9 +1,32 @@
 <template>
     <div id="app">
-        <div style="text-align: center; background-color: slategray;">
-            <div class="p-8 simple-button true-center" @click="addButton">
-                <font-awesome-icon icon="fa-solid fa-plus" style="margin-right: 5px;" />
-                Add
+        <div style="display: flex; justify-content: space-between; background-color: slategray;">
+            <div id="header" class="">
+                <a href="https://labels.desi.com/" target="_blank">
+                    <img class="desi-logo" src="./assets/desi-logo.png" />
+                </a>
+                <div class="simple-button true-center header-button">
+                    <font-awesome-icon icon="fa-regular fa-folder-open" style="margin-right: 5px;" />
+                    Open
+                </div>
+                <div class="simple-button true-center header-button">
+                    <font-awesome-icon icon="fa-regular fa-floppy-disk" style="margin-right: 5px;" />
+                    Save
+                </div>
+                <div class="simple-button true-center header-button" @click="addButton">
+                    <font-awesome-icon icon="fa-solid fa-plus" style="margin-right: 5px;" />
+                    Add
+                </div>
+                <div class="simple-button true-center header-button">
+                    <font-awesome-icon icon="fa-solid fa-print" style="margin-right: 5px;" />
+                    Print
+                </div>
+            </div>
+            <div style="display: flex; margin-right: 25px;">
+                <div class="simple-button true-center header-button" style="margin-right: 25px; text-align: center;">Saved Phones</div>
+                <div style="margin: auto 0">
+                    Welcome User!
+                </div>
             </div>
         </div>
 
@@ -56,7 +79,7 @@
                 
 
                 <!--================ Okay/Cancel Buttons ================-->
-                <div style="display: flex; padding-top: 15px;">
+                <div style="display: flex; justify-content: space-around; padding-top: 15px;">
                     <button
                         class="simple-button true-center" style="background-color: white;"
                         @click="clickOK" :class="{ disabled: tempExtension === '' || tempSelectedValue === '' || tempModel === '' }"
@@ -71,7 +94,7 @@
 
         <!--================ SIDE BAR ================-->
         <div style="display: flex;">
-            <div id="draggable-side-bar" ref="draggableDiv" style="min-width: 100px; max-width: 90%;">
+            <div id="draggable-side-bar" ref="draggableDiv">
 
                 <div class="ext-model-header" style="display: flex; background-color: lightgray;">
                     <div class="ext-model-header-side-bar" ref="draggableExtDiv">Extension</div>
@@ -182,6 +205,7 @@ export default {
             isResizing: false,
             initialWidth: 0,
             initialX: 0,
+            currentSideBarWidth: 0,
 
             templateCheckBox: false,
             phoneListingClicked: false,
@@ -196,10 +220,6 @@ export default {
     },
     components: {
         PhoneType
-    },
-    created() {
-        console.log('Created');
-        // return fetch()
     },
     methods: {
         fetchPhoneType(phone) {
@@ -258,8 +278,8 @@ export default {
                 this.currentPhoneIndexClicked = this.phoneIndex;
             }
             this.tempExtension = '';
-            this.tempSelectedValue = '';
-            this.tempModel = '';
+            // this.tempSelectedValue = '';
+            // this.tempModel = '';
             this.tempName = '';
             this.templateCheckBox = false;
             
@@ -347,6 +367,8 @@ export default {
             if(this.isResizing) {
                 const newWidth = this.initialWidth + (event.clientX - this.initialX);
                 this.$refs.draggableDiv.style.width = `${newWidth}px`;
+                this.currentSideBarWidth = this.$refs.draggableDiv.style.width;
+                // console.log(this.$refs.draggableDiv.style.width);
             }
         },
         stopResize() {
@@ -429,13 +451,30 @@ export default {
 <style>
 body {
     background-color: gray;
+    margin: 0;
+}
+
+.desi-logo {
+    cursor: pointer;
+}
+
+#header {
+    display: flex;
+    padding: 20px;
+}
+
+.header-button {
+    margin: auto 10px;
+}
+.header-button:hover {
+    background-color: rgb(162, 162, 162);
+    transition: 0.2s;
 }
 
 .simple-button {
     width: 70px;
     height: 40px;
     background-color: lightgray;
-    margin: 0 auto;
     cursor: pointer;
     border-radius: 5px;
 }
@@ -501,6 +540,8 @@ body {
     flex-direction: column;
     height: 96vh;
     width: 350px;
+    min-width: 100px;
+    max-width: 550px;
     background-color: slategrey;
     position: relative;
     overflow: hidden;
@@ -511,7 +552,8 @@ body {
 .edit-button {
     display: flex;
     align-items: center;
-    width: calc(50% - 20px);
+    /* width: calc(50% - 20px); */
+    width: 100px;
     border-radius: 5px;
     padding: 7px 0;
     margin: 4px 10px;

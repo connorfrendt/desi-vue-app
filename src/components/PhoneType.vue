@@ -17,7 +17,6 @@
             </div>
         </form>
 
-
         <div v-if="popupVisible" class="popup">
             <div class="textarea-container">
                 <textarea
@@ -155,10 +154,10 @@ export default {
             
             this.userInput = [];
             this.userInput.push(data);
-            
+            console.log(this.$parent);
             this.outerContainerStyles = {
                 position: 'absolute',
-                left: this.twipsToPixels(this.userInput[0].origins[0][0]) + 500 + 'px',
+                left: this.twipsToPixels(this.userInput[0].origins[0][0]) + this.$parent.initialX + 300 + 'px',
                 top: this.twipsToPixels(this.userInput[0].origins[0][1]) + 'px',
                 width: this.twipsToPixels(this.userInput[0].width) + 'px',
                 height: this.twipsToPixels(this.userInput[0].height) + 'px',
