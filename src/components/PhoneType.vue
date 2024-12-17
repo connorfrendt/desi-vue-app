@@ -157,7 +157,8 @@ export default {
             console.log(this.$parent);
             this.outerContainerStyles = {
                 position: 'absolute',
-                left: this.twipsToPixels(this.userInput[0].origins[0][0]) + this.$parent.initialX + 300 + 'px',
+                // left: this.twipsToPixels(this.userInput[0].origins[0][0]) + this.$parent.initialX + 300 + 'px',
+                left: 'calc(50%)',
                 top: this.twipsToPixels(this.userInput[0].origins[0][1]) + 'px',
                 width: this.twipsToPixels(this.userInput[0].width) + 'px',
                 height: this.twipsToPixels(this.userInput[0].height) + 'px',

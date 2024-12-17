@@ -5,19 +5,19 @@
                 <a href="https://labels.desi.com/" target="_blank">
                     <img class="desi-logo" src="./assets/desi-logo.png" />
                 </a>
-                <div class="simple-button true-center header-button">
+                <div class="true-center header-button">
                     <font-awesome-icon icon="fa-regular fa-folder-open" style="margin-right: 5px;" />
                     Open
                 </div>
-                <div class="simple-button true-center header-button">
+                <div class="true-center header-button">
                     <font-awesome-icon icon="fa-regular fa-floppy-disk" style="margin-right: 5px;" />
                     Save
                 </div>
-                <div class="simple-button true-center header-button" @click="addButton">
+                <div class="true-center header-button" @click="addButton">
                     <font-awesome-icon icon="fa-solid fa-plus" style="margin-right: 5px;" />
                     Add
                 </div>
-                <div class="simple-button true-center header-button">
+                <div class="header-button true-center">
                     <font-awesome-icon icon="fa-solid fa-print" style="margin-right: 5px;" />
                     Print
                 </div>
@@ -35,7 +35,7 @@
             <div id="open-window" v-if="buttonClicked" style="text-align: center; z-index: 20;">
                 <label for="extension" style="margin-top: 10px;">Extension number to add:</label>
                 <br />
-                <input id="extension" type="text" v-model="tempExtension" style="width: 265px;" />
+                <input id="extension" type="number" v-model="tempExtension" style="width: 265px;" />
                 
                 <div style="margin-top: 20px;">
                     <label>Product Family:</label>
@@ -81,12 +81,12 @@
                 <!--================ Okay/Cancel Buttons ================-->
                 <div style="display: flex; justify-content: space-around; padding-top: 15px;">
                     <button
-                        class="simple-button true-center" style="background-color: white;"
+                        class="ok-cancel-btn true-center" style="background-color: white;"
                         @click="clickOK" :class="{ disabled: tempExtension === '' || tempSelectedValue === '' || tempModel === '' }"
                         :disabled="tempExtension === '' || tempSelectedValue === '' || tempModel === ''">
                         OK
                     </button>
-                    <button class="simple-button true-center" style="background-color: white;" @click="clickCancel">Cancel</button>
+                    <button class="ok-cancel-btn true-center" style="background-color: white;" @click="clickCancel">Cancel</button>
                 </div>
 
             </div>
@@ -460,28 +460,30 @@ body {
 
 #header {
     display: flex;
-    padding: 20px;
+    padding: 0 20px;
 }
 
 .header-button {
-    margin: auto 10px;
+    margin: auto;
+    height: 100%;
+    width: 80px;
 }
 .header-button:hover {
     background-color: rgb(162, 162, 162);
     transition: 0.2s;
 }
-
-.simple-button {
-    width: 70px;
-    height: 40px;
-    background-color: lightgray;
-    cursor: pointer;
-    border-radius: 5px;
-}
-.simple-button:active {
+.header-button:active {
     background-color: gray;
 }
-.simple-button.disabled {
+
+.ok-cancel-btn {
+    background-color: lightgray;
+    cursor: pointer;
+}
+.ok-cancel-btn:active {
+    background-color: gray;
+}
+.ok-cancel-btn.disabled {
     color: rgba(0, 0, 0, 0.2);
     cursor: not-allowed;
     pointer-events: none;
@@ -658,5 +660,17 @@ body {
 .edit-popup-cancel:hover {
     background-color: rgb(180, 180, 180);
     border: 2px solid black;
+}
+
+/* Remove arrows in Chrome, Safari, and Edge */
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+/* Remove arrows in Firefox */
+input[type="number"] {
+    -moz-appearance: textfield;
 }
 </style>
