@@ -264,11 +264,13 @@ export default {
             this.popupVisible = false;
             this.currentBox = null;
             this.currentIndex = null;
+            this.selectedBox = null;
         },
         cancelEdit() {
             this.popupVisible = false;
             this.currentBox = null;
             this.currentIndex = null;
+            this.selectedBox = null;
         },
         makeBold() {
             this.isBold = !this.isBold;

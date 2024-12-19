@@ -23,7 +23,10 @@
                 </div>
             </div>
             <div style="display: flex; margin-right: 25px;">
-                <div class="simple-button true-center header-button" style="margin-right: 25px; text-align: center;">Saved Phones</div>
+                <div class="simple-button true-center header-button" style="margin-right: 25px; padding-right: 10px; text-align: center;">
+                    Saved Phones
+                    <font-awesome-icon icon="fa-solid fa-angle-down" />
+                </div>
                 <div style="margin: auto 0">
                     Welcome User!
                 </div>
@@ -163,6 +166,8 @@
             @user-input-object="userInputObjectUpdate($event)"
             @current-box-input="currentBoxUpdate"
         />
+
+        <RouterView></RouterView>
     </div>
 </template>
 
@@ -471,6 +476,7 @@ body {
 .header-button:hover {
     background-color: rgb(162, 162, 162);
     transition: 0.2s;
+    cursor: pointer;
 }
 .header-button:active {
     background-color: gray;
@@ -479,6 +485,9 @@ body {
 .ok-cancel-btn {
     background-color: lightgray;
     cursor: pointer;
+    width: 80px;
+    height: 50px;
+    border-radius: 5px;
 }
 .ok-cancel-btn:active {
     background-color: gray;
