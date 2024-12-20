@@ -116,7 +116,7 @@
                         :class="{ active: index === currentPhoneIndexClicked || index === phoneIndex }"
                         class="phone-listing"
                     >
-                        <div class="phone-listing-ext" ref="extensionDivs" style="width: 200px;">{{ phone.ext }}</div>
+                        <div class="phone-listing-ext" ref="extensionDivs">{{ phone.ext }}</div>
                         <div class="phone-listing-model" ref="modelDivs">{{ phone.modelDisplayName }}</div>
                         <div class="phone-listing-name">{{ phone.name }}</div>
                     </div>
@@ -614,7 +614,7 @@ body {
 .phone-listing-model,
 .phone-listing-name {
     padding: 5px;
-    /* width: 100px; */
+    width: 100px;
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
