@@ -116,9 +116,9 @@
                         :class="{ active: index === currentPhoneIndexClicked || index === phoneIndex }"
                         class="phone-listing"
                     >
-                        <div class="phone-listing-ext" ref="extensionDivs">{{ phone.ext }}</div>
+                        <div class="phone-listing-ext" ref="extensionDivs" style="width: 200px;">{{ phone.ext }}</div>
                         <div class="phone-listing-model" ref="modelDivs">{{ phone.modelDisplayName }}</div>
-                        <div class="phone-listing-model">{{ phone.name }}</div>
+                        <div class="phone-listing-name">{{ phone.name }}</div>
                     </div>
                     <div id="edit-trash-div" v-if="index === currentPhoneIndexClicked || index === phoneIndex" style="display: flex;">
                         <div @click="showEditPhoneListing" class="edit-button">
@@ -257,6 +257,7 @@ export default {
             
             this.innerModelText = this.getOptionText(this.model);
             this.innerProdFamText = this.getOptionText(this.selectedValue);
+            console.log('asdf', this.initialWidth);
         },
         clickCancel() {
             this.buttonClicked = false;
@@ -283,8 +284,6 @@ export default {
                 this.currentPhoneIndexClicked = this.phoneIndex;
             }
             this.tempExtension = '';
-            // this.tempSelectedValue = '';
-            // this.tempModel = '';
             this.tempName = '';
             this.templateCheckBox = false;
             
@@ -298,13 +297,6 @@ export default {
         getModelNumber(file) {
             this.modelNum = file.split('.')[0];
         },
-        // addPhone(phone) {
-        //     this.phoneList.push(phone);
-        //     this.savePhones(phone);
-        // },
-        // savePhones(phone) {
-        //     localStorage.setItem(this.extension + '-' + this.modelNum, JSON.stringify(phone));
-        // },
         getOptionText(value) {
             const option = this.$el.querySelector(`option[value="${value}"]`);
             return option ? option.innerHTML : value;
@@ -386,6 +378,7 @@ export default {
         startExtResize(event) {
             this.isResizing = true;
             this.initialWidth = this.$refs.draggableExtDiv.offsetWidth;
+            console.log('init width: ', this.initialWidth);
             this.initialX = event.clientX;
             document.addEventListener('mousemove', this.resizeExt);
             document.addEventListener('mouseup', this.stopExtResize);
@@ -393,6 +386,7 @@ export default {
         resizeExt(event) {
             if(this.isResizing) {
                 const newWidth = this.initialWidth + (event.clientX - this.initialX);
+                // let draggableExtDivWidth = this.$refs.draggableExtDiv.style.width;
                 this.$refs.draggableExtDiv.style.width = `${newWidth}px`;
                 if(this.$refs.extensionDivs) {
                     this.$refs.extensionDivs.forEach(div => {
@@ -620,7 +614,7 @@ body {
 .phone-listing-model,
 .phone-listing-name {
     padding: 5px;
-    width: 100px;
+    /* width: 100px; */
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
