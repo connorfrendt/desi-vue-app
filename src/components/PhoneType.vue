@@ -153,12 +153,14 @@ export default {
     },
     methods: {
         updatePhone(data) {
+            console.log('Data: ', data);
+
             // Origins - top left corner of the phone's outer box
             this.origins = data.origins;
             
             this.userInput = [];
             this.userInput.push(data);
-            console.log('User Input: ', this.userInput);
+            // console.log('User Input: ', this.userInput);
             // if(Object.keys(data).length === 0) {
             //     console.log('empty');
             //     this.outerContainerStyles = {
@@ -174,22 +176,22 @@ export default {
             // }
             // else {
 
-                this.outerContainerStyles = {
-                    position: 'absolute',
-                    // left: this.twipsToPixels(this.userInput[0].origins[0][0]) + this.$parent.initialX + 300 + 'px',
-                    left: 'calc(50%)',
-                    top: this.twipsToPixels(this.userInput[0].origins[0][1]) + 'px',
-                    width: this.twipsToPixels(this.userInput[0].width) + 'px',
-                    height: this.twipsToPixels(this.userInput[0].height) + 'px',
-                    backgroundColor: 'lightgray'
-                }
-                
-                // this.boxes makes it so that the CSS can be applied
-                this.boxes = Object.entries(this.userInput[0].objects);
-    
-                this.$nextTick(() => {
-                    this.gatherUserComments();
-                });
+            this.outerContainerStyles = {
+                position: 'absolute',
+                // left: this.twipsToPixels(this.userInput[0].origins[0][0]) + this.$parent.initialX + 300 + 'px',
+                left: 'calc(50%)',
+                top: this.twipsToPixels(this.userInput[0].origins[0][1]) + 'px',
+                width: this.twipsToPixels(this.userInput[0].width) + 'px',
+                height: this.twipsToPixels(this.userInput[0].height) + 'px',
+                backgroundColor: 'lightgray'
+            }
+            
+            // this.boxes makes it so that the CSS can be applied
+            this.boxes = Object.entries(this.userInput[0].objects);
+
+            this.$nextTick(() => {
+                this.gatherUserComments();
+            });
 
             // }
 
@@ -246,7 +248,7 @@ export default {
             this.userInputObject = { ...this.userInput };
 
             // Passes the userInputObject up to the parent component "App.vue"
-            console.log('User Input Object: ', this.userInputObject);
+            // console.log('User Input Object: ', this.userInputObject);
             this.$emit('user-input-object', this.userInputObject);
         },
         // This shows the popup box to edit the text inside an editable box on the phone label
@@ -256,8 +258,6 @@ export default {
             
             this.selectedBox = index;
 
-            console.log(box);
-            // box[1].
             this.currentBox = box;
             this.currentIndex = index;
 
@@ -335,7 +335,15 @@ export default {
     },
     watch: {
         data(newValue) {
-            this.updatePhone(newValue);
+            console.log('***************\nNew Value Here: ', newValue, typeof newValue, Object.entries(newValue));
+            if(Object.keys(newValue).length === 0) {
+                this.outerContainerStyles = {};
+                this.boxes = [];
+            }
+            else {
+                this.updatePhone(newValue);
+
+            }
         }
     }
 }
