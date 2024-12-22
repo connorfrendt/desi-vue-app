@@ -85,7 +85,7 @@
                 <div style="display: flex; justify-content: space-around; padding-top: 15px;">
                     <button
                         class="ok-cancel-btn true-center" style="background-color: white;"
-                        @click="clickOK" :class="{ disabled: tempExtension === '' || tempSelectedValue === '' || tempModel === '' }"
+                        @click="addPhone" :class="{ disabled: tempExtension === '' || tempSelectedValue === '' || tempModel === '' }"
                         :disabled="tempExtension === '' || tempSelectedValue === '' || tempModel === ''">
                         OK
                     </button>
@@ -245,7 +245,7 @@ export default {
         },
 
         // ======================= Add/Delete Phone =======================
-        clickOK() {
+        addPhone() {
             this.extension = this.tempExtension;
             this.selectedValue = this.tempSelectedValue;
             this.model = this.tempModel;
@@ -271,7 +271,10 @@ export default {
                 this.phoneIndex = this.phoneList.findIndex(phone => phone.ext === parentDiv.querySelector('.phone-listing-ext').innerHTML);
                 
                 // Removes the phone from the phoneList
+                console.log('phone index: ', this.phoneIndex);
                 this.phoneList.splice(this.phoneIndex, 1);
+                this.phoneIndex = -1;
+                this.currentPhoneIndexClicked = -1;
                 this.data = {};
             }
         },
@@ -315,6 +318,7 @@ export default {
             return option ? option.innerHTML : value;
         },
         phoneClickedFunc(event, index) {
+            console.log('Index: ', index);
             let clickedDiv = event.target;
             let parentDiv = clickedDiv.closest('.phone-listing');
             
@@ -328,6 +332,8 @@ export default {
 
             // This changes the data to be updated with the phone that was clicked on
             this.data = this.phoneList[this.phoneIndex].userData[0];
+
+            console.log('Index: ', index);
         },
 
         // ======================= PHONE LISTING POPUP =======================
@@ -336,7 +342,6 @@ export default {
             this.extPopup = this.phoneList[this.phoneIndex].ext;
             this.namePopup = this.phoneList[this.phoneIndex].name;
             let currentUserData = this.phoneList[this.phoneIndex].userData[0];
-            console.log(this.phoneList[this.phoneIndex].userData[0]);
             this.prodFamEditPopup = currentUserData.group;
             this.modelEditPopup = currentUserData.description;
             this.typeCodeEditPopup = currentUserData.typeCode;
@@ -345,7 +350,6 @@ export default {
             this.phoneListingClicked = false;
             this.phoneList[this.phoneIndex].ext = this.extPopup;
             this.phoneList[this.phoneIndex].name = this.namePopup;
-            console.log(this.phoneList);
         },
         cancelEditPopup() {
             this.phoneListingClicked = false;
@@ -364,7 +368,6 @@ export default {
                 const newWidth = this.initialWidth + (event.clientX - this.initialX);
                 this.$refs.draggableDiv.style.width = `${newWidth}px`;
                 this.currentSideBarWidth = this.$refs.draggableDiv.style.width;
-                // console.log(this.$refs.draggableDiv.style.width);
             }
         },
         stopResize() {
@@ -377,7 +380,6 @@ export default {
         startExtResize(event) {
             this.isResizing = true;
             this.initialWidth = this.$refs.draggableExtDiv.offsetWidth;
-            console.log('init width: ', this.initialWidth);
             this.initialX = event.clientX;
             document.addEventListener('mousemove', this.resizeExt);
             document.addEventListener('mouseup', this.stopExtResize);

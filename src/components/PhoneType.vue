@@ -153,7 +153,7 @@ export default {
     },
     methods: {
         updatePhone(data) {
-            console.log('Data: ', data);
+            // console.log('Data: ', data);
 
             // Origins - top left corner of the phone's outer box
             this.origins = data.origins;
@@ -335,14 +335,14 @@ export default {
     },
     watch: {
         data(newValue) {
-            console.log('***************\nNew Value Here: ', newValue, typeof newValue, Object.entries(newValue));
+            console.log(newValue);
             if(Object.keys(newValue).length === 0) {
                 this.outerContainerStyles = {};
                 this.boxes = [];
             }
             else {
+                console.log('here');
                 this.updatePhone(newValue);
-
             }
         }
     }
