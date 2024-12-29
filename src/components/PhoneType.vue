@@ -153,33 +153,16 @@ export default {
     },
     methods: {
         updatePhone(data) {
-            // console.log('Data: ', data);
-
             // Origins - top left corner of the phone's outer box
             this.origins = data.origins;
             
             this.userInput = [];
             this.userInput.push(data);
-            // console.log('User Input: ', this.userInput);
-            // if(Object.keys(data).length === 0) {
-            //     console.log('empty');
-            //     this.outerContainerStyles = {
-            //         position: 'absolute',
-            //         left: 0,
-            //         top: 0,
-            //         width: 0,
-            //         height: 0,
-            //         backgroundColor: ''
-            //     }
-
-            //     this.boxes = [];
-            // }
-            // else {
 
             this.outerContainerStyles = {
                 position: 'absolute',
-                // left: this.twipsToPixels(this.userInput[0].origins[0][0]) + this.$parent.initialX + 300 + 'px',
                 left: 'calc(50%)',
+                // left: this.twipsToPixels(this.userInput[0].origins[0][0]) + this.$parent.initialX + 300 + 'px',
                 top: this.twipsToPixels(this.userInput[0].origins[0][1]) + 'px',
                 width: this.twipsToPixels(this.userInput[0].width) + 'px',
                 height: this.twipsToPixels(this.userInput[0].height) + 'px',
@@ -335,13 +318,11 @@ export default {
     },
     watch: {
         data(newValue) {
-            console.log(newValue);
             if(Object.keys(newValue).length === 0) {
                 this.outerContainerStyles = {};
                 this.boxes = [];
             }
             else {
-                console.log('here');
                 this.updatePhone(newValue);
             }
         }

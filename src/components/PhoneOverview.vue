@@ -21,6 +21,7 @@
                     <font-awesome-icon icon="fa-solid fa-print" style="margin-right: 5px;" />
                     Print
                 </div>
+                <div @click="myFunc">DATA</div>
             </div>
             <div style="display: flex; margin-right: 25px;">
                 <div class="simple-button true-center header-button" style="margin-right: 25px; padding-right: 10px; text-align: center;">
@@ -124,8 +125,8 @@
                         <div @click="showEditPhoneListing" class="edit-button">
                             <font-awesome-icon icon="fa-regular fa-pen-to-square" class="edit-icon" style="z-index: 2;" />
                         </div>
-                        <div @click.stop="deletePhone($event)" class="trash-button">
-                            <font-awesome-icon icon="fa-regular fa-trash-can" @click.stop="deletePhone($event)" class="trash-icon" style="z-index: 2;" />
+                        <div @click.stop="deletePhone($event, index)" class="trash-button">
+                            <font-awesome-icon icon="fa-regular fa-trash-can" @click.stop="deletePhone($event, index)" class="trash-icon" style="z-index: 2;" />
                         </div>
                     </div>
                 </div>
@@ -237,6 +238,12 @@ export default {
                     console.error('There was an error!', error);
                 });
         },
+        myFunc() {
+            console.log('ext', this.ext);
+            console.log('temp ext: ', this.tempExtension);
+            console.log('selectedValue: ', this.selectedValue);
+            console.log('tempSelectedValue: ', this.tempSelectedValue);
+        },
         addButton() {
             this.buttonClicked = !this.buttonClicked;
         },
@@ -261,12 +268,12 @@ export default {
         clickCancel() {
             this.buttonClicked = false;
         },
-        deletePhone(event) {
+        deletePhone(event, index) {
             event.stopPropagation();
             if(confirm('Are you sure you want to delete this phone?')) {
                 // Finds the parent div of the trash can icon
                 let parentDiv = event.target.closest('.phone-list');
-                
+                console.log(index);
                 // Finds the index of the phone in the phoneList that was clicked on
                 this.phoneIndex = this.phoneList.findIndex(phone => phone.ext === parentDiv.querySelector('.phone-listing-ext').innerHTML);
                 
@@ -283,10 +290,11 @@ export default {
 
             // Check to see if the phone exists
             let phoneExists = this.phoneList.some(phone => phone.ext === this.extension);
-            
+            console.log('Does Phone Exist: ', phoneExists, '\nEXT: ', this.extension);
             const userDataCopy = JSON.parse(JSON.stringify(this.userInputObjectData));
 
             if(!phoneExists) {
+                console.log('Phone does not exist');
                 this.phoneList.push({
                     "ext": this.extension,
                     "modelDisplayName": this.innerModelText + ' (' + this.innerProdFamText + ')',
@@ -299,6 +307,7 @@ export default {
                 this.phoneIndex = this.phoneList.length - 1;
                 this.currentPhoneIndexClicked = this.phoneIndex;
             }
+            console.log('clicked here');
             this.tempExtension = '';
             this.tempName = '';
             this.templateCheckBox = false;
@@ -318,7 +327,6 @@ export default {
             return option ? option.innerHTML : value;
         },
         phoneClickedFunc(event, index) {
-            console.log('Index: ', index);
             let clickedDiv = event.target;
             let parentDiv = clickedDiv.closest('.phone-listing');
             
@@ -326,14 +334,13 @@ export default {
                 This takes the ext in the object of whatever phone was clicked on,
                 and tries to match with the ext in the phoneList that was clicked on.
                 If true, it finds the index and sets it to this.phoneIndex
+                If false, 
             */
             this.phoneIndex = this.phoneList.findIndex(phone => phone.ext === parentDiv.querySelector('div:first-child').innerHTML);
             this.currentPhoneIndexClicked = index;
-
+            this.extension = this.phoneList[this.phoneIndex].ext;
             // This changes the data to be updated with the phone that was clicked on
             this.data = this.phoneList[this.phoneIndex].userData[0];
-
-            console.log('Index: ', index);
         },
 
         // ======================= PHONE LISTING POPUP =======================
