@@ -56,7 +56,7 @@
                     <label>Model:</label>
                 </div>
                 <div style="display: flex; justify-content: center;">
-                    <select class="model-selection" v-model="tempModel" style="width: 265px;">
+                    <select @change="uncheckTemplate()" class="model-selection" v-model="tempModel" style="width: 265px;">
                         <option value=""></option>
                         <option value="20-button-phone">20 Button Phone</option>
                         <option value="260">2603E, 2604, 2604E, 2606</option>
@@ -74,7 +74,7 @@
                         Show Templating Options
                 </div>
                 <div v-if="templateCheckBox">
-                    <select @change="myFunc" style="width: 265px;" v-model="tempCurrentTemplateSelected">
+                    <select style="width: 265px;" v-model="tempCurrentTemplateSelected">
                         <option v-if="phoneList.length === 0" value="">No Template</option>
                         <option v-for="phone in modelList" :key="phone.ext" :value="phone.ext">{{ phone.ext }} <span v-if="phone.name">({{ phone.name }})</span></option>
                     </select>
@@ -115,6 +115,7 @@
                         @click="phoneClickedFunc($event, index)"
                         :class="{ active: index === currentPhoneIndexClicked || index === phoneIndex }"
                         class="phone-listing"
+                        ref="phoneListingDiv"
                     >
                         <div class="phone-listing-ext" ref="extensionDivs">{{ phone.ext }}</div>
                         <div class="phone-listing-model" ref="modelDivs">{{ phone.modelDisplayName }}</div>
@@ -240,8 +241,8 @@ export default {
                     console.error('There was an error!', error);
                 });
         },
-        myFunc() {
-            console.log('Template', this.currentTemplateSelected);
+        uncheckTemplate() {
+            this.templateCheckBox = false;
         },
         addButton() {
             this.buttonClicked = !this.buttonClicked;
@@ -260,14 +261,6 @@ export default {
             if(this.selectedValue) {
                 this.fetchPhoneType(this.selectedValue);
                 this.buttonClicked = false;
-
-                // if tempModel is true (css has values), then add those in
-                if(this.tempCurrentTemplateSelected) {
-                    console.log('TEMPLATE SELECTED HERE\n', this.tempCurrentTemplateSelected);
-                    console.log(this.phoneList);
-                    // find element with that ext in the phoneList and push a copy of it to the phoneList
-                    
-                } 
             }
             
             this.innerModelText = this.getOptionText(this.model);
@@ -299,6 +292,8 @@ export default {
 
             if(this.tempCurrentTemplateSelected) {
                 console.log('Template Selected');
+                let foo = this.phoneList.find(phone => phone.ext === this.currentTemplateSelected);
+                let bar = ...foo.u
                 this.phoneList.push({
                     "ext": this.extension,
                     "modelDisplayName": this.innerModelText + ' (' + this.innerProdFamText + ')',
@@ -333,6 +328,10 @@ export default {
             this.tempName = '';
             this.templateCheckBox = false;
             this.tempCurrentTemplateSelected = '';
+
+            this.$nextTick(() => {
+                this.$refs.phoneListingDiv[this.phoneIndex].click();
+            });
 
         },
         currentBoxUpdate(currentBox) {
@@ -468,14 +467,8 @@ export default {
                     this.modelList.push(this.phoneList[i]);
                 }
             }
-            console.log('Model List: ', this.modelList);
         }
     },
-    // watch: {
-    //     phoneClickedFunc() {
-    //         console.log('Changed');
-    //     }
-    // }
 }
 </script>
 
