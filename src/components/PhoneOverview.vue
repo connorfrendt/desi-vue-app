@@ -21,8 +21,7 @@
                     <font-awesome-icon icon="fa-solid fa-print" style="margin-right: 5px;" />
                     Print
                 </div>
-                <div @click="myFunc">DATA</div>
-            </div>
+            </div>  
             <div style="display: flex; margin-right: 25px;">
                 <div class="simple-button true-center header-button" style="margin-right: 25px; padding-right: 10px; text-align: center;">
                     Saved Phones
@@ -75,7 +74,7 @@
                         Show Templating Options
                 </div>
                 <div v-if="templateCheckBox">
-                    <select style="width: 265px;">
+                    <select @change="myFunc" style="width: 265px;" v-model="tempCurrentTemplateSelected">
                         <option v-if="phoneList.length === 0" value="">No Template</option>
                         <option v-for="phone in modelList" :key="phone.ext" :value="phone.ext">{{ phone.ext }} <span v-if="phone.name">({{ phone.name }})</span></option>
                     </select>
@@ -220,6 +219,9 @@ export default {
             prodFamEditPopup: '',
             modelEditPopup: '',
             typeCodeEditPopup: '',
+
+            tempCurrentTemplateSelected: '',
+            currentTemplateSelected: '',
         }
     },
     components: {
@@ -239,10 +241,7 @@ export default {
                 });
         },
         myFunc() {
-            console.log('ext', this.ext);
-            console.log('temp ext: ', this.tempExtension);
-            console.log('selectedValue: ', this.selectedValue);
-            console.log('tempSelectedValue: ', this.tempSelectedValue);
+            console.log('Template', this.currentTemplateSelected);
         },
         addButton() {
             this.buttonClicked = !this.buttonClicked;
@@ -257,9 +256,18 @@ export default {
             this.selectedValue = this.tempSelectedValue;
             this.model = this.tempModel;
             this.name = this.tempName;
+            this.currentTemplateSelected = this.tempCurrentTemplateSelected;
             if(this.selectedValue) {
                 this.fetchPhoneType(this.selectedValue);
                 this.buttonClicked = false;
+
+                // if tempModel is true (css has values), then add those in
+                if(this.tempCurrentTemplateSelected) {
+                    console.log('TEMPLATE SELECTED HERE\n', this.tempCurrentTemplateSelected);
+                    console.log(this.phoneList);
+                    // find element with that ext in the phoneList and push a copy of it to the phoneList
+                    
+                } 
             }
             
             this.innerModelText = this.getOptionText(this.model);
@@ -287,11 +295,25 @@ export default {
         },
         userInputObjectUpdate(data) {
             this.userInputObjectData = data;
+            const userDataCopy = JSON.parse(JSON.stringify(this.userInputObjectData));
+
+            if(this.tempCurrentTemplateSelected) {
+                console.log('Template Selected');
+                this.phoneList.push({
+                    "ext": this.extension,
+                    "modelDisplayName": this.innerModelText + ' (' + this.innerProdFamText + ')',
+                    "productName": this.innerProdFamText,
+                    "modelName": this.innerModelText,
+                    "value": this.selectedValue,
+                    "name": this.name,
+                    "userData": this.phoneList.find(phone => phone.ext === this.currentTemplateSelected).userData,
+                });
+                this.phoneIndex = this.phoneList.length - 1;
+                this.currentPhoneIndexClicked = this.phoneIndex;
+            }
 
             // Check to see if the phone exists
             let phoneExists = this.phoneList.some(phone => phone.ext === this.extension);
-            console.log('Does Phone Exist: ', phoneExists, '\nEXT: ', this.extension);
-            const userDataCopy = JSON.parse(JSON.stringify(this.userInputObjectData));
 
             if(!phoneExists) {
                 console.log('Phone does not exist');
@@ -307,11 +329,11 @@ export default {
                 this.phoneIndex = this.phoneList.length - 1;
                 this.currentPhoneIndexClicked = this.phoneIndex;
             }
-            console.log('clicked here');
             this.tempExtension = '';
             this.tempName = '';
             this.templateCheckBox = false;
-            
+            this.tempCurrentTemplateSelected = '';
+
         },
         currentBoxUpdate(currentBox) {
             this.currentBox = currentBox;
@@ -330,15 +352,14 @@ export default {
             let clickedDiv = event.target;
             let parentDiv = clickedDiv.closest('.phone-listing');
             
-            /*
-                This takes the ext in the object of whatever phone was clicked on,
-                and tries to match with the ext in the phoneList that was clicked on.
-                If true, it finds the index and sets it to this.phoneIndex
-                If false, 
-            */
+            /*This takes the ext in the object of whatever phone was clicked on,
+            and tries to match with the ext in the phoneList that was clicked on.
+            If true, it finds the index and sets it to this.phoneIndex
+            If false, returns -1*/
             this.phoneIndex = this.phoneList.findIndex(phone => phone.ext === parentDiv.querySelector('div:first-child').innerHTML);
             this.currentPhoneIndexClicked = index;
             this.extension = this.phoneList[this.phoneIndex].ext;
+
             // This changes the data to be updated with the phone that was clicked on
             this.data = this.phoneList[this.phoneIndex].userData[0];
         },
@@ -444,13 +465,17 @@ export default {
             
             for(let i = 0; i < this.phoneList.length; i++) {
                 if(selectedModelInnerHTML === this.phoneList[i].modelName) {
-                    // console.log('***HERE***: ', selectedModelInnerHTML, this.phoneList[i].modelName);
                     this.modelList.push(this.phoneList[i]);
                 }
             }
             console.log('Model List: ', this.modelList);
         }
     },
+    // watch: {
+    //     phoneClickedFunc() {
+    //         console.log('Changed');
+    //     }
+    // }
 }
 </script>
 
