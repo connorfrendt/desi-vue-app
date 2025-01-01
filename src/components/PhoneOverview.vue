@@ -288,12 +288,11 @@ export default {
         },
         userInputObjectUpdate(data) {
             this.userInputObjectData = data;
-            const userDataCopy = JSON.parse(JSON.stringify(this.userInputObjectData));
+            // const userDataCopy = JSON.parse(JSON.stringify(this.userInputObjectData));
 
             if(this.tempCurrentTemplateSelected) {
-                console.log('Template Selected');
-                let foo = this.phoneList.find(phone => phone.ext === this.currentTemplateSelected);
-                let bar = ...foo.u
+                let templatePhone = this.phoneList.find(phone => phone.ext === this.currentTemplateSelected).userData;
+                let deepCopyTemplatePhone = JSON.parse(JSON.stringify(templatePhone));
                 this.phoneList.push({
                     "ext": this.extension,
                     "modelDisplayName": this.innerModelText + ' (' + this.innerProdFamText + ')',
@@ -301,7 +300,7 @@ export default {
                     "modelName": this.innerModelText,
                     "value": this.selectedValue,
                     "name": this.name,
-                    "userData": this.phoneList.find(phone => phone.ext === this.currentTemplateSelected).userData,
+                    "userData": deepCopyTemplatePhone,
                 });
                 this.phoneIndex = this.phoneList.length - 1;
                 this.currentPhoneIndexClicked = this.phoneIndex;
@@ -311,7 +310,6 @@ export default {
             let phoneExists = this.phoneList.some(phone => phone.ext === this.extension);
 
             if(!phoneExists) {
-                console.log('Phone does not exist');
                 this.phoneList.push({
                     "ext": this.extension,
                     "modelDisplayName": this.innerModelText + ' (' + this.innerProdFamText + ')',
@@ -319,7 +317,7 @@ export default {
                     "modelName": this.innerModelText,
                     "value": this.selectedValue,
                     "name": this.name,
-                    "userData": userDataCopy,
+                    "userData": this.userInputObjectData,
                 });
                 this.phoneIndex = this.phoneList.length - 1;
                 this.currentPhoneIndexClicked = this.phoneIndex;
@@ -456,8 +454,6 @@ export default {
         },
         onlyShowExtensionsForCurrentPhoneModel() {
             // loop through phoneList, and make a list of all current models and their corresponding extensions, and return a list of extensions
-            
-            // empty modelList
             this.modelList = [];
             const selectedModelOption = document.querySelector('.model-selection option:checked');
             const selectedModelInnerHTML = selectedModelOption ? selectedModelOption.innerHTML : '';
@@ -472,7 +468,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 .desi-logo {
     cursor: pointer;
 }
