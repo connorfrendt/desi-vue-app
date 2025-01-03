@@ -46,7 +46,7 @@
                 <div style="display: flex; justify-content: center;">
                     <select id="dropdown" v-model="tempSelectedValue" style="width: 265px;">
                         <option value=""></option>
-                        <option value="10075.json">Toshiba DKT 2000</option>
+                        <option value="tos-2020.json">Toshiba DKT 2000</option>
                         <option value="10130.json">Vodavi Starplus II</option>
                         <option value="12455.json">Inter-Tel Axxess 8000 Series</option>
                     </select>
@@ -230,16 +230,26 @@ export default {
     },
     methods: {
         fetchPhoneType(phone) {
-            return fetch(`./json/${phone}`)
-                .then(response => {
-                    return response.json();
-                })
-                .then(data => {
-                    this.data = data;
-                })
-                .catch(error => {
-                    console.error('There was an error!', error);
-                });
+            // return fetch(`./json/JSON-files/Toshiba_DKT_2000/${phone}`)
+            // return fetch(`../src/assets/${phone}`)
+            try {
+                const data = require(`../assets/${phone}`);
+                this.data = data;
+                console.log('DATA TRY', data);
+                return data;
+            }
+            catch(error) {
+                console.error('***ERROR*** ', error);
+            }
+                // .then(response => {
+                //     return response.json();
+                // })
+                // .then(data => {
+                //     this.data = data;
+                // })
+                // .catch(error => {
+                //     console.error('There was an error!', error);
+                // });
         },
         uncheckTemplate() {
             this.templateCheckBox = false;
@@ -250,7 +260,7 @@ export default {
         templateButton() {
             this.templateCheckBox = !this.templateCheckBox;
         },
-
+        
         // ======================= Add/Delete Phone =======================
         addPhone() {
             this.extension = this.tempExtension;
@@ -258,13 +268,16 @@ export default {
             this.model = this.tempModel;
             this.name = this.tempName;
             this.currentTemplateSelected = this.tempCurrentTemplateSelected;
+            console.log('Selected Value: ', this.selectedValue);
             if(this.selectedValue) {
+                console.log('BUT HERE');
                 this.fetchPhoneType(this.selectedValue);
                 this.buttonClicked = false;
             }
             
             this.innerModelText = this.getOptionText(this.model);
             this.innerProdFamText = this.getOptionText(this.selectedValue);
+            console.log('here');
         },
         clickCancel() {
             this.buttonClicked = false;
@@ -274,7 +287,7 @@ export default {
             if(confirm('Are you sure you want to delete this phone?')) {
                 // Finds the parent div of the trash can icon
                 let parentDiv = event.target.closest('.phone-list');
-                
+                console.log(index);
                 // Finds the index of the phone in the phoneList that was clicked on
                 this.phoneIndex = this.phoneList.findIndex(phone => phone.ext === parentDiv.querySelector('.phone-listing-ext').innerHTML);
                 
@@ -288,7 +301,7 @@ export default {
         userInputObjectUpdate(data) {
             this.userInputObjectData = data;
             // const userDataCopy = JSON.parse(JSON.stringify(this.userInputObjectData));
-
+            console.log('USER INPUT OBJECT DATA: ', this.userInputObjectData);
             if(this.tempCurrentTemplateSelected) {
                 let templatePhone = this.phoneList.find(phone => phone.ext === this.currentTemplateSelected).userData;
                 let deepCopyTemplatePhone = JSON.parse(JSON.stringify(templatePhone));
