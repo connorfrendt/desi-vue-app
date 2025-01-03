@@ -274,12 +274,11 @@ export default {
             if(confirm('Are you sure you want to delete this phone?')) {
                 // Finds the parent div of the trash can icon
                 let parentDiv = event.target.closest('.phone-list');
-                console.log(index);
+                
                 // Finds the index of the phone in the phoneList that was clicked on
                 this.phoneIndex = this.phoneList.findIndex(phone => phone.ext === parentDiv.querySelector('.phone-listing-ext').innerHTML);
                 
                 // Removes the phone from the phoneList
-                console.log('phone index: ', this.phoneIndex);
                 this.phoneList.splice(this.phoneIndex, 1);
                 this.phoneIndex = -1;
                 this.currentPhoneIndexClicked = -1;

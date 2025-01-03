@@ -231,7 +231,6 @@ export default {
             this.userInputObject = { ...this.userInput };
 
             // Passes the userInputObject up to the parent component "App.vue"
-            // console.log('User Input Object: ', this.userInputObject);
             this.$emit('user-input-object', this.userInputObject);
         },
         // This shows the popup box to edit the text inside an editable box on the phone label
