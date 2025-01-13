@@ -47,7 +47,7 @@
                     <select id="dropdown" v-model="tempSelectedValue" style="width: 265px;">
                         <option value=""></option>
                         <option value="tos-2020.json">Toshiba DKT 2000</option>
-                        <option value="10130.json">Vodavi Starplus II</option>
+                        <option value="stp-260x.json">Vodavi Starplus II</option>
                         <option value="12455.json">Inter-Tel Axxess 8000 Series</option>
                     </select>
                 </div>
@@ -232,15 +232,16 @@ export default {
         fetchPhoneType(phone) {
             // return fetch(`./json/JSON-files/Toshiba_DKT_2000/${phone}`)
             // return fetch(`../src/assets/${phone}`)
-            try {
-                const data = require(`../assets/${phone}`);
+            // try {
+                let data = require(`../assets/${phone}`);
+                console.log('First Data: ', data)
                 this.data = data;
-                console.log('DATA TRY', data);
+                console.log('Second Data: ', data)
                 return data;
-            }
-            catch(error) {
-                console.error('***ERROR*** ', error);
-            }
+            // }
+            // catch(error) {
+            //     console.error('***ERROR*** ', error);
+            // }
                 // .then(response => {
                 //     return response.json();
                 // })
@@ -268,16 +269,13 @@ export default {
             this.model = this.tempModel;
             this.name = this.tempName;
             this.currentTemplateSelected = this.tempCurrentTemplateSelected;
-            console.log('Selected Value: ', this.selectedValue);
             if(this.selectedValue) {
-                console.log('BUT HERE');
                 this.fetchPhoneType(this.selectedValue);
                 this.buttonClicked = false;
             }
             
             this.innerModelText = this.getOptionText(this.model);
             this.innerProdFamText = this.getOptionText(this.selectedValue);
-            console.log('here');
         },
         clickCancel() {
             this.buttonClicked = false;
@@ -338,7 +336,9 @@ export default {
             this.tempName = '';
             this.templateCheckBox = false;
             this.tempCurrentTemplateSelected = '';
-
+            console.log('data before', data);
+            data = {};
+            console.log('data after', data);
             this.$nextTick(() => {
                 this.$refs.phoneListingDiv[this.phoneIndex].click();
             });

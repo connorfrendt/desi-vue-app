@@ -153,6 +153,7 @@ export default {
     },
     methods: {
         updatePhone(data) {
+            console.log('Updating Phone...');
             // Origins - top left corner of the phone's outer box
             this.origins = data.origins;
             
@@ -317,6 +318,7 @@ export default {
     },
     watch: {
         data(newValue) {
+            console.log('WATCHED', newValue);
             if(Object.keys(newValue).length === 0) {
                 this.outerContainerStyles = {};
                 this.boxes = [];
