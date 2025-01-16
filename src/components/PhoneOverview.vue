@@ -242,8 +242,8 @@ export default {
                 // return data;
             // }
 
-            return fetch(`./json/${phone}`)
-            // return fetch(`/api/files/${phone}`)
+            // return fetch(`./json/${phone}`)
+            return fetch(`/api/files/${phone}`)
                 .then(response => {
                     return response.json();
                 })
@@ -256,10 +256,17 @@ export default {
         },
         fetchFiles() {
             fetch('/api/files')
-                .then(response => response.json())
+                .then(response =>{
+                    console.log('***********************');
+                    console.log(response);
+                    console.log('=======================');
+                    return response.json()
+                })
                 .then(data => {
+                    console.log('DATA?????');
+                    console.log(data);
+                    console.log('DATA?????');
                     this.files = data;
-                    console.log('MOUNTED?????');
                 })
                 .catch(err => {
                     console.error('ERROR ERROR: ', err);
@@ -277,6 +284,8 @@ export default {
         
         // ======================= Add/Delete Phone =======================
         addPhone() {
+            console.log('PHONE LIST HERE: ', this.phoneList);
+
             this.extension = this.tempExtension;
             this.selectedValue = this.tempSelectedValue;
             this.model = this.tempModel;
@@ -491,6 +500,7 @@ export default {
         }
     },
     mounted() {
+        console.log('**********Mounted**********');
         this.fetchFiles();
     }
 }
