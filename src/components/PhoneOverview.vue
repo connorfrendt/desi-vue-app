@@ -46,8 +46,10 @@
                 <div style="display: flex; justify-content: center;">
                     <select id="dropdown" v-model="tempSelectedValue" style="width: 265px;">
                         <option value=""></option>
-                        <option value="tos-2020.json">Toshiba DKT 2000</option>
-                        <option value="stp-260x.json">Vodavi Starplus II</option>
+                        <!-- <option value="tos-2020.json">Toshiba DKT 2000</option> -->
+                        <option value="10075.json">Toshiba DKT 2000</option>
+                        <!-- <option value="stp-260x.json">Vodavi Starplus II</option> -->
+                        <option value="10130.json">Vodavi Starplus II</option>
                         <option value="12455.json">Inter-Tel Axxess 8000 Series</option>
                     </select>
                 </div>
@@ -223,6 +225,8 @@ export default {
 
             tempCurrentTemplateSelected: '',
             currentTemplateSelected: '',
+
+            files: [],
         }
     },
     components: {
@@ -230,27 +234,36 @@ export default {
     },
     methods: {
         fetchPhoneType(phone) {
-            // return fetch(`./json/JSON-files/Toshiba_DKT_2000/${phone}`)
-            // return fetch(`../src/assets/${phone}`)
             // try {
-                let data = require(`../assets/${phone}`);
-                console.log('First Data: ', data)
-                this.data = data;
-                console.log('Second Data: ', data)
-                return data;
+                // let data = require(`../assets/${phone}`);
+                // console.log('First Data: ', data)
+                // this.data = data;
+                // console.log('Second Data: ', data)
+                // return data;
             // }
-            // catch(error) {
-            //     console.error('***ERROR*** ', error);
-            // }
-                // .then(response => {
-                //     return response.json();
-                // })
-                // .then(data => {
-                //     this.data = data;
-                // })
-                // .catch(error => {
-                //     console.error('There was an error!', error);
-                // });
+
+            // return fetch(`./json/${phone}`)
+            return fetch(`/api/files/${phone}`)
+                .then(response => {
+                    return response.json();
+                })
+                .then(data => {
+                    this.data = data;
+                })
+                .catch(error => {
+                    console.log('Error: ', error);
+                });
+        },
+        fetchFiles() {
+            fetch('/api/files')
+                .then(response => response.json())
+                .then(data => {
+                    this.files = data;
+                    console.log('MOUNTED?????');
+                })
+                .catch(err => {
+                    console.error('ERROR ERROR: ', err);
+                });
         },
         uncheckTemplate() {
             this.templateCheckBox = false;
@@ -285,7 +298,7 @@ export default {
             if(confirm('Are you sure you want to delete this phone?')) {
                 // Finds the parent div of the trash can icon
                 let parentDiv = event.target.closest('.phone-list');
-                console.log(index);
+                console.log(index); // keeping this here because of parameter
                 // Finds the index of the phone in the phoneList that was clicked on
                 this.phoneIndex = this.phoneList.findIndex(phone => phone.ext === parentDiv.querySelector('.phone-listing-ext').innerHTML);
                 
@@ -477,6 +490,9 @@ export default {
             }
         }
     },
+    mounted() {
+        this.fetchFiles();
+    }
 }
 </script>
 
