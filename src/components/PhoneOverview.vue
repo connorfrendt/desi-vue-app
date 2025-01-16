@@ -242,8 +242,8 @@ export default {
                 // return data;
             // }
 
-            // return fetch(`./json/${phone}`)
-            return fetch(`/api/files/${phone}`)
+            return fetch(`./json/${phone}`)
+            // return fetch(`/api/files/${phone}`)
                 .then(response => {
                     return response.json();
                 })

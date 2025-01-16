@@ -3,7 +3,7 @@ const app = express();
 const PORT = 3000;
 const fs = require('fs');
 const path = require('path');
-
+console.log('******************************');
 app.get('/api/files', (req, res) => {
     console.log('HERE HERE');
     const directoryPath = path.join(__dirname, 'public/json/JSON-files/Bittel');
@@ -13,8 +13,8 @@ app.get('/api/files', (req, res) => {
         }
         res.json(files);
     })
-})
+});
 
 app.listen(PORT, () => {
     console.log(`Server Started on port: ${PORT}`);
-})
+});
