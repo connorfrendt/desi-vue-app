@@ -48,6 +48,7 @@
                         <option value=""></option>
                         <!-- <option value="tos-2020.json">Toshiba DKT 2000</option> -->
                         <option value="10075.json">Toshiba DKT 2000</option>
+                        <option value="tos-2020.json">Toshiba DKT 2000</option>
                         <!-- <option value="stp-260x.json">Vodavi Starplus II</option> -->
                         <option value="10130.json">Vodavi Starplus II</option>
                         <option value="12455.json">Inter-Tel Axxess 8000 Series</option>
@@ -234,6 +235,7 @@ export default {
     },
     methods: {
         fetchPhoneType(phone) {
+            // console.log('\n\n\n\nBANANA\n\n\n\n', );
             // try {
                 // let data = require(`../assets/${phone}`);
                 // console.log('First Data: ', data)
@@ -259,8 +261,9 @@ export default {
                 .then(response =>{
                     console.log('***********************');
                     console.log(response);
-                    console.log('=======================');
-                    return response.json()
+                    console.log('***********************');
+                    // return response.json()
+                    return response
                 })
                 .then(data => {
                     console.log('DATA?????');
