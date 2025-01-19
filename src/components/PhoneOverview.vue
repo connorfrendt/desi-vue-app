@@ -46,9 +46,8 @@
                 <div style="display: flex; justify-content: center;">
                     <select id="dropdown" v-model="tempSelectedValue" style="width: 265px;">
                         <option value=""></option>
-                        <!-- <option value="tos-2020.json">Toshiba DKT 2000</option> -->
                         <option value="10075.json">Toshiba DKT 2000</option>
-                        <option value="tos-2020.json">Toshiba DKT 2000</option>
+                        <option value="tos-2020.json">Toshiba DKT 2000 (tos)</option>
                         <!-- <option value="stp-260x.json">Vodavi Starplus II</option> -->
                         <option value="10130.json">Vodavi Starplus II</option>
                         <option value="12455.json">Inter-Tel Axxess 8000 Series</option>
@@ -235,17 +234,15 @@ export default {
     },
     methods: {
         fetchPhoneType(phone) {
-            // console.log('\n\n\n\nBANANA\n\n\n\n', );
-            // try {
-                // let data = require(`../assets/${phone}`);
-                // console.log('First Data: ', data)
-                // this.data = data;
-                // console.log('Second Data: ', data)
-                // return data;
-            // }
-
+            // let data = require(`../assets/${phone}`);
+            // this.data = data;
+            // return data;
+            
             // return fetch(`./json/${phone}`)
-            return fetch(`/api/files/${phone}`)
+            // Instead of tempSelectedValue, I need the innerHTML of the option
+            
+            console.log('selected value: ', this.tempSelectedValue);
+            return fetch(`/api/files/${this.tempSelectedValue}/${phone}`)
                 .then(response => {
                     return response.json();
                 })
@@ -257,7 +254,7 @@ export default {
                 });
         },
         fetchFiles() {
-            fetch('/api/files')
+            fetch(`/api/files?subdirectory=${this.tempSelectedValue}`)
                 .then(response =>{
                     console.log('***********************');
                     console.log(response);
@@ -287,7 +284,7 @@ export default {
         
         // ======================= Add/Delete Phone =======================
         addPhone() {
-            console.log('PHONE LIST HERE: ', this.phoneList);
+            // console.log('PHONE LIST HERE: ', this.phoneList);
 
             this.extension = this.tempExtension;
             this.selectedValue = this.tempSelectedValue;
@@ -503,7 +500,7 @@ export default {
         }
     },
     mounted() {
-        console.log('**********Mounted**********');
+        console.log('Mounted, Fetching Files...');
         this.fetchFiles();
     }
 }
