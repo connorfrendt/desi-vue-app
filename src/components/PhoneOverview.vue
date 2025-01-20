@@ -47,7 +47,7 @@
                     <select id="dropdown" v-model="tempSelectedValue" style="width: 265px;">
                         <option value=""></option>
                         <option value="10075.json">Toshiba DKT 2000</option>
-                        <option value="tos-2020.json">Toshiba DKT 2000 (tos)</option>
+                        <option value="tos-2020.json">Toshiba DKT 2000</option>
                         <!-- <option value="stp-260x.json">Vodavi Starplus II</option> -->
                         <option value="10130.json">Vodavi Starplus II</option>
                         <option value="12455.json">Inter-Tel Axxess 8000 Series</option>
@@ -240,9 +240,12 @@ export default {
             
             // return fetch(`./json/${phone}`)
             // Instead of tempSelectedValue, I need the innerHTML of the option
-            
+            let innerHTMLText = this.getOptionText(this.tempSelectedValue);
+            console.log('PHONE TYPE: ', innerHTMLText);
+
+            let innerFileName = this.turnInnerHTMLToFileName(innerHTMLText);
             console.log('selected value: ', this.tempSelectedValue);
-            return fetch(`/api/files/${this.tempSelectedValue}/${phone}`)
+            return fetch(`/api/files/${innerFileName}/${phone}`)
                 .then(response => {
                     return response.json();
                 })
@@ -271,6 +274,10 @@ export default {
                 .catch(err => {
                     console.error('ERROR ERROR: ', err);
                 });
+        },
+        turnInnerHTMLToFileName(innerHTML) {
+            let fileName = innerHTML.toLowerCase().replace(/ /g, '_');
+            return fileName;
         },
         uncheckTemplate() {
             this.templateCheckBox = false;
