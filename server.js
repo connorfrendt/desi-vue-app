@@ -8,7 +8,7 @@ console.log('******************************');
 app.get('/api/files', (req, res) => {
     // console.log('APP GET');
     // console.log('sub dir?', req.query);
-
+    const subdirectory = req.query.subdirectory || '';
     const directoryPath = path.join(__dirname, 'public/json/JSON-files/', subdirectory);
     
     fs.readdir(directoryPath, (err, files) => {

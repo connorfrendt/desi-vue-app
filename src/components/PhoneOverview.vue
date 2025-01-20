@@ -17,7 +17,7 @@
                     <font-awesome-icon icon="fa-solid fa-plus" style="margin-right: 5px;" />
                     Add
                 </div>
-                <div class="header-button true-center">
+                <div class="header-button true-center" @click="myFunc">
                     <font-awesome-icon icon="fa-solid fa-print" style="margin-right: 5px;" />
                     Print
                 </div>
@@ -46,11 +46,10 @@
                 <div style="display: flex; justify-content: center;">
                     <select id="dropdown" v-model="tempSelectedValue" style="width: 265px;">
                         <option value=""></option>
-                        <option value="10075.json">Toshiba DKT 2000</option>
-                        <option value="tos-2020.json">Toshiba DKT 2000</option>
-                        <!-- <option value="stp-260x.json">Vodavi Starplus II</option> -->
+                        <option v-for="file in files" :key="file" :value="file">{{ file }}</option>
+                        <!-- <option value="tos-2020.json">Toshiba DKT 2000</option>
                         <option value="stp-260x.json">Vodavi Starplus II</option>
-                        <option value="12455.json">Inter-Tel Axxess 8000 Series</option>
+                        <option value="12455.json">Inter-Tel Axxess 8000 Series</option> -->
                     </select>
                 </div>
                 
@@ -236,11 +235,8 @@ export default {
         fetchPhoneType(phone) {
             // Instead of tempSelectedValue, I need the innerHTML of the option
             let innerHTMLText = this.getOptionText(this.tempSelectedValue);
-            console.log('PHONE TYPE: ', innerHTMLText);
-
             let innerFileName = this.turnInnerHTMLToFileName(innerHTMLText);
-            console.log('selected value: ', this.tempSelectedValue);
-            console.log('innerFileName: ', innerFileName);
+
             return fetch(`/api/files/${innerFileName}/${phone}`)
                 .then(response => {
                     return response.json();
@@ -252,19 +248,12 @@ export default {
                     console.log('Error: ', error);
                 });
         },
-        fetchFiles() {
-            console.log('Selected Value: ', this.tempSelectedValue);
-            fetch('/api/files')
+        fetchFiles(subdirectory = '') {
+            fetch(`/api/files?subdirectory=${subdirectory}`)
                 .then(response =>{
-                    console.log('***********************');
-                    console.log('RESPONSE:\n', response);
-                    console.log('***********************');
-                    // return response.json()
-                    return response
+                    return response.json();
                 })
                 .then(data => {
-                    console.log('DATA:');
-                    console.log(data);
                     this.files = data;
                 })
                 .catch(err => {
@@ -304,6 +293,9 @@ export default {
         },
         clickCancel() {
             this.buttonClicked = false;
+        },
+        myFunc() {
+            console.log('Files: ', this.files);
         },
         deletePhone(event, index) {
             event.stopPropagation();
@@ -361,9 +353,7 @@ export default {
             this.tempName = '';
             this.templateCheckBox = false;
             this.tempCurrentTemplateSelected = '';
-            console.log('data before', data);
-            data = {};
-            console.log('data after', data);
+            // data = {};
             this.$nextTick(() => {
                 this.$refs.phoneListingDiv[this.phoneIndex].click();
             });
@@ -503,7 +493,7 @@ export default {
         }
     },
     mounted() {
-        console.log('Mounted, Fetching Files...');
+        console.log('Mounted,\nFetching Files...');
         this.fetchFiles();
     }
 }
