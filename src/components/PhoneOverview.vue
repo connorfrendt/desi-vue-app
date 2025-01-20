@@ -49,7 +49,7 @@
                         <option value="10075.json">Toshiba DKT 2000</option>
                         <option value="tos-2020.json">Toshiba DKT 2000</option>
                         <!-- <option value="stp-260x.json">Vodavi Starplus II</option> -->
-                        <option value="10130.json">Vodavi Starplus II</option>
+                        <option value="stp-260x.json">Vodavi Starplus II</option>
                         <option value="12455.json">Inter-Tel Axxess 8000 Series</option>
                     </select>
                 </div>
@@ -234,17 +234,13 @@ export default {
     },
     methods: {
         fetchPhoneType(phone) {
-            // let data = require(`../assets/${phone}`);
-            // this.data = data;
-            // return data;
-            
-            // return fetch(`./json/${phone}`)
             // Instead of tempSelectedValue, I need the innerHTML of the option
             let innerHTMLText = this.getOptionText(this.tempSelectedValue);
             console.log('PHONE TYPE: ', innerHTMLText);
 
             let innerFileName = this.turnInnerHTMLToFileName(innerHTMLText);
             console.log('selected value: ', this.tempSelectedValue);
+            console.log('innerFileName: ', innerFileName);
             return fetch(`/api/files/${innerFileName}/${phone}`)
                 .then(response => {
                     return response.json();
@@ -257,18 +253,18 @@ export default {
                 });
         },
         fetchFiles() {
-            fetch(`/api/files?subdirectory=${this.tempSelectedValue}`)
+            console.log('Selected Value: ', this.tempSelectedValue);
+            fetch('/api/files')
                 .then(response =>{
                     console.log('***********************');
-                    console.log(response);
+                    console.log('RESPONSE:\n', response);
                     console.log('***********************');
                     // return response.json()
                     return response
                 })
                 .then(data => {
-                    console.log('DATA?????');
+                    console.log('DATA:');
                     console.log(data);
-                    console.log('DATA?????');
                     this.files = data;
                 })
                 .catch(err => {
@@ -276,7 +272,7 @@ export default {
                 });
         },
         turnInnerHTMLToFileName(innerHTML) {
-            let fileName = innerHTML.toLowerCase().replace(/ /g, '_');
+            let fileName = innerHTML.replace(/ /g, '_');
             return fileName;
         },
         uncheckTemplate() {
