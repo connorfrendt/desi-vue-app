@@ -44,12 +44,9 @@
                     <label>Product Family:</label>
                 </div>
                 <div style="display: flex; justify-content: center;">
-                    <select id="dropdown" v-model="tempSelectedValue" style="width: 265px;">
+                    <select id="dropdown" v-model="tempSelectedValue" @change="fetchFiles(tempSelectedValue)" style="width: 265px;">
                         <option value=""></option>
                         <option v-for="file in files" :key="file" :value="file">{{ file }}</option>
-                        <!-- <option value="tos-2020.json">Toshiba DKT 2000</option>
-                        <option value="stp-260x.json">Vodavi Starplus II</option>
-                        <option value="12455.json">Inter-Tel Axxess 8000 Series</option> -->
                     </select>
                 </div>
                 
@@ -59,9 +56,10 @@
                 <div style="display: flex; justify-content: center;">
                     <select @change="uncheckTemplate()" class="model-selection" v-model="tempModel" style="width: 265px;">
                         <option value=""></option>
-                        <option value="20-button-phone">20 Button Phone</option>
+                        <option v-for="model in models" :key="model" :value="model">{{ model }}</option>
+                        <!-- <option value="20-button-phone">20 Button Phone</option>
                         <option value="260">2603E, 2604, 2604E, 2606</option>
-                        <option value="Inter-Tel">Inter-Tel Axxess 8000 Series</option>
+                        <option value="Inter-Tel">Inter-Tel Axxess 8000 Series</option> -->
                     </select>
                 </div>
 
@@ -226,6 +224,7 @@ export default {
             currentTemplateSelected: '',
 
             files: [],
+            models: [],
         }
     },
     components: {
@@ -248,13 +247,19 @@ export default {
                     console.log('Error: ', error);
                 });
         },
-        fetchFiles(subdirectory = '') {
-            fetch(`/api/files?subdirectory=${subdirectory}`)
+        fetchFolders() {
+            fetch(/api/files)
                 .then(response =>{
                     return response.json();
                 })
                 .then(data => {
                     this.files = data;
+                    console.log('SUBDIRECTORY: ', subdirectory);
+                    if(subdirectory) {
+                        this.models = data;
+                        console.log('MODELS: ', this.models);
+                    }
+                    console.log('FILES: ', this.files);
                 })
                 .catch(err => {
                     console.error('ERROR ERROR: ', err);
