@@ -263,11 +263,6 @@ export default {
                 })
                 .then(data => {
                     this.models = data;
-                    console.log('SUBDIRECTORY: ', subdirectory);
-                    if(subdirectory) {
-                        this.models = data;
-                        console.log('MODELS: ', this.models);
-                    }
                 })
                 .catch(err => {
                     console.error('ERROR ERROR: ', err);
@@ -295,7 +290,8 @@ export default {
             this.name = this.tempName;
             this.currentTemplateSelected = this.tempCurrentTemplateSelected;
             if(this.selectedValue) {
-                this.fetchPhoneType(this.selectedValue);
+                console.log('SELECTED VALUE: ', this.tempModel);
+                this.fetchPhoneType(this.tempModel);
                 this.buttonClicked = false;
             }
             
