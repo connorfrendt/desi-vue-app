@@ -17,7 +17,7 @@
                     <font-awesome-icon icon="fa-solid fa-plus" style="margin-right: 5px;" />
                     Add
                 </div>
-                <div class="header-button true-center" @click="myFunc">
+                <div class="header-button true-center">
                     <font-awesome-icon icon="fa-solid fa-print" style="margin-right: 5px;" />
                     Print
                 </div>
@@ -44,9 +44,9 @@
                     <label>Product Family:</label>
                 </div>
                 <div style="display: flex; justify-content: center;">
-                    <select id="dropdown" v-model="tempSelectedValue" @change="fetchFiles(tempSelectedValue)" style="width: 265px;">
+                    <select id="dropdown" v-model="tempSelectedValue" @change="fetchModels(tempSelectedValue)" style="width: 265px;">
                         <option value=""></option>
-                        <option v-for="file in files" :key="file" :value="file">{{ file }}</option>
+                        <option v-for="folder in folders" :key="folder" :value="folder">{{ folder }}</option>
                     </select>
                 </div>
                 
@@ -57,9 +57,6 @@
                     <select @change="uncheckTemplate()" class="model-selection" v-model="tempModel" style="width: 265px;">
                         <option value=""></option>
                         <option v-for="model in models" :key="model" :value="model">{{ model }}</option>
-                        <!-- <option value="20-button-phone">20 Button Phone</option>
-                        <option value="260">2603E, 2604, 2604E, 2606</option>
-                        <option value="Inter-Tel">Inter-Tel Axxess 8000 Series</option> -->
                     </select>
                 </div>
 
@@ -223,7 +220,7 @@ export default {
             tempCurrentTemplateSelected: '',
             currentTemplateSelected: '',
 
-            files: [],
+            folders: [],
             models: [],
         }
     },
@@ -248,18 +245,29 @@ export default {
                 });
         },
         fetchFolders() {
-            fetch(/api/files)
+            fetch('/api/files')
+                .then(response => {
+                    return response.json();
+                })
+                .then(data => {
+                    this.folders = data;
+                })
+                .catch(err => {
+                    console.error('ERROR: ', err);
+                });
+        },
+        fetchModels(subdirectory) {
+            fetch(`/api/files?subdirectory=${subdirectory}`)
                 .then(response =>{
                     return response.json();
                 })
                 .then(data => {
-                    this.files = data;
+                    this.models = data;
                     console.log('SUBDIRECTORY: ', subdirectory);
                     if(subdirectory) {
                         this.models = data;
                         console.log('MODELS: ', this.models);
                     }
-                    console.log('FILES: ', this.files);
                 })
                 .catch(err => {
                     console.error('ERROR ERROR: ', err);
@@ -281,8 +289,6 @@ export default {
         
         // ======================= Add/Delete Phone =======================
         addPhone() {
-            // console.log('PHONE LIST HERE: ', this.phoneList);
-
             this.extension = this.tempExtension;
             this.selectedValue = this.tempSelectedValue;
             this.model = this.tempModel;
@@ -298,9 +304,6 @@ export default {
         },
         clickCancel() {
             this.buttonClicked = false;
-        },
-        myFunc() {
-            console.log('Files: ', this.files);
         },
         deletePhone(event, index) {
             event.stopPropagation();
@@ -499,7 +502,7 @@ export default {
     },
     mounted() {
         console.log('Mounted,\nFetching Files...');
-        this.fetchFiles();
+        this.fetchFolders();
     }
 }
 </script>
