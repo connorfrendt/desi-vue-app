@@ -16,6 +16,7 @@
     "core-js": "^3.8.3",
     "express": "^4.21.2",
     "nodemon": "^3.1.9",
+    "print-js": "^1.6.0",
     "strip-bom": "^5.0.0",
     "vue": "^2.6.14",
     "vue-axios": "^3.5.2",

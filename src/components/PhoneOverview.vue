@@ -17,7 +17,7 @@
                     <font-awesome-icon icon="fa-solid fa-plus" style="margin-right: 5px;" />
                     Add
                 </div>
-                <div class="header-button true-center">
+                <div class="header-button true-center" @click="printPage">
                     <font-awesome-icon icon="fa-solid fa-print" style="margin-right: 5px;" />
                     Print
                 </div>
@@ -159,6 +159,7 @@
         </div>
 
         <PhoneType
+            id="test-this"
             :data="data"
             :phoneIndex = "phoneIndex"
             @user-input-object="userInputObjectUpdate($event)"
@@ -169,6 +170,7 @@
 
 <script>
 import PhoneType from './PhoneType.vue';
+import printJS from 'print-js';
 
 export default {
     data() {
@@ -228,6 +230,13 @@ export default {
         PhoneType
     },
     methods: {
+        printPage() {
+            // Print a specific HTML element with ID 
+            printJS({ 
+                printable: 'test-this', 
+                type: 'html',
+            });
+        },
         fetchPhoneType(phone) {
             // Instead of tempSelectedValue, I need the innerHTML of the option
             let innerHTMLText = this.getOptionText(this.tempSelectedValue);
