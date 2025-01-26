@@ -45,7 +45,7 @@
                 </div>
                 <div style="display: flex; justify-content: center;">
                     <select id="dropdown" v-model="tempSelectedValue" @change="fetchModels(tempSelectedValue)" style="width: 265px;">
-                        <option value=""></option>
+                        <option value="">Select a Product...</option>
                         <option v-for="folder in folders" :key="folder" :value="folder">{{ folder }}</option>
                     </select>
                 </div>
@@ -55,7 +55,7 @@
                 </div>
                 <div style="display: flex; justify-content: center;">
                     <select @change="uncheckTemplate()" class="model-selection" v-model="tempModel" style="width: 265px;">
-                        <option value=""></option>
+                        <option value="">Select a Model...</option>
                         <option v-for="model in models" :key="model" :value="model">{{ model }}</option>
                     </select>
                 </div>
@@ -170,7 +170,7 @@
 
 <script>
 import PhoneType from './PhoneType.vue';
-import printJS from 'print-js';
+// import printJS from 'print-js';
 
 export default {
     data() {
@@ -231,11 +231,13 @@ export default {
     },
     methods: {
         printPage() {
-            // Print a specific HTML element with ID 
-            printJS({ 
-                printable: 'test-this', 
-                type: 'html',
-            });
+            console.log('User Input Object Data: ', this.userInputObjectData[0].objects['76096']);
+            // Print a specific HTML element with ID
+            // let phoneJSON = Object.entries(this.userInputObjectData[0].objects);
+            // printJS({
+            //     printable: phoneJSON,
+            //     type: 'json',
+            // });
         },
         fetchPhoneType(phone) {
             // Instead of tempSelectedValue, I need the innerHTML of the option
