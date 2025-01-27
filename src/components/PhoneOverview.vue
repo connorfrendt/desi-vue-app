@@ -231,9 +231,15 @@ export default {
     },
     methods: {
         printPage() {
-            console.log('User Input Object Data: ', this.userInputObjectData[0].objects['76096']);
-            // Print a specific HTML element with ID
-            // let phoneJSON = Object.entries(this.userInputObjectData[0].objects);
+            // console.log('User Input Object Data: ', Object.entries(this.userInputObjectData[0].objects));
+            let userInputObjects = Object.entries(this.userInputObjectData[0].objects);
+            // let objectData = {};
+
+            for(let i = 0; i < userInputObjects.length; i++) {
+                console.log('User Input Object Data: ', userInputObjects[i][1]);
+                
+            }
+            
             // printJS({
             //     printable: phoneJSON,
             //     type: 'json',

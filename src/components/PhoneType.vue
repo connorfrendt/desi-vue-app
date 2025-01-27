@@ -46,11 +46,17 @@
                 <div class="popup-button" :class="{ active: isBold }" @click="makeBold">Bold</div>
                 <div class="popup-button" :class="{ active: isItalics }" @click="makeItalicize">Italicize</div>
                 <div class="popup-button" :class="{ active: isUnderline }" @click="makeUnderline">Underline</div>
-                <div style="text-align: center; margin-top: 20px;">ALIGNMENT</div>
+                <div style="text-align: center; margin-top: 20px;">JUSTIFICATION</div>
                 <div style="display: flex; justify-content: space-evenly;">
-                    <div class="popup-button" :class="{ active: textAlign === 'left' }" @click="setTextAlign('left')">Left</div>
-                    <div class="popup-button" :class="{ active: textAlign === 'center' }" @click="setTextAlign('center')">Center</div>
-                    <div class="popup-button" :class="{ active: textAlign === 'right' }" @click="setTextAlign('right')">Right</div>
+                    <div class="popup-button" :class="{ active: textAlign === 'left' }" @click="setTextAlign('left')">
+                        Left<font-awesome-icon icon="fa-solid fa-align-left" />
+                    </div>
+                    <div class="popup-button" :class="{ active: textAlign === 'center' }" @click="setTextAlign('center')">
+                        Center<font-awesome-icon icon="fa-solid fa-align-center" />
+                    </div>
+                    <div class="popup-button" :class="{ active: textAlign === 'right' }" @click="setTextAlign('right')">
+                        Right<font-awesome-icon icon="fa-solid fa-align-right" />
+                    </div>
                 </div>
 
                 <div style="text-align: center; margin-top: 10px;">COLOR</div>
@@ -213,6 +219,7 @@ export default {
             
             for(let i = 0; i < userInputObjects.length; i++) {
                 let obj = userInputObjects[i][1];
+                
                 if(obj.editable) {
                     
                     let userComment = document.getElementById(`input-box-${i}`).innerText;
@@ -228,7 +235,7 @@ export default {
                     obj.fontStyle = obj.fontStyle || 'font-arial';
                 }
             }
-            
+            console.log('USER INPUT', this.userInput);
             this.userInputObject = { ...this.userInput };
 
             // Passes the userInputObject up to the parent component "App.vue"
@@ -360,6 +367,13 @@ textarea {
 }
 
 /* ----------------- TEXT COLORS ----------------- */
+.textarea-container {
+    background-color: red;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
 .text-black {
     color: black;
 }
