@@ -40,6 +40,16 @@
                         backgroundColor: 'lightgray'
                     }"
                 ></textarea>
+                <div style="vertical-align: bottom;">
+                    <input type="text" style="height: 75px; background-color: lightgray;"
+                        :class="[
+                            {
+                                [`text-${textAlign}`]: true,
+                            }
+                        ]"
+
+                    />
+                </div>
             </div>
             <div>
                 <div style="text-align: center; margin-top: 10px;">STYLE</div>
@@ -187,6 +197,7 @@ export default {
 
         },
         getBoxStyles(box) {
+            // Makes the css for the boxes
             let styles = {
                 height: this.twipsToPixels(box.position[3] - box.position[1]) + 'px',
                 width: this.twipsToPixels(box.position[2] - box.position[0]) + 'px',
@@ -368,10 +379,10 @@ textarea {
 
 /* ----------------- TEXT COLORS ----------------- */
 .textarea-container {
-    background-color: red;
+    /*background-color: red;
     display: flex;
     justify-content: center;
-    align-items: center;
+    align-items: center;*/
 }
 
 .text-black {

@@ -5,7 +5,7 @@
                 <a href="https://labels.desi.com/" target="_blank">
                     <img class="desi-logo" src="../assets/desi-logo.png" />
                 </a>
-                <div class="true-center header-button">
+                <div class="true-center header-button p-[100px]">
                     <font-awesome-icon icon="fa-regular fa-folder-open" style="margin-right: 5px;" />
                     Open
                 </div>
@@ -159,7 +159,7 @@
         </div>
 
         <PhoneType
-            id="test-this"
+            id="phone-type"
             :data="data"
             :phoneIndex = "phoneIndex"
             @user-input-object="userInputObjectUpdate($event)"
@@ -170,7 +170,7 @@
 
 <script>
 import PhoneType from './PhoneType.vue';
-// import printJS from 'print-js';
+import printJS from 'print-js';
 
 export default {
     data() {
@@ -234,16 +234,65 @@ export default {
             // console.log('User Input Object Data: ', Object.entries(this.userInputObjectData[0].objects));
             let userInputObjects = Object.entries(this.userInputObjectData[0].objects);
             // let objectData = {};
-
-            for(let i = 0; i < userInputObjects.length; i++) {
-                console.log('User Input Object Data: ', userInputObjects[i][1]);
-                
+            console.log('******************')
+            // for(let i = 0; i < userInputObjects.length; i++) {
+            //     if(userInputObjects[i][1].userComment) {
+            //         console.log(userInputObjects[i][1].userComment);
+            //     }
+            // }
+            console.log(userInputObjects[73]);
+            console.log('******************')
+            let box1 = userInputObjects[73][1];
+            let box2 = userInputObjects[84][1];
+            let styles1 = {
+                height: this.twipsToPixels(box1.position[3] - box1.position[1]) + 'px',
+                width: this.twipsToPixels(box1.position[2] - box1.position[0]) + 'px',
+                position: 'absolute',
+                left: this.twipsToPixels(box1.position[0]) + 'px',
+                top: this.twipsToPixels(box1.position[1]) + 'px',
             }
-            
-            // printJS({
-            //     printable: phoneJSON,
-            //     type: 'json',
-            // });
+            let styles2 = {
+                height: this.twipsToPixels(box2.position[3] - box2.position[1]) + 'px',
+                width: this.twipsToPixels(box2.position[2] - box2.position[0]) + 'px',
+                position: 'absolute',
+                left: this.twipsToPixels(box2.position[0]) + 'px',
+                top: this.twipsToPixels(box2.position[1]) + 'px',
+            }
+            console.log('BOX1: ', box1);
+            console.log('BOX2: ', box2);
+            // console.log('Styles: ', styles);
+            printJS({
+                printable: 'phone-type',
+                type: 'html',
+                style: `
+                    #input-box-73 {
+                        height: ${styles1.height};
+                        width: ${styles1.width};
+                        position: absolute;
+                        left: ${styles1.left};
+                        top: ${styles1.top};
+                        color: red;
+                        background-color: rbg(255, 0, 0);
+                        list-style-type: none;
+                    }
+
+                    #input-box-83 {
+                        height: ${styles2.height};
+                        width: ${styles2.width};
+                        position: absolute;
+                        left: ${styles2.left};
+                        top: ${styles2.top};
+                        color: red;
+                        background-color: rbg(255, 0, 0);
+                        list-style-type: none;
+                    }
+                `,
+            });
+        },
+        twipsToPixels(num) {
+            let numTwips = num / 1440; // 1440 twips per inch
+            let twipsToPixels = numTwips * 96; // 96 pixels per inch
+            return twipsToPixels;
         },
         fetchPhoneType(phone) {
             // Instead of tempSelectedValue, I need the innerHTML of the option
