@@ -232,61 +232,92 @@ export default {
     methods: {
         printPage() {
             // console.log('User Input Object Data: ', Object.entries(this.userInputObjectData[0].objects));
-            let userInputObjects = Object.entries(this.userInputObjectData[0].objects);
+            // let userInputObjects = Object.entries(this.userInputObjectData[0].objects);
             // let objectData = {};
-            console.log('******************')
             // for(let i = 0; i < userInputObjects.length; i++) {
             //     if(userInputObjects[i][1].userComment) {
             //         console.log(userInputObjects[i][1].userComment);
             //     }
             // }
-            console.log(userInputObjects[73]);
-            console.log('******************')
-            let box1 = userInputObjects[73][1];
-            let box2 = userInputObjects[84][1];
-            let styles1 = {
-                height: this.twipsToPixels(box1.position[3] - box1.position[1]) + 'px',
-                width: this.twipsToPixels(box1.position[2] - box1.position[0]) + 'px',
-                position: 'absolute',
-                left: this.twipsToPixels(box1.position[0]) + 'px',
-                top: this.twipsToPixels(box1.position[1]) + 'px',
-            }
-            let styles2 = {
-                height: this.twipsToPixels(box2.position[3] - box2.position[1]) + 'px',
-                width: this.twipsToPixels(box2.position[2] - box2.position[0]) + 'px',
-                position: 'absolute',
-                left: this.twipsToPixels(box2.position[0]) + 'px',
-                top: this.twipsToPixels(box2.position[1]) + 'px',
-            }
-            console.log('BOX1: ', box1);
-            console.log('BOX2: ', box2);
-            // console.log('Styles: ', styles);
-            printJS({
-                printable: 'phone-type',
-                type: 'html',
-                style: `
-                    #input-box-73 {
-                        height: ${styles1.height};
-                        width: ${styles1.width};
-                        position: absolute;
-                        left: ${styles1.left};
-                        top: ${styles1.top};
-                        color: red;
-                        background-color: rbg(255, 0, 0);
-                        list-style-type: none;
-                    }
+            // let myHeader = `<ul id="list"></ul>`;
+            let container = document.createElement('div');
+            container.innerHTML = `<ul id="list"></ul>`;
+            let list = container.querySelector('#list');
+            const items = [
+                { id: 1, name: "Apple" },
+                { id: 2, name: "Banana" },
+                { id: 3, name: "Cherry" }
+            ];
 
-                    #input-box-83 {
-                        height: ${styles2.height};
-                        width: ${styles2.width};
-                        position: absolute;
-                        left: ${styles2.left};
-                        top: ${styles2.top};
-                        color: red;
-                        background-color: rbg(255, 0, 0);
-                        list-style-type: none;
-                    }
-                `,
+            console.log('LIST LIST LIST LIST', list);
+            items.forEach(item => {
+                const li = document.createElement('li');
+                li.textContent = item.name;
+                list.appendChild(li);
+            });
+            // let box1 = userInputObjects[73][1];
+            // let box2 = userInputObjects[74][1];
+            // let box3 = userInputObjects[84][1];
+            // let styles1 = {
+            //     height: this.twipsToPixels(box1.position[3] - box1.position[1]) + 'px',
+            //     width: this.twipsToPixels(box1.position[2] - box1.position[0]) + 'px',
+            //     position: 'absolute',
+            //     left: this.twipsToPixels(box1.position[0]) + 'px',
+            //     top: this.twipsToPixels(box1.position[1]) + 'px',
+            // }
+            // let styles2 = {
+            //     height: this.twipsToPixels(box2.position[3] - box2.position[1]) + 'px',
+            //     width: this.twipsToPixels(box2.position[2] - box2.position[0]) + 'px',
+            //     position: 'absolute',
+            //     left: this.twipsToPixels(box2.position[0]) + 'px',
+            //     top: this.twipsToPixels(box2.position[1]) + 'px',
+            // }
+            // let styles3 = {
+            //     height: this.twipsToPixels(box3.position[3] - box3.position[1]) + 'px',
+            //     width: this.twipsToPixels(box3.position[2] - box3.position[0]) + 'px',
+            //     position: 'absolute',
+            //     left: this.twipsToPixels(box3.position[0]) + 'px',
+            //     top: this.twipsToPixels(box3.position[1]) + 'px',
+            // }
+            // let myStyles = `
+            //     #input-box-73 {
+            //         height: ${styles1.height};
+            //         width: ${styles1.width};
+            //         position: absolute;
+            //         left: ${styles1.left};
+            //         top: ${styles1.top};
+            //         color: red;
+            //         list-style-type: none;
+            //         text-align: center;
+            //     }
+
+            //     #input-box-74 {
+            //         height: ${styles2.height};
+            //         width: ${styles2.width};
+            //         position: absolute;
+            //         left: ${styles2.left};
+            //         top: ${styles2.top};
+            //         color: red;
+            //         list-style-type: none;
+            //         text-align: right;
+            //     }
+
+            //     #input-box-84 {
+            //         height: ${styles3.height};
+            //         width: ${styles3.width};
+            //         position: absolute;
+            //         left: ${styles3.left};
+            //         top: ${styles3.top};
+            //         color: red;
+            //         list-style-type: none;
+            //         text-align: center;
+            //     }
+            // `;
+            printJS({
+                printable: container.innerHTML,
+                type: 'raw-html',
+                // style: myStyles,
+                
             });
         },
         twipsToPixels(num) {
