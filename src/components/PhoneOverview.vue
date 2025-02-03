@@ -233,53 +233,74 @@ export default {
         printPage() {
             let userInputObjects = Object.entries(this.userInputObjectData[0].objects);
             console.log('User Input Object Data: ', userInputObjects);
+
             const items = [];
             for(let i = 0; i < userInputObjects.length; i++) {
-                // if(userInputObjects[i][1].userComment) {
-                //     console.log(userInputObjects[i][1].userComment);
-                // }
-
-                console.log(userInputObjects[i][1]);
-                items.push(userInputObjects[i][1]);
+                if(userInputObjects[i][1].userComment) {
+                    // console.log(userInputObjects[i][1].userComment);
+                    items.push(userInputObjects[i][1]);
+                }
             }
-            
+            console.log(items);
+            let box73 = userInputObjects[73][1];
+
             let container = document.createElement('div');
             container.innerHTML = `<ul id="list"></ul>`;
-            let list = container.querySelector('#list');
+            // let list = container.querySelector('#list');
 
-            items.forEach(item => {
-                const li = document.createElement('li');
-                li.textContent = item.userComment;
-                list.appendChild(li);
-            });
-            let myStyles = '';
-            console.log(myStyles);
-            items.forEach((item, index) => {
-                let styles = {
-                    height: this.twipsToPixels(item.position[3] - item.position[1]) + 'px',
-                    width: this.twipsToPixels(item.position[2] - item.position[0]) + 'px',
-                    position: 'absolute',
-                    left: this.twipsToPixels(item.position[0]) + 'px',
-                    top: this.twipsToPixels(item.position[1]) + 'px',
-                };
-                myStyles += `
-                    #input-box-${index} {
-                        height: ${styles.height};
-                        width: ${styles.width};
-                        position: absolute;
-                        left: ${styles.left};
-                        top: ${styles.top};
-                        color: red;
-                        list-style-type: none;
-                        text-align: ${index % 2 === 0 ? 'center' : 'right'};
-                    }
-                `;
-            });
+            // items.forEach(item => {
+            //     const li = document.createElement('li');
+            //     li.textContent = item.userComment;
+            //     list.appendChild(li);
+            // });
+            
+            let styles73 = {
+                height: this.twipsToPixels(box73.position[3] - box73.position[1]) + 'px',
+                width: this.twipsToPixels(box73.position[2] - box73.position[0]) + 'px',
+                position: 'absolute',
+                left: this.twipsToPixels(box73.position[0]) + 'px',
+                top: this.twipsToPixels(box73.position[1]) + 'px',
+            }
+
+            // console.log(myStyles);
+            // items.forEach((item, index) => {
+            //     let styles = {
+            //         height: this.twipsToPixels(item.position[3] - item.position[1]) + 'px',
+            //         width: this.twipsToPixels(item.position[2] - item.position[0]) + 'px',
+            //         position: 'absolute',
+            //         left: this.twipsToPixels(item.position[0]) + 'px',
+            //         top: this.twipsToPixels(item.position[1]) + 'px',
+            //         border: '1px solid black',
+            //     };
+            //     myStyles += `
+            //         #input-box-${index} {
+            //             height: ${styles.height};
+            //             width: ${styles.width};
+            //             position: absolute;
+            //             left: ${styles.left};
+            //             top: ${styles.top};
+            //             color: red;
+            //             list-style-type: none;
+            //             text-align: center;
+            //             border: ${styles.border};
+            //         }
+            //     `;
+            // });
+
             printJS({
                 printable: container.innerHTML,
                 type: 'raw-html',
-                // style: myStyles,
-                style: '#list { color: green; list-style-type: none; }'
+                style: `
+                    #input-box-73 {
+                        height: ${styles73.height};
+                        width: ${styles73.width};
+                        position: absolute;
+                        left: ${styles73.left};
+                        top: ${styles73.top};
+                        color: red;
+                        list-style-type: none;
+                    }
+                `,
             });
         },
         twipsToPixels(num) {
