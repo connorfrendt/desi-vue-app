@@ -232,20 +232,99 @@ export default {
     methods: {
         printPage() {
             let userInputObjects = Object.entries(this.userInputObjectData[0].objects);
-            console.log('User Input Object Data: ', userInputObjects);
-
-            const items = [];
+            let items = [];
             for(let i = 0; i < userInputObjects.length; i++) {
-                if(userInputObjects[i][1].userComment) {
-                    // console.log(userInputObjects[i][1].userComment);
-                    items.push(userInputObjects[i][1]);
-                }
+                items.push(userInputObjects[i][1]);
             }
-            console.log(items);
-            let box73 = userInputObjects[73][1];
-
+            console.log('ITEMS: ', items);
             let container = document.createElement('div');
             container.innerHTML = `<ul id="list"></ul>`;
+            document.body.appendChild(container);
+            let list = container.querySelector('#list');
+
+            let myStyles = '';
+            console.log(myStyles);
+            items.forEach((item, index) => {
+                const li = document.createElement('li');
+                li.textContent = item.userComment;
+                li.id = `input-box-${index}`;
+                list.appendChild(li);
+                console.log(item.position);
+                let styles = {
+                    height: this.twipsToPixels(item.position[3] - item.position[1]) + 'px',
+                    width: this.twipsToPixels(item.position[2] - item.position[0]) + 'px',
+                    position: 'absolute',
+                    left: this.twipsToPixels(item.position[0]) + 'px',
+                    top: this.twipsToPixels(item.position[1]) + 'px',
+                };
+                myStyles += `
+                    #input-box-${index} {
+                        height: ${styles.height};
+                        width: ${styles.width};
+                        position: absolute;
+                        left: ${styles.left};
+                        top: ${styles.top};
+                        color: red;
+                        list-style-type: none;
+                        text-align: center;
+                    }
+                `;
+            });
+
+            printJS({
+                printable: container.innerHTML,
+                type: 'raw-html',
+                style: myStyles,
+            });
+            // let box1 = userInputObjects[73][1];
+            // let box2 = userInputObjects[83][1];
+            // let styles1 = {
+            //     height: this.twipsToPixels(box1.position[3] - box1.position[1]) + 'px',
+            //     width: this.twipsToPixels(box1.position[2] - box1.position[0]) + 'px',
+            //     position: 'absolute',
+            //     left: this.twipsToPixels(box1.position[0]) + 'px',
+            //     top: this.twipsToPixels(box1.position[1]) + 'px',
+            // }
+            // let styles2 = {
+            //     height: this.twipsToPixels(box2.position[3] - box2.position[1]) + 'px',
+            //     width: this.twipsToPixels(box2.position[2] - box2.position[0]) + 'px',
+            //     position: 'absolute',
+            //     left: this.twipsToPixels(box2.position[0]) + 'px',
+            //     top: this.twipsToPixels(box2.position[1]) + 'px',
+            // }
+            // console.log('BOX1: ', box1);
+            // console.log('BOX2: ', box2);
+            // // console.log('Styles: ', styles);
+            // printJS({
+            //     printable: 'phone-type',
+            //     type: 'html',
+            //     style: `
+            //         #input-box-73 {
+            //             height: ${styles1.height};
+            //             width: ${styles1.width};
+            //             position: absolute;
+            //             left: ${styles1.left};
+            //             top: ${styles1.top};
+            //             color: red;
+            //             background-color: rbg(255, 0, 0);
+            //             list-style-type: none;
+            //         }
+
+            //         #input-box-83 {
+            //             height: ${styles2.height};
+            //             width: ${styles2.width};
+            //             position: absolute;
+            //             left: ${styles2.left};
+            //             top: ${styles2.top};
+            //             color: green;
+            //             background-color: rbg(255, 0, 0);
+            //             list-style-type: none;
+            //         }
+            //     `,
+            // });
+            
+            // let container = document.createElement('div');
+            // container.innerHTML = `<ul id="list"></ul>`;
             // let list = container.querySelector('#list');
 
             // items.forEach(item => {
@@ -254,15 +333,6 @@ export default {
             //     list.appendChild(li);
             // });
             
-            let styles73 = {
-                height: this.twipsToPixels(box73.position[3] - box73.position[1]) + 'px',
-                width: this.twipsToPixels(box73.position[2] - box73.position[0]) + 'px',
-                position: 'absolute',
-                left: this.twipsToPixels(box73.position[0]) + 'px',
-                top: this.twipsToPixels(box73.position[1]) + 'px',
-            }
-
-            // console.log(myStyles);
             // items.forEach((item, index) => {
             //     let styles = {
             //         height: this.twipsToPixels(item.position[3] - item.position[1]) + 'px',
@@ -287,21 +357,32 @@ export default {
             //     `;
             // });
 
-            printJS({
-                printable: container.innerHTML,
-                type: 'raw-html',
-                style: `
-                    #input-box-73 {
-                        height: ${styles73.height};
-                        width: ${styles73.width};
-                        position: absolute;
-                        left: ${styles73.left};
-                        top: ${styles73.top};
-                        color: red;
-                        list-style-type: none;
-                    }
-                `,
-            });
+            // printJS({
+            //     printable: container.innerHTML,
+            //     type: 'raw-html',
+            //     style: `
+            //         #input-box-73 {
+            //             height: ${styles73.height};
+            //             width: ${styles73.width};
+            //             position: absolute;
+            //             left: ${styles73.left};
+            //             top: ${styles73.top};
+            //             color: red;
+            //             list-style-type: none;
+            //         }
+                        
+            //         #input-box-84 {
+            //             height: ${styles73.height};
+            //             width: ${styles73.width};
+            //             position: absolute;
+            //             left: ${styles73.left};
+            //             top: ${styles73.top};
+            //             color: red;
+            //             list-style-type: none;
+            //         }
+
+            //     `,
+            // });
         },
         twipsToPixels(num) {
             let numTwips = num / 1440; // 1440 twips per inch
