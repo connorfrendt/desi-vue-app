@@ -249,13 +249,14 @@ export default {
                 li.textContent = item.userComment;
                 li.id = `input-box-${index}`;
                 list.appendChild(li);
-                console.log(item.position);
+                
                 let styles = {
                     height: this.twipsToPixels(item.position[3] - item.position[1]) + 'px',
                     width: this.twipsToPixels(item.position[2] - item.position[0]) + 'px',
                     position: 'absolute',
                     left: this.twipsToPixels(item.position[0]) + 'px',
                     top: this.twipsToPixels(item.position[1]) + 'px',
+                    color: item.textColor
                 };
                 myStyles += `
                     #input-box-${index} {
@@ -264,7 +265,7 @@ export default {
                         position: absolute;
                         left: ${styles.left};
                         top: ${styles.top};
-                        color: red;
+                        color: ${styles.color};
                         list-style-type: none;
                         text-align: center;
                     }
