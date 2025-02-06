@@ -256,7 +256,14 @@ export default {
                     position: 'absolute',
                     left: this.twipsToPixels(item.position[0]) + 'px',
                     top: this.twipsToPixels(item.position[1]) + 'px',
-                    color: item.textColor
+                    color: item.textColor,
+                    textAlign: item.textAlign,
+                    fontSize: item.fontSize,
+                    fontStyle: item.fontStyle,
+                    isBold: item.isBold,
+                    isItalics: item.isItalics,
+                    isUnderline: item.isUnderline,
+                    
                 };
                 myStyles += `
                     #input-box-${index} {
@@ -267,7 +274,11 @@ export default {
                         top: ${styles.top};
                         color: ${styles.color};
                         list-style-type: none;
-                        text-align: center;
+                        text-align: ${styles.textAlign};
+                        font-size: ${styles.fontSize + 'px'};
+                        font-style: ${styles.isItalics ? 'italic' : ''};
+                        font-weight: ${styles.isBold ? 'bold' : ''};
+                        text-decoration: ${styles.isUnderline ? 'underline' : ''};
                     }
                 `;
             });
@@ -870,6 +881,7 @@ export default {
     text-align: center;
     border: 2px solid lightgray;
     border-radius: 5px;
+    
 }
 
 .edit-popup-ok:hover,
