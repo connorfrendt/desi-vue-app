@@ -27,7 +27,8 @@
                             bold: isBold,
                             italics: isItalics,
                             underline: isUnderline,
-                            [`text-${textAlign}`]: true,
+                            [`text-${textHorizontalAlign}`]: true,
+                            [`text-${textVerticalAlign}`]: true,
                             [`text-${textColor}`]: true,
                             [`font-size-${fontSize}`]: true,
                             [`${fontStyle}`]: true
@@ -44,7 +45,7 @@
                     <input type="text" style="height: 75px; background-color: lightgray;"
                         :class="[
                             {
-                                [`text-${textAlign}`]: true,
+                                [`text-${textHorizontalAlign}`]: true,
                             }
                         ]"
 
@@ -57,14 +58,27 @@
                 <div class="popup-button" :class="{ active: isItalics }" @click="makeItalicize">Italicize</div>
                 <div class="popup-button" :class="{ active: isUnderline }" @click="makeUnderline">Underline</div>
                 <div style="text-align: center; margin-top: 20px;">JUSTIFICATION</div>
+                
                 <div style="display: flex; justify-content: space-evenly;">
-                    <div class="popup-button" :class="{ active: textAlign === 'left' }" @click="setTextAlign('left')">
-                        Left<font-awesome-icon icon="fa-solid fa-align-left" />
+                    <div class="popup-button" :class="{ active: textVerticalAlign === 'top' }" @click="setVerticalTextAlign('top')">
+                        Top<font-awesome-icon icon="fa-solid fa-align-left" />
                     </div>
-                    <div class="popup-button" :class="{ active: textAlign === 'center' }" @click="setTextAlign('center')">
+                    <div class="popup-button" :class="{ active: textVerticalAlign === 'center' }" @click="setVerticalTextAlign('center')">
                         Center<font-awesome-icon icon="fa-solid fa-align-center" />
                     </div>
-                    <div class="popup-button" :class="{ active: textAlign === 'right' }" @click="setTextAlign('right')">
+                    <div class="popup-button" :class="{ active: textVerticalAlign === 'bottom' }" @click="setVerticalTextAlign('bottom')">
+                        Bottom<font-awesome-icon icon="fa-solid fa-align-right" />
+                    </div>
+                </div>
+
+                <div style="display: flex; justify-content: space-evenly;">
+                    <div class="popup-button" :class="{ active: textHorizontalAlign === 'left' }" @click="setHorizontalTextAlign('left')">
+                        Left<font-awesome-icon icon="fa-solid fa-align-left" />
+                    </div>
+                    <div class="popup-button" :class="{ active: textHorizontalAlign === 'center' }" @click="setHorizontalTextAlign('center')">
+                        Center<font-awesome-icon icon="fa-solid fa-align-center" />
+                    </div>
+                    <div class="popup-button" :class="{ active: textHorizontalAlign === 'right' }" @click="setHorizontalTextAlign('right')">
                         Right<font-awesome-icon icon="fa-solid fa-align-right" />
                     </div>
                 </div>
@@ -148,7 +162,8 @@ export default {
             isBold: false,
             isItalics: false,
             isUnderline: false,
-            textAlign: 'center',
+            textHorizontalAlign: 'center',
+            textVerticalAlign: 'center',
             textColor: 'black',
 
             fontSize: 0,
@@ -197,7 +212,7 @@ export default {
 
         },
         getBoxStyles(box) {
-            // Makes the css for the boxes
+            // Makes the css for the boxes, this is not for the text inside
             let styles = {
                 height: this.twipsToPixels(box.position[3] - box.position[1]) + 'px',
                 width: this.twipsToPixels(box.position[2] - box.position[0]) + 'px',
@@ -217,9 +232,13 @@ export default {
                 bold: box.isBold,
                 italics: box.isItalics,
                 underline: box.isUnderline,
-                'text-left': box.textAlign === 'left',
-                'text-center': box.textAlign === 'center',
-                'text-right': box.textAlign === 'right',
+                'text-left': box.textHorizontalAlign === 'left',
+                'text-h-center': box.textHorizontalAlign === 'center',
+                'text-right': box.textHorizontalAlign === 'right',
+                'text-top': box.textVerticalAlign === 'top',
+                'text-v-center': box.textVerticalAlign === 'center',
+                'text-bottom': box.textVerticalAlign === 'bottom',
+                // 'text-top': 
                 [`text-${box.textColor}`]: true,
                 [`font-size-${box.fontSize}`]: true,
                 [`${box.fontStyle}`]: true
@@ -240,7 +259,8 @@ export default {
                     obj.isBold = obj.isBold || false;
                     obj.isItalics = obj.isItalics || false;
                     obj.isUnderline = obj.isUnderline || false;
-                    obj.textAlign = obj.textAlign || 'center';
+                    obj.textHorizontalAlign = obj.textHorizontalAlign || 'center';
+                    obj.textVerticalAlign = obj.textVerticalAlign || 'center';
                     obj.textColor = obj.textColor || 'black';
                     obj.fontSize = obj.fontSize || 12;
                     obj.fontStyle = obj.fontStyle || 'font-arial';
@@ -252,8 +272,9 @@ export default {
             // Passes the userInputObject up to the parent component "App.vue"
             this.$emit('user-input-object', this.userInputObject);
         },
-        // This shows the popup box to edit the text inside an editable box on the phone label
+
         showPopUp(box, index) {
+            // This shows the popup box to edit the text inside an editable box on the phone label
             this.popupVisible = true;
             this.popupText = box[1].userComment;
             
@@ -265,20 +286,24 @@ export default {
             this.isBold = box[1].isBold;
             this.isItalics = box[1].isItalics;
             this.isUnderline = box[1].isUnderline;
-            this.textAlign = box[1].textAlign;
+            this.textHorizontalAlign = box[1].textHorizontalAlign;
+            this.textVerticalAlign = box[1].textVerticalAlign;
             this.textColor = box[1].textColor;
             this.fontSize = box[1].fontSize;
             this.fontStyle = box[1].fontStyle;
 
             this.resetFocus();
         },
-        // This is confirming the text changes in the popup box and makes them appear on the phone label
+
         confirmEdit() {
+            // This is confirming the text changes in the popup box and makes them appear on the phone label
+            console.log('CONFIRMING EDIT', this.currentBox[1]);
             this.currentBox[1].userComment = this.popupText;
             this.currentBox[1].isBold = this.isBold;
             this.currentBox[1].isItalics = this.isItalics;
             this.currentBox[1].isUnderline = this.isUnderline;
-            this.currentBox[1].textAlign = this.textAlign;
+            this.currentBox[1].textHorizontalAlign = this.textHorizontalAlign;
+            this.currentBox[1].textVerticalAlign = this.textVerticalAlign;
             this.currentBox[1].textColor = this.textColor;
             this.currentBox[1].fontSize = this.fontSize;
             this.currentBox[1].fontStyle = this.fontStyle;
@@ -308,8 +333,12 @@ export default {
             this.isUnderline = !this.isUnderline;
             this.resetFocus();
         },
-        setTextAlign(align) {
-            this.textAlign = align;
+        setHorizontalTextAlign(align) {
+            this.textHorizontalAlign = align;
+            this.resetFocus();
+        },
+        setVerticalTextAlign(align) {
+            this.textVerticalAlign = align;
             this.resetFocus();
         },
         setTextColor(color) {
@@ -379,10 +408,8 @@ textarea {
 
 /* ----------------- TEXT COLORS ----------------- */
 .textarea-container {
-    /*background-color: red;
-    display: flex;
-    justify-content: center;
-    align-items: center;*/
+    display: grid;
+    place-items: center;
 }
 
 .text-black {
@@ -407,15 +434,35 @@ textarea {
     color: purple;
 }
 
+/* ----------------- TEXT ALIGNMENT ----------------- */
 .text-left {
-    text-align: left;
+    display: flex;
+    justify-content: flex-start;
+    /* text-align: left; */
 }
-.text-center {
-    text-align: center;
+.text-h-center {
+    display: flex;
+    justify-content: center;
+    /* text-align: center; */
 }
 .text-right {
-    text-align: right;
+    display: flex;
+    justify-content: flex-end;
+    /* text-align: right; */
 }
+.text-top {
+    display: flex;
+    align-items: flex-start;
+}
+.text-v-center {
+    display: flex;
+    align-items: center;
+}
+.text-bottom {
+    display: flex;
+    align-items: flex-end;
+}
+
 
 /* ----------------- POP UP BUTTONS ----------------- */
 .popup-button {
