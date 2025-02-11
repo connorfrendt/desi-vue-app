@@ -224,6 +224,9 @@ export default {
 
             folders: [],
             models: [],
+
+            justifyContent: 'center',
+            alignItems: 'center',
         }
     },
     components: {
@@ -243,7 +246,7 @@ export default {
             let list = container.querySelector('#list');
 
             let myStyles = '';
-            console.log(myStyles);
+            // console.log(myStyles);
             items.forEach((item, index) => {
                 const li = document.createElement('li');
                 li.textContent = item.userComment;
@@ -251,13 +254,15 @@ export default {
                 list.appendChild(li);
                 
                 let styles = {
+                    display: 'flex',
+                    justifyContent: this.textHorizontalAlign(item.textHorizontalAlign),
+                    alignItems: this.textVerticalAlign(item.textVerticalAlign),
                     height: this.twipsToPixels(item.position[3] - item.position[1]) + 'px',
                     width: this.twipsToPixels(item.position[2] - item.position[0]) + 'px',
                     position: 'absolute',
                     left: this.twipsToPixels(item.position[0]) + 'px',
                     top: this.twipsToPixels(item.position[1]) + 'px',
                     color: item.textColor,
-                    textAlign: item.textAlign,
                     fontSize: item.fontSize,
                     fontStyle: item.fontStyle,
                     isBold: item.isBold,
@@ -267,6 +272,9 @@ export default {
                 };
                 myStyles += `
                     #input-box-${index} {
+                        display: flex;
+                        justify-content: ${styles.justifyContent};
+                        align-items: ${styles.alignItems};
                         height: ${styles.height};
                         width: ${styles.width};
                         position: absolute;
@@ -274,7 +282,6 @@ export default {
                         top: ${styles.top};
                         color: ${styles.color};
                         list-style-type: none;
-                        text-align: ${styles.textAlign};
                         font-size: ${styles.fontSize + 'px'};
                         font-style: ${styles.isItalics ? 'italic' : ''};
                         font-weight: ${styles.isBold ? 'bold' : ''};
@@ -289,6 +296,20 @@ export default {
                 style: myStyles,
             });
 
+        },
+        textVerticalAlign(verticalAlignment) {
+            console.log('\n*******V ALIGN: ', verticalAlignment);
+            return verticalAlignment === 'top' ? 'flex-start'
+                 : verticalAlignment === 'center' ? 'center'
+                 : verticalAlignment === 'bottom' ? 'flex-end'
+                 : 'center';
+        },
+        textHorizontalAlign(horizontalAlignment) {
+            console.log('\n*******H ALIGN: ', horizontalAlignment);
+            return horizontalAlignment === 'left' ? 'flex-start'
+                 : horizontalAlignment === 'center' ? 'center'
+                 : horizontalAlignment === 'right' ? 'flex-end'
+                 : 'center';
         },
         twipsToPixels(num) {
             let numTwips = num / 1440; // 1440 twips per inch

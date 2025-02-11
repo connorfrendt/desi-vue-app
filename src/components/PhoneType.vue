@@ -238,7 +238,6 @@ export default {
                 'text-top': box.textVerticalAlign === 'top',
                 'text-v-center': box.textVerticalAlign === 'center',
                 'text-bottom': box.textVerticalAlign === 'bottom',
-                // 'text-top': 
                 [`text-${box.textColor}`]: true,
                 [`font-size-${box.fontSize}`]: true,
                 [`${box.fontStyle}`]: true
