@@ -38,13 +38,13 @@
             <div id="open-window" v-if="buttonClicked" style="text-align: center; z-index: 20;">
                 <label for="extension" style="margin-top: 10px;">Extension number to add:</label>
                 <br />
-                <input id="extension" type="number" v-model="tempExtension" style="width: 265px;" />
+                <input id="extension" type="number" v-model="tempExtension" style="width: 365px;" />
                 
                 <div style="margin-top: 20px;">
                     <label>Product Family:</label>
                 </div>
                 <div style="display: flex; justify-content: center;">
-                    <select id="dropdown" v-model="tempSelectedValue" @change="fetchModels(tempSelectedValue)" style="width: 265px;">
+                    <select id="dropdown" v-model="tempSelectedValue" @change="fetchModels(tempSelectedValue)" style="width: 365px;">
                         <option value="">Select a Product...</option>
                         <option v-for="folder in folders" :key="folder" :value="folder">{{ folder }}</option>
                     </select>
@@ -54,7 +54,7 @@
                     <label>Model:</label>
                 </div>
                 <div style="display: flex; justify-content: center;">
-                    <select @change="uncheckTemplate()" class="model-selection" v-model="tempModel" style="width: 265px;">
+                    <select @change="uncheckTemplate()" class="model-selection" v-model="tempModel" style="width: 365px;">
                         <option value="">Select a Model...</option>
                         <option v-for="model in models" :key="model" :value="model">{{ model }}</option>
                     </select>
@@ -62,7 +62,7 @@
 
                 <div style="margin-top: 20px;"><label>Person's Name (optional)</label></div>
                 <div>
-                    <input type="text" v-model="tempName" style="width: 265px;" />
+                    <input type="text" v-model="tempName" style="width: 365px;" />
                 </div>
 
                 <div id="template-checkbox">
@@ -70,7 +70,7 @@
                         Show Templating Options
                 </div>
                 <div v-if="templateCheckBox">
-                    <select style="width: 265px;" v-model="tempCurrentTemplateSelected">
+                    <select style="width: 365px;" v-model="tempCurrentTemplateSelected">
                         <option v-if="phoneList.length === 0" value="">No Template</option>
                         <option v-for="phone in modelList" :key="phone.ext" :value="phone.ext">{{ phone.ext }} <span v-if="phone.name">({{ phone.name }})</span></option>
                     </select>

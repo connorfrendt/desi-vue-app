@@ -6,9 +6,9 @@ import router from './router.js';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import { faTrashCan, faPenToSquare, faFolderOpen, faFloppyDisk } from '@fortawesome/free-regular-svg-icons';
-import { faAlignCenter, faAlignLeft, faAlignRight, faAngleDown, faPlus, faPrint } from '@fortawesome/free-solid-svg-icons';
+import { faAlignCenter, faAlignLeft, faAlignRight, faAngleDown, faArrowsDownToLine, faArrowsUpToLine, faPlus, faPrint } from '@fortawesome/free-solid-svg-icons';
 
-library.add(faTrashCan, faPlus, faPenToSquare, faFolderOpen, faFloppyDisk, faPrint, faAngleDown, faAlignLeft, faAlignCenter, faAlignRight)
+library.add(faTrashCan, faPlus, faPenToSquare, faFolderOpen, faFloppyDisk, faPrint, faAngleDown, faAlignLeft, faAlignCenter, faAlignRight, faArrowsUpToLine, faArrowsDownToLine)
 Vue.component('font-awesome-icon', FontAwesomeIcon);
 
 Vue.use(VueRouter);

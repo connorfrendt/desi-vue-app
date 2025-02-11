@@ -61,13 +61,13 @@
                 
                 <div style="display: flex; justify-content: space-evenly;">
                     <div class="popup-button" :class="{ active: textVerticalAlign === 'top' }" @click="setVerticalTextAlign('top')">
-                        Top<font-awesome-icon icon="fa-solid fa-align-left" />
+                        Top<font-awesome-icon icon="fa-solid fa-arrows-up-to-line" />
                     </div>
                     <div class="popup-button" :class="{ active: textVerticalAlign === 'center' }" @click="setVerticalTextAlign('center')">
                         Center<font-awesome-icon icon="fa-solid fa-align-center" />
                     </div>
                     <div class="popup-button" :class="{ active: textVerticalAlign === 'bottom' }" @click="setVerticalTextAlign('bottom')">
-                        Bottom<font-awesome-icon icon="fa-solid fa-align-right" />
+                        Bottom<font-awesome-icon icon="fa-solid fa-arrows-down-to-line" />
                     </div>
                 </div>
 
