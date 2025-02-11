@@ -244,9 +244,9 @@ export default {
             container.innerHTML = `<ul id="list"></ul>`;
             document.body.appendChild(container);
             let list = container.querySelector('#list');
-
+            // just like ^ #list, make one for the outerContainerStyles
             let myStyles = '';
-            // console.log(myStyles);
+            
             items.forEach((item, index) => {
                 const li = document.createElement('li');
                 li.textContent = item.userComment;
@@ -272,7 +272,7 @@ export default {
                 };
                 myStyles += `
                     #input-box-${index} {
-                        display: flex;
+                        display: ${styles.display};
                         justify-content: ${styles.justifyContent};
                         align-items: ${styles.alignItems};
                         height: ${styles.height};
@@ -298,14 +298,12 @@ export default {
 
         },
         textVerticalAlign(verticalAlignment) {
-            console.log('\n*******V ALIGN: ', verticalAlignment);
             return verticalAlignment === 'top' ? 'flex-start'
                  : verticalAlignment === 'center' ? 'center'
                  : verticalAlignment === 'bottom' ? 'flex-end'
                  : 'center';
         },
         textHorizontalAlign(horizontalAlignment) {
-            console.log('\n*******H ALIGN: ', horizontalAlignment);
             return horizontalAlignment === 'left' ? 'flex-start'
                  : horizontalAlignment === 'center' ? 'center'
                  : horizontalAlignment === 'right' ? 'flex-end'
