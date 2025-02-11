@@ -298,9 +298,8 @@ export default {
         fetchPhoneType(phone) {
             // Instead of tempSelectedValue, I need the innerHTML of the option
             let innerHTMLText = this.getOptionText(this.tempSelectedValue);
-            let innerFileName = this.turnInnerHTMLToFileName(innerHTMLText);
 
-            return fetch(`/api/files/${innerFileName}/${phone}`)
+            return fetch(`/api/files/${innerHTMLText}/${phone}`)
                 .then(response => {
                     return response.json();
                 })
