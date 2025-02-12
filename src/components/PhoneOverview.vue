@@ -240,11 +240,18 @@ export default {
                 items.push(userInputObjects[i][1]);
             }
             console.log('ITEMS: ', items);
+
+            let outerContainer = document.createElement('div');
+            outerContainer.id = 'outer-container';
+            document.body.appendChild(outerContainer);
+            
             let container = document.createElement('div');
             container.innerHTML = `<ul id="list"></ul>`;
-            document.body.appendChild(container);
+            
+            outerContainer.appendChild(container);
+            
             let list = container.querySelector('#list');
-            // just like ^ #list, make one for the outerContainerStyles
+            
             let myStyles = '';
             
             items.forEach((item, index) => {
@@ -289,10 +296,10 @@ export default {
                     }
                 `;
             });
-
+            console.log('Outer Container: ', document.body);
             printJS({
-                printable: container.innerHTML,
-                type: 'raw-html',
+                printable: 'outer-container',
+                type: 'html',
                 style: myStyles,
             });
 
