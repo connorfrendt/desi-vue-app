@@ -241,9 +241,17 @@ export default {
             }
             console.log('ITEMS: ', items);
 
+            let printContainer = document.createElement('div');
+            document.body.appendChild(printContainer);
+
             let outerContainer = document.createElement('div');
             outerContainer.id = 'outer-container';
-            document.body.appendChild(outerContainer);
+            outerContainer.style.height = '670px';
+            outerContainer.style.width = '181.66px';
+            outerContainer.style.border = '1px solid black';
+            outerContainer.style.position = 'absolute';
+            // outerContainer.style.padding = '20px';
+            printContainer.appendChild(outerContainer);
             
             let container = document.createElement('div');
             container.innerHTML = `<ul id="list"></ul>`;
@@ -268,6 +276,7 @@ export default {
                     width: this.twipsToPixels(item.position[2] - item.position[0]) + 'px',
                     position: 'absolute',
                     left: this.twipsToPixels(item.position[0]) + 'px',
+                    // left: '13px',
                     top: this.twipsToPixels(item.position[1]) + 'px',
                     color: item.textColor,
                     fontSize: item.fontSize,
@@ -275,11 +284,10 @@ export default {
                     isBold: item.isBold,
                     isItalics: item.isItalics,
                     isUnderline: item.isUnderline,
-                    
                 };
                 myStyles += `
                     #input-box-${index} {
-                        display: ${styles.display};
+                        display: flex;
                         justify-content: ${styles.justifyContent};
                         align-items: ${styles.alignItems};
                         height: ${styles.height};
@@ -288,21 +296,23 @@ export default {
                         left: ${styles.left};
                         top: ${styles.top};
                         color: ${styles.color};
-                        list-style-type: none;
                         font-size: ${styles.fontSize + 'px'};
                         font-style: ${styles.isItalics ? 'italic' : ''};
                         font-weight: ${styles.isBold ? 'bold' : ''};
                         text-decoration: ${styles.isUnderline ? 'underline' : ''};
+                        border: 1px solid black;
                     }
                 `;
+
             });
-            console.log('Outer Container: ', document.body);
+            console.log(myStyles);
             printJS({
-                printable: 'outer-container',
-                type: 'html',
+                printable: printContainer.innerHTML,
+                type: 'raw-html',
                 style: myStyles,
             });
 
+            document.body.removeChild(printContainer);
         },
         textVerticalAlign(verticalAlignment) {
             return verticalAlignment === 'top' ? 'flex-start'
