@@ -250,7 +250,6 @@ export default {
             outerContainer.style.width = '181.66px';
             outerContainer.style.border = '1px solid black';
             outerContainer.style.position = 'absolute';
-            // outerContainer.style.padding = '20px';
             printContainer.appendChild(outerContainer);
             
             let container = document.createElement('div');
