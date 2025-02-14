@@ -56,7 +56,7 @@
                 <div style="display: flex; justify-content: center;">
                     <select @change="uncheckTemplate()" class="model-selection" v-model="tempModel" style="width: 365px;">
                         <option value="">Select a Model...</option>
-                        <option v-for="model in models" :key="model" :value="model">{{ model }}</option>
+                        <option v-for="model in models" :key="model" :value="model">{{ takeJSONExtOff(model) }}</option>
                     </select>
                 </div>
 
@@ -248,7 +248,6 @@ export default {
             outerContainer.id = 'outer-container';
             outerContainer.style.height = '670px';
             outerContainer.style.width = '181.66px';
-            outerContainer.style.border = '1px solid black';
             outerContainer.style.position = 'absolute';
             printContainer.appendChild(outerContainer);
             
@@ -299,7 +298,6 @@ export default {
                         font-style: ${styles.isItalics ? 'italic' : ''};
                         font-weight: ${styles.isBold ? 'bold' : ''};
                         text-decoration: ${styles.isUnderline ? 'underline' : ''};
-                        border: 1px solid black;
                     }
                 `;
 
@@ -368,6 +366,9 @@ export default {
                 .catch(err => {
                     console.error('ERROR ERROR: ', err);
                 });
+        },
+        takeJSONExtOff(fileName) {
+            return fileName.split('.')[0];
         },
         turnInnerHTMLToFileName(innerHTML) {
             let fileName = innerHTML.replace(/ /g, '_');
