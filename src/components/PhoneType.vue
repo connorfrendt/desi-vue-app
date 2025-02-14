@@ -19,7 +19,12 @@
 
         <div v-if="popupVisible" class="popup">
             <div class="textarea-container">
-                <textarea
+                <ul>
+                    <li style="list-style-type: none; height: 100px; width: 195px; background-color: red;">
+                        <input type="text" />
+                    </li>
+                </ul>
+                <!-- <textarea
                     ref="popupInput"
                     v-model="popupText"
                     :class="[
@@ -50,7 +55,7 @@
                         ]"
 
                     />
-                </div>
+                </div> -->
             </div>
             <div>
                 <div style="text-align: center; margin-top: 10px;">STYLE</div>
@@ -407,8 +412,10 @@ textarea {
 
 /* ----------------- TEXT COLORS ----------------- */
 .textarea-container {
-    display: grid;
-    place-items: center;
+    /* display: grid;
+    place-items: center; */
+    display: flex;
+    justify-content: center;
 }
 
 .text-black {
