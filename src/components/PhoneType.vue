@@ -20,7 +20,7 @@
         <div v-if="popupVisible" class="popup">
             <div class="textarea-container">
                 <ul style="padding: 0;">
-                    <li style="list-style-type: none; height: 100px; width: 195px; background-color: lightgray; display: flex;" :class="[{ [`text-${textVerticalAlign}`]: true }]">
+                    <li style="list-style-type: none; height: 100px; width: 200px; background-color: lightgray; display: flex;" :class="[{ [`text-${textVerticalAlign}`]: true }]">
                         <input type="text" ref="popupInput" v-model="popupText" style="width: 195px; background-color: lightgray; border: none;"
                             :class="[
                                 {
@@ -629,7 +629,7 @@ input:focus {
 }
 
 /* ----------------- FONT STYLES ----------------- */
-.font-aria {
+.font-arial {
     font-family: Arial;
 }
 .font-courier-new {
