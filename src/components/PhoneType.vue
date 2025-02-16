@@ -19,9 +19,22 @@
 
         <div v-if="popupVisible" class="popup">
             <div class="textarea-container">
-                <ul>
-                    <li style="list-style-type: none; height: 100px; width: 195px; background-color: red;">
-                        <input type="text" />
+                <ul style="padding: 0;">
+                    <li style="list-style-type: none; height: 100px; width: 195px; background-color: lightgray; display: flex;" :class="[{ [`text-${textVerticalAlign}`]: true }]">
+                        <input type="text" ref="popupInput" v-model="popupText" style="width: 195px; background-color: lightgray; border: none;"
+                            :class="[
+                                {
+                                    bold: isBold,
+                                    italics: isItalics,
+                                    underline: isUnderline,
+                                    [`text-input-${textHorizontalAlign}`]: true,
+                                    // [`text-${textVerticalAlign}`]: true,
+                                    [`text-${textColor}`]: true,
+                                    [`font-size-${fontSize}`]: true,
+                                    [`${fontStyle}`]: true
+                                },
+                            ]"
+                        />
                     </li>
                 </ul>
                 <!-- <textarea
@@ -399,6 +412,9 @@ textarea {
     resize: none;
 }
 
+input:focus {
+    outline: none;
+}
 /* ----------------- BOLD, ITALICS, UNDERLINE ----------------- */
 .bold {
     font-weight: bold;
@@ -412,10 +428,7 @@ textarea {
 
 /* ----------------- TEXT COLORS ----------------- */
 .textarea-container {
-    /* display: grid;
-    place-items: center; */
-    display: flex;
-    justify-content: center;
+    
 }
 
 .text-black {
@@ -441,20 +454,27 @@ textarea {
 }
 
 /* ----------------- TEXT ALIGNMENT ----------------- */
+.text-input-left {
+    text-align: left;
+}
+.text-input-center {
+    text-align: center;
+}
+.text-input-right {
+    text-align: right;
+}
+
 .text-left {
     display: flex;
     justify-content: flex-start;
-    /* text-align: left; */
 }
 .text-h-center {
     display: flex;
     justify-content: center;
-    /* text-align: center; */
 }
 .text-right {
     display: flex;
     justify-content: flex-end;
-    /* text-align: right; */
 }
 .text-top {
     display: flex;
@@ -468,7 +488,6 @@ textarea {
     display: flex;
     align-items: flex-end;
 }
-
 
 /* ----------------- POP UP BUTTONS ----------------- */
 .popup-button {
