@@ -302,7 +302,7 @@ export default {
                 `;
 
             });
-            console.log(myStyles);
+            
             printJS({
                 printable: printContainer.innerHTML,
                 type: 'raw-html',

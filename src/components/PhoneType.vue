@@ -28,7 +28,6 @@
                                     italics: isItalics,
                                     underline: isUnderline,
                                     [`text-input-${textHorizontalAlign}`]: true,
-                                    // [`text-${textVerticalAlign}`]: true,
                                     [`text-${textColor}`]: true,
                                     [`font-size-${fontSize}`]: true,
                                     [`${fontStyle}`]: true
@@ -231,18 +230,34 @@ export default {
         },
         getBoxStyles(box) {
             // Makes the css for the boxes, this is not for the text inside
-            let styles = {
-                height: this.twipsToPixels(box.position[3] - box.position[1]) + 'px',
-                width: this.twipsToPixels(box.position[2] - box.position[0]) + 'px',
-                position: 'absolute',
-                left: this.twipsToPixels(box.position[0]) + 'px',
-                top: this.twipsToPixels(box.position[1]) + 'px',
-                backgroundColor: box.kind === 'text' ? box.color : box.kind === 'rectangle' ? box.color : '',
-                border: box.kind === 'dottedLine' ? `1px dotted ${box.color}` : '',
-                color: box.kind === 'staticText' ? box.color : '',
-                zIndex: box.editable ? 2 : 1
+            if(box.kind === "rectangle" || box.kind === "dottedLine" || box.kind === "staticText" || box.kind === "text") {
+                let styles = {
+                    height: this.twipsToPixels(box.position[3] - box.position[1]) + 'px',
+                    width: this.twipsToPixels(box.position[2] - box.position[0]) + 'px',
+                    position: 'absolute',
+                    left: this.twipsToPixels(box.position[0]) + 'px',
+                    top: this.twipsToPixels(box.position[1]) + 'px',
+                    backgroundColor: box.kind === 'text' ? box.color : box.kind === 'rectangle' ? box.color : '',
+                    border: box.kind === 'dottedLine' ? `1px dotted ${box.color}` : '',
+                    color: box.kind === 'staticText' ? box.color : '',
+                    zIndex: box.editable ? 2 : 1
+                }
+                return styles;
             }
-            return styles;
+            
+            if(box.kind === "ellipse") {
+                let styles = {
+                    height: this.twipsToPixels(box.position[3] - box.position[1]) + 'px',
+                    width: this.twipsToPixels(box.position[2] - box.position[0]) + 'px',
+                    position: 'absolute',
+                    left: this.twipsToPixels(box.position[0]) + 'px',
+                    top: this.twipsToPixels(box.position[1]) + 'px',
+                    border: '1px solid' + box.color,
+                    borderRadius: '50%',
+                    zIndex: 2
+                }
+                return styles;
+            }
         },
         getTextClasses(box) {
             // Applies classes to each individual editable box. Each class gets applied when the following value is "true"
