@@ -283,6 +283,7 @@ export default {
                     isItalics: item.isItalics,
                     isUnderline: item.isUnderline,
                 };
+                console.log('FONT: ', styles.fontStyle);
                 myStyles += `
                     #input-box-${index} {
                         display: flex;
@@ -298,6 +299,7 @@ export default {
                         font-style: ${styles.isItalics ? 'italic' : ''};
                         font-weight: ${styles.isBold ? 'bold' : ''};
                         text-decoration: ${styles.isUnderline ? 'underline' : ''};
+                        font-family: ${styles.fontStyle};
                     }
                 `;
 
