@@ -21,6 +21,9 @@
                     <font-awesome-icon icon="fa-solid fa-print" style="margin-right: 5px;" />
                     Print
                 </div>
+                <div class="true-center header-button" @click="zoomFunc">
+                    Zoom
+                </div>
             </div>  
             <div style="display: flex; margin-right: 25px;">
                 <div class="simple-button true-center header-button" style="margin-right: 25px; padding-right: 10px; text-align: center;">
@@ -274,7 +277,6 @@ export default {
                     width: this.twipsToPixels(item.position[2] - item.position[0]) + 'px',
                     position: 'absolute',
                     left: this.twipsToPixels(item.position[0]) + 'px',
-                    // left: '13px',
                     top: this.twipsToPixels(item.position[1]) + 'px',
                     color: item.textColor,
                     fontSize: item.fontSize,
@@ -598,6 +600,9 @@ export default {
                     this.modelList.push(this.phoneList[i]);
                 }
             }
+        },
+        zoomFunc() {
+            console.log('Zoomed in');
         }
     },
     mounted() {
