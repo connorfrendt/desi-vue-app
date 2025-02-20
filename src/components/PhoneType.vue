@@ -6,7 +6,7 @@
                     <ul>
                         <li v-for="(box, index) in boxes" :key="box[0]"
                             :id="`input-box-${index}`"
-                            :style="[getBoxStyles(box[1]), selectedBox === index ? { outline: '2px solid black' } : '']"
+                            :style="[getBoxStyles(box[1]), selectedBox === index ? { outline : '1px solid black', } : '']"
                             v-html="box[1].editable ? box[1].userComment : box[1].defaultText"
                             style="list-style-type: none;"
                             @click="box[1].editable ? showPopUp(box, index) : ''"
@@ -36,38 +36,6 @@
                         />
                     </li>
                 </ul>
-                <!-- <textarea
-                    ref="popupInput"
-                    v-model="popupText"
-                    :class="[
-                        {
-                            bold: isBold,
-                            italics: isItalics,
-                            underline: isUnderline,
-                            [`text-${textHorizontalAlign}`]: true,
-                            [`text-${textVerticalAlign}`]: true,
-                            [`text-${textColor}`]: true,
-                            [`font-size-${fontSize}`]: true,
-                            [`${fontStyle}`]: true
-                        },
-                    ]"
-                    :style="{
-                        fontSize: fontSize + 'px',
-                        width: '195px',
-                        height: '100px',
-                        backgroundColor: 'lightgray'
-                    }"
-                ></textarea>
-                <div style="vertical-align: bottom;">
-                    <input type="text" style="height: 75px; background-color: lightgray;"
-                        :class="[
-                            {
-                                [`text-${textHorizontalAlign}`]: true,
-                            }
-                        ]"
-
-                    />
-                </div> -->
             </div>
             <div>
                 <div style="text-align: center; margin-top: 10px;">STYLE</div>
@@ -238,11 +206,12 @@ export default {
                     left: this.twipsToPixels(box.position[0]) + 'px',
                     top: this.twipsToPixels(box.position[1]) + 'px',
                     backgroundColor: box.kind === 'text' || box.kind === 'rectangle' ? box.color : '',
-                    border: box.kind === 'dottedLine' ? `1px dotted ${box.color}` : '',
-                    outline: box.editable ? '1px solid rgba(0, 0, 0, 0.5)' : '',
+                    border: box.kind === 'dottedLine' ? `1px dotted ${box.color}` : box.editable ? '1px solid rgba(0, 0, 0, 0.5)' : '',
+                    // outline: box.editable ? '1px solid rgba(0, 0, 0, 0.5)' : '',
                     color: box.kind === 'staticText' ? box.color : '',
                     zIndex: box.editable ? 2 : 1,
                     fontSize: box.fontSize ? box.fontSize + 'px' : '12px',
+                    // marginTop: '5px',
                 }
                 return styles;
             }
