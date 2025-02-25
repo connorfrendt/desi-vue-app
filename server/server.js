@@ -4,7 +4,6 @@ const PORT = 3000;
 const fs = require('fs');
 const path = require('path');
 
-
 console.log('******************************');
 app.get('/api/files', (req, res) => {
     const subdirectory = req.query.subdirectory || '';
