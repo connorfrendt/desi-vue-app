@@ -1,0 +1,210 @@
+{
+    "copyright": "Copyright © 1997 Matrix Software Solutions",
+    "group": "Vodavi Starplus II",
+    "typeCode": "STP-2601",
+    "description": "2601",
+    "landscape": false,
+    "width": 4700,
+    "height": 10500,
+    "origins": [
+        [
+            1175,
+            2435
+        ],
+        [
+            6395,
+            2435
+        ]
+    ],
+    "objects": {
+        "5096": {
+            "kind": "staticText",
+            "color": "#000",
+            "position": [
+                250,
+                100,
+                1150,
+                350
+            ],
+            "defaultText": "Comments:"
+        },
+        "6096": {
+            "kind": "text",
+            "printable": true,
+            "editable": true,
+            "color": "#fff",
+            "position": [
+                1000,
+                2097,
+                3700,
+                2597
+            ],
+            "defaultText": ""
+        },
+        "7096": {
+            "kind": "text",
+            "printable": true,
+            "editable": true,
+            "color": "#fff",
+            "position": [
+                1000,
+                2609,
+                3700,
+                3109
+            ],
+            "defaultText": ""
+        },
+        "8096": {
+            "kind": "text",
+            "printable": true,
+            "editable": true,
+            "color": "#fff",
+            "position": [
+                1000,
+                3121,
+                3700,
+                3621
+            ],
+            "defaultText": ""
+        },
+        "9096": {
+            "kind": "text",
+            "printable": true,
+            "editable": true,
+            "color": "#fff",
+            "position": [
+                1000,
+                3633,
+                3700,
+                4133
+            ],
+            "defaultText": ""
+        },
+        "10096": {
+            "kind": "text",
+            "printable": true,
+            "editable": true,
+            "color": "#fff",
+            "position": [
+                1000,
+                4145,
+                3700,
+                4645
+            ],
+            "defaultText": ""
+        },
+        "11096": {
+            "kind": "text",
+            "printable": true,
+            "editable": true,
+            "color": "#fff",
+            "position": [
+                1000,
+                4657,
+                3700,
+                5157
+            ],
+            "defaultText": ""
+        },
+        "12096": {
+            "kind": "text",
+            "printable": true,
+            "editable": true,
+            "color": "#fff",
+            "position": [
+                1000,
+                5167,
+                3700,
+                5672
+            ],
+            "defaultText": ""
+        },
+        "13096": {
+            "kind": "text",
+            "printable": true,
+            "editable": true,
+            "color": "#fff",
+            "position": [
+                1000,
+                5681,
+                3700,
+                6181
+            ],
+            "defaultText": ""
+        },
+        "14096": {
+            "kind": "text",
+            "printable": true,
+            "editable": true,
+            "color": "#fff",
+            "position": [
+                1000,
+                6193,
+                3700,
+                6693
+            ],
+            "defaultText": ""
+        },
+        "15096": {
+            "kind": "text",
+            "printable": true,
+            "editable": true,
+            "color": "#fff",
+            "position": [
+                1000,
+                6705,
+                3700,
+                7205
+            ],
+            "defaultText": ""
+        },
+        "16096": {
+            "kind": "text",
+            "printable": true,
+            "editable": true,
+            "color": "#fff",
+            "position": [
+                1140,
+                9805,
+                3540,
+                10335
+            ],
+            "defaultText": ""
+        },
+        "17096": {
+            "kind": "dottedLine",
+            "color": "#000",
+            "position": [
+                250,
+                1150,
+                4400,
+                8300
+            ],
+            "defaultText": ""
+        },
+        "18096": {
+            "kind": "text",
+            "printable": true,
+            "editable": true,
+            "color": "#c0ffff",
+            "position": [
+                250,
+                350,
+                4400,
+                1050
+            ],
+            "defaultText": ""
+        },
+        "19096": {
+            "kind": "dottedLine",
+            "color": "#000",
+            "position": [
+                1090,
+                9755,
+                3590,
+                10385
+            ],
+            "defaultText": ""
+        }
+    }
+}
