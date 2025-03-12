@@ -11,7 +11,7 @@
                 </div>
                 <div class="true-center header-button">
                     <font-awesome-icon icon="fa-regular fa-floppy-disk" style="margin-right: 5px;" />
-                    Savesss
+                    Save
                 </div>
                 <div class="true-center header-button" @click="addButton">
                     <font-awesome-icon icon="fa-solid fa-plus" style="margin-right: 5px;" />
@@ -24,7 +24,7 @@
                 <div class="true-center header-button" @click="zoomFunc">
                     Zoom
                 </div>
-                <div class="true-center header-button" @click="DBTest">
+                <div class="true-center header-button">
                     DB Test
                 </div>
             </div>  
@@ -34,7 +34,7 @@
                     <font-awesome-icon icon="fa-solid fa-angle-down" />
                 </div>
                 <div style="margin: auto 0">
-                    Welcome User!!!!!
+                    Welcome User
                 </div>
             </div>
         </div>
@@ -177,7 +177,7 @@
 <script>
 import PhoneType from './PhoneType.vue';
 import printJS from 'print-js';
-import PocketBase from 'pocketbase';
+// import PocketBase from 'pocketbase';
 
 export default {
     data() {
@@ -319,35 +319,35 @@ export default {
 
             document.body.removeChild(printContainer);
         },
-        DBTest() {
-            console.log('DB Test');
-            const pb = new PocketBase('http://127.0.0.1:8090');
-            // const authData = pb.collection("users").authWithPassword('test@example.com', '12345678');
-            // console.log('Auth Data: ', authData);
-            // console.log('isValid: ', pb.authStore.isValid);
-            // console.log('token: ', pb.authStore.token);
-            // console.log('record id: ', pb.authStore.record.id);
+        // DBTest() {
+        //     console.log('DB Test');
+        //     const pb = new PocketBase('http://127.0.0.1:8090');
+        //     // const authData = pb.collection("users").authWithPassword('test@example.com', '12345678');
+        //     // console.log('Auth Data: ', authData);
+        //     // console.log('isValid: ', pb.authStore.isValid);
+        //     // console.log('token: ', pb.authStore.token);
+        //     // console.log('record id: ', pb.authStore.record.id);
 
-            async function createUser() {
-                try {
-                    const user = await pb.collection('users').create({
-                        email: 'test3@example.com',
-                        password: 'asdfqwer',
-                        passwordConfirm: 'asdfqwer',
-                        username: 'test3',
-                        name: 'nameHere'
-                    });
-                    console.log('User: ', user);
+        //     async function createUser() {
+        //         try {
+        //             const user = await pb.collection('users').create({
+        //                 email: 'test3@example.com',
+        //                 password: 'asdfqwer',
+        //                 passwordConfirm: 'asdfqwer',
+        //                 username: 'test3',
+        //                 name: 'nameHere'
+        //             });
+        //             console.log('User: ', user);
 
-                }
-                catch(err) {
-                    console.error('Error in creating user: ', err);
-                    console.log('here');
-                }
-            }
-            createUser();
+        //         }
+        //         catch(err) {
+        //             console.error('Error in creating user: ', err);
+        //             console.log('here');
+        //         }
+        //     }
+        //     createUser();
 
-        },
+        // },
         textVerticalAlign(verticalAlignment) {
             return verticalAlignment === 'top' ? 'flex-start'
                  : verticalAlignment === 'center' ? 'center'
