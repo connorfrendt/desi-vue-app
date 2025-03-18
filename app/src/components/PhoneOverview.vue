@@ -34,7 +34,10 @@
                     <font-awesome-icon icon="fa-solid fa-angle-down" />
                 </div>
                 <div style="margin: auto 0">
-                    Welcome User
+                    Welcome {{ user.name }}
+                </div>
+                <div style="margin: auto 0" @click="handleLogoutSubmit">
+                    Logout
                 </div>
             </div>
         </div>
@@ -239,7 +242,14 @@ export default {
     components: {
         PhoneType
     },
+    props: {
+        onLogout: Function,
+        user: Object,
+    },
     methods: {
+        handleLogoutSubmit() {
+            this.onLogout();
+        },
         printPage() {
             let userInputObjects = Object.entries(this.userInputObjectData[0].objects);
             let items = [];
@@ -319,35 +329,6 @@ export default {
 
             document.body.removeChild(printContainer);
         },
-        // DBTest() {
-        //     console.log('DB Test');
-        //     const pb = new PocketBase('http://127.0.0.1:8090');
-        //     // const authData = pb.collection("users").authWithPassword('test@example.com', '12345678');
-        //     // console.log('Auth Data: ', authData);
-        //     // console.log('isValid: ', pb.authStore.isValid);
-        //     // console.log('token: ', pb.authStore.token);
-        //     // console.log('record id: ', pb.authStore.record.id);
-
-        //     async function createUser() {
-        //         try {
-        //             const user = await pb.collection('users').create({
-        //                 email: 'test3@example.com',
-        //                 password: 'asdfqwer',
-        //                 passwordConfirm: 'asdfqwer',
-        //                 username: 'test3',
-        //                 name: 'nameHere'
-        //             });
-        //             console.log('User: ', user);
-
-        //         }
-        //         catch(err) {
-        //             console.error('Error in creating user: ', err);
-        //             console.log('here');
-        //         }
-        //     }
-        //     createUser();
-
-        // },
         textVerticalAlign(verticalAlignment) {
             return verticalAlignment === 'top' ? 'flex-start'
                  : verticalAlignment === 'center' ? 'center'
@@ -636,11 +617,20 @@ export default {
         },
         zoomFunc() {
             console.log('Zoomed in');
+        },
+        logout() {
+
+        },
+        fetchUser() {
+            console.log('Fetching User');
+            const storedUser = sessionStorage.getItem('user');
+            console.log('Stored User: ', storedUser);
         }
     },
     mounted() {
         console.log('Mounted,\nFetching Files...');
         this.fetchFolders();
+        this.fetchUser();
     }
 }
 </script>

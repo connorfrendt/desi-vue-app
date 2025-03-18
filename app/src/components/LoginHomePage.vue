@@ -8,14 +8,14 @@
                         <div class="input-element" style="text-align: right;">
                             EMAIL:
                         </div>
-                        <div style="display: flex; align-items: center;">
+                        <div style="display: flex; align-items: center;" class="input-element">
                             <input v-model="profile.email">
                         </div>
                     
                         <div class="input-element" style="text-align: right;">
                             PASSWORD:
                         </div>
-                        <div style="display: flex; align-items: center;">
+                        <div style="display: flex; align-items: center;" class="input-element">
                             <input v-model="profile.password" type="password">
                         </div>
                         
@@ -44,22 +44,29 @@
                         <div class="input-element" style="text-align: right;">
                             EMAIL:
                         </div>
-                        <div style="display: flex; align-items: center;">
+                        <div style="display: flex; align-items: center;" class="input-element">
                             <input v-model="profile.email">
                         </div>
                         
                         <div class="input-element" style="text-align: right;">
                             PASSWORD:
                         </div>
-                        <div style="display: flex; align-items: center;">
+                        <div style="display: flex; align-items: center;" class="input-element">
                             <input v-model="profile.password" type="password">
                         </div>
                         
                         <div class="input-element" style="text-align: right;">
                             CONFIRM PASSWORD:
                         </div>
-                        <div style="display: flex; align-items: center;">
+                        <div style="display: flex; align-items: center;" class="input-element">
                             <input type="password" v-model="profile.passwordConfirm">
+                        </div>
+                        
+                        <div class="input-element" style="text-align: right;">
+                            NAME:
+                        </div>
+                        <div style="display: flex; align-items: center;" class="input-element">
+                            <input type="text" v-model="profile.name">
                         </div>
 
                         <div class="input-element" style="grid-column: 1 / span 2;">
@@ -87,8 +94,6 @@
 </template>
 
 <script>
-import PocketBase from 'pocketbase';
-
 export default {
     data() {
         return {
@@ -97,54 +102,31 @@ export default {
             profile: {
                 email: '',
                 password: '',
-                passwordConfirm: ''
+                passwordConfirm: '',
+                name: ''
             },
-            pb: null
-        };
+        }
     },
     props: {
         onSignIn: Function,
-        onSignUp: Function
+        onSignUp: Function,
+        pb: Object,
     },
     methods: {
-        handleSignInSubmit() {
-            
-        },
-        async handleSignUpSubmit() {
-            
-            try {
-                const user = await this.pb.collection('users').create({
-                    email: this.profile.email,
-                    password: this.profile.password,
-                    passwordConfirm: this.profile.passwordConfirm
+        handleSignUpSubmit(profile) {
+            this.onSignUp(profile)
+                .then(() => {
+                    this.$router.push('/phone-overview');
                 });
-                console.log('User: ', user);
-                console.log('record id: ', this.pb.authStore.record.id);
-                await this.$nextTick();
-                this.$router.push('/phone-overview');
-                
-            }
-            catch(err) {
-                console.error('ERROR: ', err);
-                this.error = 'Passwords do not match.  Please try again.';
-            }
-        },
-        startDB() {
-            this.pb = new PocketBase('http://127.0.0.1:8090');
-            console.log(this.pb);
         }
     },
-    mounted() {
-        console.log('Mounted');
-        this.startDB();
-    }
 };
 </script>
 
 <style scoped>
 label {
     display: block;
-    padding: 10px;
+    padding: 100px 10px;
 }
 
 .sign-in-log-in {
@@ -164,7 +146,7 @@ label {
 }
 
 .input-element {
-    padding: 10px;
+    padding: 50px 10px 10px 10px;
 }
 
 pre {
