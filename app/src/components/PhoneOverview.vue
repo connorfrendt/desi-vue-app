@@ -24,19 +24,22 @@
                 <div class="true-center header-button" @click="zoomFunc">
                     Zoom
                 </div>
-                <div class="true-center header-button">
-                    DB Test
-                </div>
             </div>  
             <div style="display: flex; margin-right: 25px;">
                 <div class="simple-button true-center header-button" style="margin-right: 25px; padding-right: 10px; text-align: center;">
                     Saved Phones
                     <font-awesome-icon icon="fa-solid fa-angle-down" />
                 </div>
-                <div style="margin: auto 0">
-                    Welcome {{ user.name }}
+                <div style="margin: auto; height: 100%; width: 80px; display: flex; align-items: center;">
+                    <div v-if="authData && authData.record">
+                        Welcome {{ authData.record.name }}!
+                    </div>
+                    <div v-else>
+                        Loading User Data...
+                    </div>
+                    <!-- Welcome {{ user.record.name }} -->
                 </div>
-                <div style="margin: auto 0" @click="handleLogoutSubmit">
+                <div class="true-center header-button" @click="handleLogoutSubmit">
                     Logout
                 </div>
             </div>
@@ -237,6 +240,8 @@ export default {
 
             justifyContent: 'center',
             alignItems: 'center',
+
+            testUser: '',
         }
     },
     components: {
@@ -245,6 +250,8 @@ export default {
     props: {
         onLogout: Function,
         user: Object,
+        pb: Object,
+        authData: Object,
     },
     methods: {
         handleLogoutSubmit() {
@@ -622,13 +629,15 @@ export default {
 
         },
         fetchUser() {
-            console.log('Fetching User');
-            const storedUser = sessionStorage.getItem('user');
-            console.log('Stored User: ', storedUser);
+            console.log('-------Fetching User-------');
+            console.log('Is Auth Valid?', this.pb.authStore.isValid);
+            console.log('Stored User:', this.pb.authStore.model);
         }
     },
     mounted() {
         console.log('Mounted,\nFetching Files...');
+        console.log('PB: ', this.pb);
+        console.log('--------------------------------');
         this.fetchFolders();
         this.fetchUser();
     }

@@ -118,6 +118,12 @@ export default {
                 .then(() => {
                     this.$router.push('/phone-overview');
                 });
+        },
+        handleSignInSubmit(profile) {
+            this.onSignIn(profile)
+                .then(() => {
+                    this.$router.push('/phone-overview');
+                });
         }
     },
 };
