@@ -18,6 +18,8 @@
                         <div style="display: flex; align-items: center;" class="input-element">
                             <input v-model="profile.password" type="password">
                         </div>
+
+                        <div v-if="error" class="error-message">{{ error }}</div>
                         
                         <div class="input-element" style="grid-column: 1 / span 2;">
                             <button>Log In</button>
@@ -69,6 +71,8 @@
                             <input type="text" v-model="profile.name">
                         </div>
 
+                        <div v-if="error" class="error-message">{{ error }}</div>
+
                         <div class="input-element" style="grid-column: 1 / span 2;">
                             <button>Sign Up</button>
                         </div>
@@ -83,7 +87,7 @@
                             <button type="button" @click="method = 'signin'">Log In</button>
                         </div>
                     </div>
-                    <pre v-if="error">{{ error }}</pre>
+                    
                 </div>
                 
             </form>
@@ -116,13 +120,21 @@ export default {
         handleSignUpSubmit(profile) {
             this.onSignUp(profile)
                 .then(() => {
-                    this.$router.push('/phone-overview');
+                    // this.$router.push('/phone-overview');
+                })
+                .catch(error => {
+                    this.error = 'working on this';
+                    console.log('ERROR ERROR ERROR ERROR', error);
                 });
         },
         handleSignInSubmit(profile) {
             this.onSignIn(profile)
                 .then(() => {
-                    this.$router.push('/phone-overview');
+                    // this.$router.push('/phone-overview');
+                })
+                .catch(error => {
+                    console.log('Error: ', error);
+                    this.error = 'Email or password is incorrect.';
                 });
         }
     },
@@ -145,7 +157,6 @@ label {
     flex-direction: column;
     padding: 10px;
     background: rgb(230, 228, 228);
-    /* background: white; */
     text-align: center;
     height: 100vh;
     width: 30vw;
@@ -155,7 +166,11 @@ label {
     padding: 50px 10px 10px 10px;
 }
 
-pre {
-    color: red;
+.error-message {
+    background-color: rgba(255, 0, 0, 0.2);
+    padding: 10px;
+    display: flex;
+    justify-content: center;
+    grid-column: span 2;
 }
 </style>

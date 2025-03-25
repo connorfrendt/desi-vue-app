@@ -37,10 +37,17 @@ export default {
             }
         },
         async handleSignIn(userProfile) {
-            this.authData = await this.pb.collection('customers').authWithPassword(
-                userProfile.email,
-                userProfile.password
-            );
+            try {
+                this.authData = await this.pb.collection('customers').authWithPassword(
+                    userProfile.email,
+                    userProfile.password
+                );
+            }
+            catch(err) {
+                console.log('Error in login', err.data.data);
+                this.error = 'Email or password does not exist.  Please try again.';
+                throw err;
+            }
         },
         async handleSignUp(userProfile) {
             try {
@@ -51,22 +58,16 @@ export default {
                     passwordConfirm: userProfile.passwordConfirm,
                     name: userProfile.name
                 });
-                setTimeout(() => {
-                    console.log('Created User', user);
-                }, 500);
-                setTimeout(() => {
-                    console.log('Logging in...');
-                }, 500);
-
+                console.log('Created User', user);
+                console.log('Logging in...');
                 this.authData = await this.pb.collection('customers').authWithPassword(
                     userProfile.email,
                     userProfile.password
                 );
                 console.log('Auth Data: ', this.authData);
+                
                 this.setUser(this.authData);
-                setTimeout(() => {
                     console.log('Logged In!');
-                }, 500);
                 
             }
             catch(err) {
@@ -74,7 +75,7 @@ export default {
                 this.error = 'Error in creating profile.  Please try again.';
                 this.pb.authStore.clear();
                 console.log('RETURN HERE??????');
-                return;
+                throw err;
             }
         },
         setUser(user) {
