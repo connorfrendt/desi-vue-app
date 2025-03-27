@@ -71,10 +71,8 @@ export default {
                 
             }
             catch(err) {
-                console.error('ERROR DATA: ', err.data.data);
-                this.error = 'Error in creating profile.  Please try again.';
+                // console.log('HEEEEEEEEEERE IS THE ERROR', err.data);
                 this.pb.authStore.clear();
-                console.log('RETURN HERE??????');
                 throw err;
             }
         },

@@ -54,21 +54,21 @@
                             PASSWORD:
                         </div>
                         <div style="display: flex; align-items: center;" class="input-element">
-                            <input v-model="profile.password" type="password">
+                            <input v-model="profile.password" type="password" required>
                         </div>
                         
                         <div class="input-element" style="text-align: right;">
                             CONFIRM PASSWORD:
                         </div>
                         <div style="display: flex; align-items: center;" class="input-element">
-                            <input type="password" v-model="profile.passwordConfirm">
+                            <input type="password" v-model="profile.passwordConfirm" required>
                         </div>
                         
                         <div class="input-element" style="text-align: right;">
                             NAME:
                         </div>
                         <div style="display: flex; align-items: center;" class="input-element">
-                            <input type="text" v-model="profile.name">
+                            <input type="text" v-model="profile.name" required>
                         </div>
 
                         <div v-if="error" class="error-message">{{ error }}</div>
@@ -120,11 +120,19 @@ export default {
         handleSignUpSubmit(profile) {
             this.onSignUp(profile)
                 .then(() => {
-                    // this.$router.push('/phone-overview');
+                    this.$router.push('/phone-overview');
                 })
                 .catch(error => {
-                    this.error = 'working on this';
-                    console.log('ERROR ERROR ERROR ERROR', error);
+                    console.log('ERROR ERROR ERROR ERROR', error.data);
+                    if(error.data.data.email) {
+                        this.error = 'Invalid Email';
+                    }
+                    if(error.data.data.password) {
+                        this.error = 'Password must be at least 8 characters long.';
+                    }
+                    if(error.data.data.passwordConfirm) {
+                        this.error = 'Passwords do not match';
+                    }
                 });
         },
         handleSignInSubmit(profile) {
@@ -133,7 +141,8 @@ export default {
                     // this.$router.push('/phone-overview');
                 })
                 .catch(error => {
-                    console.log('Error: ', error);
+                    console.log('Error: ', error.data);
+
                     this.error = 'Email or password is incorrect.';
                 });
         }
