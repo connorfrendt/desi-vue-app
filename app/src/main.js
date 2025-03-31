@@ -2,13 +2,18 @@ import Vue from 'vue';
 import VueRouter from 'vue-router';
 import App from './App.vue';
 import router from './router.js';
-
+// import './tailwind.css';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
-import { faTrashCan, faPenToSquare, faFolderOpen, faFloppyDisk } from '@fortawesome/free-regular-svg-icons';
-import { faAlignCenter, faAlignLeft, faAlignRight, faAngleDown, faArrowsDownToLine, faArrowsUpToLine, faPlus, faPrint } from '@fortawesome/free-solid-svg-icons';
 
-library.add(faTrashCan, faPlus, faPenToSquare, faFolderOpen, faFloppyDisk, faPrint, faAngleDown, faAlignLeft, faAlignCenter, faAlignRight, faArrowsUpToLine, faArrowsDownToLine)
+
+// REGULAR ICONS
+import { faTrashCan, faPenToSquare, faFolderOpen, faFloppyDisk, faUser } from '@fortawesome/free-regular-svg-icons';
+
+// SOLID ICONS
+import { faAlignCenter, faAlignLeft, faAlignRight, faAngleDown, faArrowsDownToLine, faArrowsUpToLine, faPlus, faPrint, faRightFromBracket } from '@fortawesome/free-solid-svg-icons';
+
+library.add(faTrashCan, faPlus, faPenToSquare, faFolderOpen, faFloppyDisk, faPrint, faAngleDown, faAlignLeft, faAlignCenter, faAlignRight, faArrowsUpToLine, faArrowsDownToLine, faRightFromBracket, faUser)
 Vue.component('font-awesome-icon', FontAwesomeIcon);
 
 Vue.use(VueRouter);

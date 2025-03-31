@@ -33,7 +33,6 @@ export default {
                     token: this.pb.authStore.token,
                     record: this.pb.authStore.model
                 };
-                console.log('Restored Session: ', this.authData);
             }
         },
         async handleSignIn(userProfile) {
@@ -51,23 +50,21 @@ export default {
         },
         async handleSignUp(userProfile) {
             try {
-                console.log('Trying');
                 const user = await this.pb.collection('customers').create({
                     email: userProfile.email,
                     password: userProfile.password,
                     passwordConfirm: userProfile.passwordConfirm,
                     name: userProfile.name
                 });
-                console.log('Created User', user);
-                console.log('Logging in...');
+                console.log(user); // keep this here for const user
                 this.authData = await this.pb.collection('customers').authWithPassword(
                     userProfile.email,
                     userProfile.password
                 );
-                console.log('Auth Data: ', this.authData);
+                // console.log('Auth Data: ', this.authData);
                 
                 this.setUser(this.authData);
-                    console.log('Logged In!');
+                console.log('Logged In!');
                 
             }
             catch(err) {
@@ -90,9 +87,7 @@ export default {
         }
     },
     mounted() {
-        console.log('Mounting DB');
         this.startPocketBaseDB();
-        console.log('HomePage PB: ', this.pb);
     }
 }
 </script>

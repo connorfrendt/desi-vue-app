@@ -27,19 +27,26 @@
             </div>  
             <div style="display: flex; margin-right: 25px;">
                 <div class="simple-button true-center header-button" style="margin-right: 25px; padding-right: 10px; text-align: center;">
-                    Saved Phones
+                    Saved Projects
                     <font-awesome-icon icon="fa-solid fa-angle-down" />
+                    <select v-model="selectedProject" @change="myFunc">
+                        <option value="">Select a project</option>
+                        <option value="project-a">Project A</option>
+                        <option value="project-b">Project B</option>
+                        <!-- <option>Add Project</option> -->
+                    </select>
                 </div>
                 <div style="margin: auto; height: 100%; width: 80px; display: flex; align-items: center;">
                     <div v-if="authData && authData.record">
-                        Welcome {{ authData.record.name }}!
+                        <font-awesome-icon icon="fa-regular fa-user" style="margin-right: 5px;" />
+                        Account {{ authData.record.name }}
                     </div>
                     <div v-else>
                         Loading User Data...
                     </div>
-                    <!-- Welcome {{ user.record.name }} -->
                 </div>
                 <div class="true-center header-button" @click="handleLogoutSubmit">
+                    <font-awesome-icon icon="fa-solid fa-right-from-bracket" style="margin-right: 5px;" />
                     Logout
                 </div>
             </div>
@@ -83,7 +90,8 @@
                 </div>
                 <div v-if="templateCheckBox">
                     <select style="width: 365px;" v-model="tempCurrentTemplateSelected">
-                        <option v-if="phoneList.length === 0" value="">No Template</option>
+                        <!-- <option v-if="phoneList.length === 0" value="">No Template</option> -->
+                        <option v-if="currentPhoneList.length === 0" value="">No Template</option>
                         <option v-for="phone in modelList" :key="phone.ext" :value="phone.ext">{{ phone.ext }} <span v-if="phone.name">({{ phone.name }})</span></option>
                     </select>
                 </div>
@@ -117,7 +125,7 @@
                 
                 <div style="margin: 10px 0;"
                     class="phone-list"
-                    v-for="(phone, index) in phoneList" :key="phone.ext"
+                    v-for="(phone, index) in currentPhoneList" :key="phone.ext"
                 >
                     <div
                         @click="phoneClickedFunc($event, index)"
@@ -204,8 +212,12 @@ export default {
             buttonClicked: false,
             userInputObjectData: {},
             
+            selectedProject: '',
             phoneList: [],
+            phoneListB: [],
+
             modelList: [],
+            projectList: [],
 
             phoneIndex: 0,
             currentPhoneIndexClicked: -1,
@@ -254,6 +266,9 @@ export default {
         authData: Object,
     },
     methods: {
+        myFunc() {
+            console.log('here');
+        },
         handleLogoutSubmit() {
             this.onLogout();
         },
@@ -416,8 +431,12 @@ export default {
             this.model = this.tempModel;
             this.name = this.tempName;
             this.currentTemplateSelected = this.tempCurrentTemplateSelected;
+
+            if(this.projectList.length === 0) {
+                this.projectList.push(this.currentPhoneList);
+            }
+            console.log('PROJECT LIST: ', this.projectList);
             if(this.selectedValue) {
-                console.log('SELECTED VALUE: ', this.tempModel);
                 this.fetchPhoneType(this.tempModel);
                 this.buttonClicked = false;
             }
@@ -435,10 +454,12 @@ export default {
                 let parentDiv = event.target.closest('.phone-list');
                 console.log(index); // keeping this here because of parameter
                 // Finds the index of the phone in the phoneList that was clicked on
-                this.phoneIndex = this.phoneList.findIndex(phone => phone.ext === parentDiv.querySelector('.phone-listing-ext').innerHTML);
+                // this.phoneIndex = this.phoneList.findIndex(phone => phone.ext === parentDiv.querySelector('.phone-listing-ext').innerHTML);
+                this.phoneIndex = this.currentPhoneList.findIndex(phone => phone.ext === parentDiv.querySelector('.phone-listing-ext').innerHTML);
                 
                 // Removes the phone from the phoneList
-                this.phoneList.splice(this.phoneIndex, 1);
+                // this.phoneList.splice(this.phoneIndex, 1);
+                this.currentPhoneList.splice(this.phoneIndex, 1);
                 this.phoneIndex = -1;
                 this.currentPhoneIndexClicked = -1;
                 this.data = {};
@@ -446,12 +467,21 @@ export default {
         },
         userInputObjectUpdate(data) {
             this.userInputObjectData = data;
-            // const userDataCopy = JSON.parse(JSON.stringify(this.userInputObjectData));
-            console.log('USER INPUT OBJECT DATA: ', this.userInputObjectData);
+
             if(this.tempCurrentTemplateSelected) {
-                let templatePhone = this.phoneList.find(phone => phone.ext === this.currentTemplateSelected).userData;
+                // let templatePhone = this.phoneList.find(phone => phone.ext === this.currentTemplateSelected).userData;
+                let templatePhone = this.currentPhoneList.find(phone => phone.ext === this.currentTemplateSelected).userData;
                 let deepCopyTemplatePhone = JSON.parse(JSON.stringify(templatePhone));
-                this.phoneList.push({
+                // this.phoneList.push({
+                //     "ext": this.extension,
+                //     "modelDisplayName": this.innerModelText + ' (' + this.innerProdFamText + ')',
+                //     "productName": this.innerProdFamText,
+                //     "modelName": this.innerModelText,
+                //     "value": this.selectedValue,
+                //     "name": this.name,
+                //     "userData": deepCopyTemplatePhone,
+                // });
+                this.currentPhoneList.push({
                     "ext": this.extension,
                     "modelDisplayName": this.innerModelText + ' (' + this.innerProdFamText + ')',
                     "productName": this.innerProdFamText,
@@ -460,15 +490,27 @@ export default {
                     "name": this.name,
                     "userData": deepCopyTemplatePhone,
                 });
-                this.phoneIndex = this.phoneList.length - 1;
+                // this.phoneIndex = this.phoneList.length - 1;
+                this.phoneIndex = this.currentPhoneList.length - 1;
                 this.currentPhoneIndexClicked = this.phoneIndex;
             }
 
             // Check to see if the phone exists
-            let phoneExists = this.phoneList.some(phone => phone.ext === this.extension);
+            // let phoneExists = this.phoneList.some(phone => phone.ext === this.extension);
+            let phoneExists = this.currentPhoneList.some(phone => phone.ext === this.extension);
 
             if(!phoneExists) {
-                this.phoneList.push({
+                // console.log('Extension: ', this.extension, typeof this.extension);
+
+                // const phoneExtData = this.pb.collection('extensions').create({
+                //     user_input_object: this.userInputObjectData,
+                //     extension: this.extension,
+                //     part_num: "10075"
+                // });
+
+                // console.log('PHONE EXT DATA: ', phoneExtData);
+
+                this.currentPhoneList.push({
                     "ext": this.extension,
                     "modelDisplayName": this.innerModelText + ' (' + this.innerProdFamText + ')',
                     "productName": this.innerProdFamText,
@@ -477,15 +519,21 @@ export default {
                     "name": this.name,
                     "userData": this.userInputObjectData,
                 });
-                this.phoneIndex = this.phoneList.length - 1;
+
+                // this.phoneIndex = this.phoneList.length - 1;
+                this.phoneIndex = this.currentPhoneList.length - 1;
                 this.currentPhoneIndexClicked = this.phoneIndex;
             }
+            console.log('PROJECT LIST: ', this.projectList);
             this.tempExtension = '';
             this.tempName = '';
             this.templateCheckBox = false;
             this.tempCurrentTemplateSelected = '';
-            // data = {};
+            
             this.$nextTick(() => {
+                console.log('PHONE INDEX: ', this.phoneIndex);
+                console.log('PHONE LISTING DIV: ', this.$refs.phoneListingDiv);
+                console.log('Array?', Array.isArray(this.$refs.phoneListingDiv));
                 this.$refs.phoneListingDiv[this.phoneIndex].click();
             });
 
@@ -494,7 +542,8 @@ export default {
             this.currentBox = currentBox;
 
             // This takes the current boxes information of the userInputObjectData, and updates the current box's information in the phoneList
-            this.phoneList[this.phoneIndex].userData[0].objects[this.currentBox[0]] = this.userInputObjectData[0].objects[this.currentBox[0]];
+            // this.phoneList[this.phoneIndex].userData[0].objects[this.currentBox[0]] = this.userInputObjectData[0].objects[this.currentBox[0]];
+            this.currentPhoneList[this.phoneIndex].userData[0].objects[this.currentBox[0]] = this.userInputObjectData[0].objects[this.currentBox[0]];
         },
         getModelNumber(file) {
             this.modelNum = file.split('.')[0];
@@ -511,28 +560,36 @@ export default {
             and tries to match with the ext in the phoneList that was clicked on.
             If true, it finds the index and sets it to this.phoneIndex
             If false, returns -1*/
-            this.phoneIndex = this.phoneList.findIndex(phone => phone.ext === parentDiv.querySelector('div:first-child').innerHTML);
+            // this.phoneIndex = this.phoneList.findIndex(phone => phone.ext === parentDiv.querySelector('div:first-child').innerHTML);
+            this.phoneIndex = this.currentPhoneList.findIndex(phone => phone.ext === parentDiv.querySelector('div:first-child').innerHTML);
             this.currentPhoneIndexClicked = index;
-            this.extension = this.phoneList[this.phoneIndex].ext;
+            // this.extension = this.phoneList[this.phoneIndex].ext;
+            this.extension = this.currentPhoneList[this.phoneIndex].ext;
 
             // This changes the data to be updated with the phone that was clicked on
-            this.data = this.phoneList[this.phoneIndex].userData[0];
+            // this.data = this.phoneList[this.phoneIndex].userData[0];
+            this.data = this.currentPhoneList[this.phoneIndex].userData[0];
         },
 
         // ======================= PHONE LISTING POPUP =======================
         showEditPhoneListing() {
             this.phoneListingClicked = true;
-            this.extPopup = this.phoneList[this.phoneIndex].ext;
-            this.namePopup = this.phoneList[this.phoneIndex].name;
-            let currentUserData = this.phoneList[this.phoneIndex].userData[0];
+            // this.extPopup = this.phoneList[this.phoneIndex].ext;
+            // this.namePopup = this.phoneList[this.phoneIndex].name;
+            // let currentUserData = this.phoneList[this.phoneIndex].userData[0];
+            this.extPopup = this.currentPhoneList[this.phoneIndex].ext;
+            this.namePopup = this.currentPhoneList[this.phoneIndex].name;
+            let currentUserData = this.currentPhoneList[this.phoneIndex].userData[0];
             this.prodFamEditPopup = currentUserData.group;
             this.modelEditPopup = currentUserData.description;
             this.typeCodeEditPopup = currentUserData.typeCode;
         },
         confirmEditPopup() {
             this.phoneListingClicked = false;
-            this.phoneList[this.phoneIndex].ext = this.extPopup;
-            this.phoneList[this.phoneIndex].name = this.namePopup;
+            // this.phoneList[this.phoneIndex].ext = this.extPopup;
+            // this.phoneList[this.phoneIndex].name = this.namePopup;
+            this.currentPhoneList[this.phoneIndex].ext = this.extPopup;
+            this.currentPhoneList[this.phoneIndex].name = this.namePopup;
         },
         cancelEditPopup() {
             this.phoneListingClicked = false;
@@ -625,19 +682,27 @@ export default {
         zoomFunc() {
             console.log('Zoomed in');
         },
-        logout() {
-
-        },
         fetchUser() {
-            console.log('-------Fetching User-------');
-            console.log('Is Auth Valid?', this.pb.authStore.isValid);
-            console.log('Stored User:', this.pb.authStore.model);
+            // console.log('-------Fetching User-------');
+            // console.log('Is Auth Valid?', this.pb.authStore.isValid);
+            // console.log('Stored User:', this.pb.authStore.model);
+        }
+    },
+    computed: {
+        currentPhoneList() {
+            console.log('Selected Project: ', this.selectedProject);
+            if(this.selectedProject === 'project-a') {
+                return this.phoneList;
+            }
+            else if(this.selectedProject === 'project-b') {
+                return this.phoneListB;
+            }
+            else {
+                return [];
+            }
         }
     },
     mounted() {
-        console.log('Mounted,\nFetching Files...');
-        console.log('PB: ', this.pb);
-        console.log('--------------------------------');
         this.fetchFolders();
         this.fetchUser();
     }

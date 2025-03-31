@@ -169,7 +169,6 @@ export default {
     },
     methods: {
         updatePhone(data) {
-            console.log('Updating Phone...');
             // Origins - top left corner of the phone's outer box
             this.origins = data.origins;
             
@@ -269,7 +268,7 @@ export default {
                     obj.fontStyle = obj.fontStyle || 'font-arial';
                 }
             }
-            console.log('USER INPUT', this.userInput);
+            
             this.userInputObject = { ...this.userInput };
 
             // Passes the userInputObject up to the parent component "App.vue"
@@ -300,7 +299,7 @@ export default {
 
         confirmEdit() {
             // This is confirming the text changes in the popup box and makes them appear on the phone label
-            console.log('CONFIRMING EDIT', this.currentBox[1]);
+            
             this.currentBox[1].userComment = this.popupText;
             this.currentBox[1].isBold = this.isBold;
             this.currentBox[1].isItalics = this.isItalics;
@@ -368,7 +367,6 @@ export default {
     },
     watch: {
         data(newValue) {
-            console.log('WATCHED', newValue);
             if(Object.keys(newValue).length === 0) {
                 this.outerContainerStyles = {};
                 this.boxes = [];
