@@ -29,7 +29,7 @@
                 <div class="simple-button true-center header-button" style="margin-right: 25px; padding-right: 10px; text-align: center;">
                     Saved Projects
                     <font-awesome-icon icon="fa-solid fa-angle-down" />
-                    <select v-model="selectedProject" @change="myFunc">
+                    <select v-model="selectedProject" @change="clearCurrentPhone">
                         <option value="">Select a project</option>
                         <option value="project-a">Project A</option>
                         <option value="project-b">Project B</option>
@@ -266,8 +266,11 @@ export default {
         authData: Object,
     },
     methods: {
-        myFunc() {
-            console.log('here');
+        clearCurrentPhone() {
+            console.log(this.userInputObjectData);
+            this.phoneIndex = -1;
+            this.currentPhoneIndexClicked = -1;
+            this.data = {};
         },
         handleLogoutSubmit() {
             this.onLogout();
@@ -454,7 +457,6 @@ export default {
                 let parentDiv = event.target.closest('.phone-list');
                 console.log(index); // keeping this here because of parameter
                 // Finds the index of the phone in the phoneList that was clicked on
-                // this.phoneIndex = this.phoneList.findIndex(phone => phone.ext === parentDiv.querySelector('.phone-listing-ext').innerHTML);
                 this.phoneIndex = this.currentPhoneList.findIndex(phone => phone.ext === parentDiv.querySelector('.phone-listing-ext').innerHTML);
                 
                 // Removes the phone from the phoneList

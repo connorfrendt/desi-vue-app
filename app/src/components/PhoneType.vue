@@ -271,7 +271,7 @@ export default {
             
             this.userInputObject = { ...this.userInput };
 
-            // Passes the userInputObject up to the parent component "App.vue"
+            // Passes the userInputObject up to the parent component "PhoneOverview.vue"
             this.$emit('user-input-object', this.userInputObject);
         },
 
