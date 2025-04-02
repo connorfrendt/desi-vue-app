@@ -9,7 +9,7 @@
                     <font-awesome-icon icon="fa-regular fa-folder-open" style="margin-right: 5px;" />
                     Open
                 </div>
-                <div class="true-center header-button">
+                <div class="true-center header-button" @click="saveInfo">
                     <font-awesome-icon icon="fa-regular fa-floppy-disk" style="margin-right: 5px;" />
                     Save
                 </div>
@@ -26,14 +26,16 @@
                 </div>
             </div>  
             <div style="display: flex; margin-right: 25px;">
+                <div class="true-center header-button" @click="addProject">
+                    <font-awesome-icon icon="fa-solid fa-plus" style="margin-right: 5px;" />
+                    Add
+                </div>
                 <div class="simple-button true-center header-button" style="margin-right: 25px; padding-right: 10px; text-align: center;">
-                    Saved Projects
-                    <font-awesome-icon icon="fa-solid fa-angle-down" />
-                    <select v-model="selectedProject" @change="clearCurrentPhone">
+                    <!-- Saved Projects
+                    <font-awesome-icon icon="fa-solid fa-angle-down" /> -->
+                    <select v-model="selectedProject" @change="handleProjectChange">
                         <option value="">Select a project</option>
-                        <option value="project-a">Project A</option>
-                        <option value="project-b">Project B</option>
-                        <!-- <option>Add Project</option> -->
+                        <option v-for="project in Object.keys(phoneLists)" :key="project" :value="project">{{ projectDisplayNames[project] }}</option>
                     </select>
                 </div>
                 <div style="margin: auto; height: 100%; width: 80px; display: flex; align-items: center;">
@@ -191,7 +193,6 @@
 <script>
 import PhoneType from './PhoneType.vue';
 import printJS from 'print-js';
-// import PocketBase from 'pocketbase';
 
 export default {
     data() {
@@ -213,8 +214,13 @@ export default {
             userInputObjectData: {},
             
             selectedProject: '',
-            phoneList: [],
-            phoneListB: [],
+            
+            displayProjectName: '',
+            projectDisplayNames: {},
+
+            storedProjectName: '',
+            phoneLists: {},
+
 
             modelList: [],
             projectList: [],
@@ -266,11 +272,30 @@ export default {
         authData: Object,
     },
     methods: {
-        clearCurrentPhone() {
-            console.log(this.userInputObjectData);
+        saveInfo() {
+
+        },
+        handleProjectChange() {
             this.phoneIndex = -1;
             this.currentPhoneIndexClicked = -1;
             this.data = {};
+        },
+        addProject() {
+            this.phoneIndex = -1;
+            this.currentPhoneIndexClicked = -1;
+            this.data = {};
+
+            let nextProjectIndex = Object.keys(this.phoneLists).length + 1;
+            this.displayProjectName = "Phone List " + `${String.fromCharCode(64 + nextProjectIndex)}`;
+
+            this.storedProjectName = this.displayProjectName.replace(/^P/, 'p').replace(/\s+/g, '')
+            this.$set(this.phoneLists, this.storedProjectName, []);
+            console.log('PHONE LIST: ', this.phoneLists);
+            this.projectDisplayNames[this.storedProjectName] = this.displayProjectName;
+            // this.selectedProject = this.displayProjectName;
+            this.selectedProject = this.storedProjectName;
+            console.log('Project Display Names: ', this.projectDisplayNames);
+            // this.selectedProject = this.displayProjectName;
         },
         handleLogoutSubmit() {
             this.onLogout();
@@ -438,7 +463,7 @@ export default {
             if(this.projectList.length === 0) {
                 this.projectList.push(this.currentPhoneList);
             }
-            console.log('PROJECT LIST: ', this.projectList);
+            console.log('Project List: ', this.projectList);
             if(this.selectedValue) {
                 this.fetchPhoneType(this.tempModel);
                 this.buttonClicked = false;
@@ -526,16 +551,12 @@ export default {
                 this.phoneIndex = this.currentPhoneList.length - 1;
                 this.currentPhoneIndexClicked = this.phoneIndex;
             }
-            console.log('PROJECT LIST: ', this.projectList);
             this.tempExtension = '';
             this.tempName = '';
             this.templateCheckBox = false;
             this.tempCurrentTemplateSelected = '';
             
             this.$nextTick(() => {
-                console.log('PHONE INDEX: ', this.phoneIndex);
-                console.log('PHONE LISTING DIV: ', this.$refs.phoneListingDiv);
-                console.log('Array?', Array.isArray(this.$refs.phoneListingDiv));
                 this.$refs.phoneListingDiv[this.phoneIndex].click();
             });
 
@@ -684,29 +705,18 @@ export default {
         zoomFunc() {
             console.log('Zoomed in');
         },
-        fetchUser() {
-            // console.log('-------Fetching User-------');
-            // console.log('Is Auth Valid?', this.pb.authStore.isValid);
-            // console.log('Stored User:', this.pb.authStore.model);
-        }
     },
     computed: {
         currentPhoneList() {
-            console.log('Selected Project: ', this.selectedProject);
-            if(this.selectedProject === 'project-a') {
-                return this.phoneList;
-            }
-            else if(this.selectedProject === 'project-b') {
-                return this.phoneListB;
-            }
-            else {
-                return [];
-            }
-        }
+            console.log('Selected Proj: ', this.selectedProject);
+            console.log('Phone Lists: ', this.phoneLists, typeof this.phoneLists);
+            // console.log('Here', this.phoneLists[this.selectedProject], typeof this.phoneLists[this.selectedProject]);
+            console.log('Here', this.phoneLists[this.storedProjectName]);
+            return this.phoneLists[this.selectedProject];
+        },
     },
     mounted() {
         this.fetchFolders();
-        this.fetchUser();
     }
 }
 </script>

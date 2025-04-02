@@ -138,7 +138,7 @@ export default {
         handleSignInSubmit(profile) {
             this.onSignIn(profile)
                 .then(() => {
-                    // this.$router.push('/phone-overview');
+                    this.$router.push('/phone-overview');
                 })
                 .catch(error => {
                     console.log('Error: ', error.data);
