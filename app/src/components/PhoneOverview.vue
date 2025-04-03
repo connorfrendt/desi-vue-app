@@ -41,7 +41,8 @@
                 <div style="margin: auto; height: 100%; width: 80px; display: flex; align-items: center;">
                     <div v-if="authData && authData.record">
                         <font-awesome-icon icon="fa-regular fa-user" style="margin-right: 5px;" />
-                        Account {{ authData.record.name }}
+                        Account
+                        {{ authData.record.name }}
                     </div>
                     <div v-else>
                         Loading User Data...
@@ -221,7 +222,6 @@ export default {
             storedProjectName: '',
             phoneLists: {},
 
-
             modelList: [],
             projectList: [],
 
@@ -272,15 +272,47 @@ export default {
         authData: Object,
     },
     methods: {
-        saveInfo() {
+        async saveInfo() {
             console.log('Saving info...');
-            // Save the phoneLists to the database or local storage
-            // You can use this.pb.collection('phoneLists').create(phoneLists) if using PocketBase
-            // Or use localStorage.setItem('phoneLists', JSON.stringify(this.phoneLists)) if using local storage
 
-            this.pb.collection('phone_lists').create({
-                customer
-            })
+            const storedAndDisplayNameEntries = Object.entries(this.projectDisplayNames);
+            
+            for (let i = 0; i < storedAndDisplayNameEntries.length; i++) {
+                const [stored_name, display_name] = storedAndDisplayNameEntries[i];
+
+                try {
+                    await this.pb.collection('phone_lists').create({
+                        customer_id: this.authData.record.id,
+                        stored_name,
+                        display_name,
+                    });
+                    console.log(`Saved phone list: ${display_name}`);
+                } catch (error) {
+                    console.error(`Error saving phone list ${display_name}:`, error);
+                }
+            }
+
+            const phoneListData = Object.entries(this.phoneLists);
+            for(let i = 0; i < phoneListData.length; i++) {
+                console.log('PHONE LIST DATA: ', phoneListData[i][1], phoneListData[i][1].length);
+                let listOfPhones = phoneListData[i][1];
+                for(let i = 0; i < listOfPhones.length; i++) {
+                    console.log('Each Phone: ', listOfPhones[i]);
+                    try {
+                        await this.pb.collection('phones').create({
+                            // phone_list_id: phone_list.id,
+                            user_input_object: listOfPhones[i],
+                            extension: listOfPhones[i].ext,
+                        });
+                    }
+                    catch(error) {
+                        console.error('ERROR HEEEERE', error);
+                    }
+
+                }
+            }
+            // console.log('Phone Lists: ', this.phoneLists);
+            
         },
         handleProjectChange() {
             this.phoneIndex = -1;
@@ -297,11 +329,13 @@ export default {
 
             this.storedProjectName = this.displayProjectName.replace(/^P/, 'p').replace(/\s+/g, '')
             this.$set(this.phoneLists, this.storedProjectName, []);
+
             console.log('PHONE LIST: ', this.phoneLists);
             this.projectDisplayNames[this.storedProjectName] = this.displayProjectName;
             // this.selectedProject = this.displayProjectName;
             this.selectedProject = this.storedProjectName;
-            console.log('Project Display Names: ', this.projectDisplayNames);
+            
+            console.log('Phone List Display Names: ', this.projectDisplayNames);
             // this.selectedProject = this.displayProjectName;
         },
         handleLogoutSubmit() {
@@ -470,7 +504,7 @@ export default {
             if(this.projectList.length === 0) {
                 this.projectList.push(this.currentPhoneList);
             }
-            console.log('Project List: ', this.projectList);
+            
             if(this.selectedValue) {
                 this.fetchPhoneType(this.tempModel);
                 this.buttonClicked = false;
@@ -715,7 +749,6 @@ export default {
     },
     computed: {
         currentPhoneList() {
-            console.log('Phone Lists: ', this.phoneLists);
             return this.phoneLists[this.selectedProject];
         },
     },

@@ -61,14 +61,12 @@ export default {
                     userProfile.email,
                     userProfile.password
                 );
-                // console.log('Auth Data: ', this.authData);
                 
                 this.setUser(this.authData);
                 console.log('Logged In!');
                 
             }
             catch(err) {
-                // console.log('HEEEEEEEEEERE IS THE ERROR', err.data);
                 this.pb.authStore.clear();
                 throw err;
             }
