@@ -273,7 +273,14 @@ export default {
     },
     methods: {
         saveInfo() {
+            console.log('Saving info...');
+            // Save the phoneLists to the database or local storage
+            // You can use this.pb.collection('phoneLists').create(phoneLists) if using PocketBase
+            // Or use localStorage.setItem('phoneLists', JSON.stringify(this.phoneLists)) if using local storage
 
+            this.pb.collection('phone_lists').create({
+                customer
+            })
         },
         handleProjectChange() {
             this.phoneIndex = -1;
@@ -708,10 +715,7 @@ export default {
     },
     computed: {
         currentPhoneList() {
-            console.log('Selected Proj: ', this.selectedProject);
-            console.log('Phone Lists: ', this.phoneLists, typeof this.phoneLists);
-            // console.log('Here', this.phoneLists[this.selectedProject], typeof this.phoneLists[this.selectedProject]);
-            console.log('Here', this.phoneLists[this.storedProjectName]);
+            console.log('Phone Lists: ', this.phoneLists);
             return this.phoneLists[this.selectedProject];
         },
     },
