@@ -276,42 +276,50 @@ export default {
             console.log('Saving info...');
 
             const storedAndDisplayNameEntries = Object.entries(this.projectDisplayNames);
+            const phoneListData = Object.entries(this.phoneLists);
             
+            console.log('Phone List Data: ', phoneListData)
             for (let i = 0; i < storedAndDisplayNameEntries.length; i++) {
                 const [stored_name, display_name] = storedAndDisplayNameEntries[i];
 
                 try {
-                    await this.pb.collection('phone_lists').create({
+                    const phoneList = await this.pb.collection('phone_lists').create({
                         customer_id: this.authData.record.id,
                         stored_name,
                         display_name,
                     });
-                    console.log(`Saved phone list: ${display_name}`);
+
+                    const phoneListId = phoneList.id;
+                    console.log('Phone List Id: ', phoneListId);
+
+                    // for(let i = 0; i < phoneListData.length; i++) {
+                    //     let listOfPhones = phoneListData[i][1];
+                    //     console.log('List of Phones', listOfPhones);
+                    // }
                 } catch (error) {
                     console.error(`Error saving phone list ${display_name}:`, error);
                 }
             }
+            
+            // const phoneListData = Object.entries(this.phoneLists);
+            // for(let i = 0; i < phoneListData.length; i++) {
+            //     // console.log('PHONE LIST DATA: ', phoneListData[i][1], phoneListData[i][1].length);
+            //     let listOfPhones = phoneListData[i][1];
+            //     for(let i = 0; i < listOfPhones.length; i++) {
+            //         console.log('Each Phone: ', listOfPhones[i]);
+            //         try {
+            //             await this.pb.collection('phones').create({
+            //                 // phone_list_id: phone_list.id,
+            //                 user_input_object: listOfPhones[i],
+            //                 extension: listOfPhones[i].ext,
+            //             });
+            //         }
+            //         catch(error) {
+            //             console.error('ERROR HEEEERE', error);
+            //         }
 
-            const phoneListData = Object.entries(this.phoneLists);
-            for(let i = 0; i < phoneListData.length; i++) {
-                console.log('PHONE LIST DATA: ', phoneListData[i][1], phoneListData[i][1].length);
-                let listOfPhones = phoneListData[i][1];
-                for(let i = 0; i < listOfPhones.length; i++) {
-                    console.log('Each Phone: ', listOfPhones[i]);
-                    try {
-                        await this.pb.collection('phones').create({
-                            // phone_list_id: phone_list.id,
-                            user_input_object: listOfPhones[i],
-                            extension: listOfPhones[i].ext,
-                        });
-                    }
-                    catch(error) {
-                        console.error('ERROR HEEEERE', error);
-                    }
-
-                }
-            }
-            // console.log('Phone Lists: ', this.phoneLists);
+            //     }
+            // }
             
         },
         handleProjectChange() {
@@ -319,7 +327,7 @@ export default {
             this.currentPhoneIndexClicked = -1;
             this.data = {};
         },
-        addProject() {
+        async addProject() {
             this.phoneIndex = -1;
             this.currentPhoneIndexClicked = -1;
             this.data = {};
@@ -335,8 +343,24 @@ export default {
             // this.selectedProject = this.displayProjectName;
             this.selectedProject = this.storedProjectName;
             
+            let phoneListDisplayNames = Object.entries(this.projectDisplayNames);
+            let phoneListDisplayNamesLength = phoneListDisplayNames.length;
             console.log('Phone List Display Names: ', this.projectDisplayNames);
+            console.log(phoneListDisplayNames.length);
+            console.log(phoneListDisplayNames[phoneListDisplayNamesLength - 1][1]);
+            
             // this.selectedProject = this.displayProjectName;
+            let stored_name = phoneListDisplayNames[phoneListDisplayNamesLength - 1][0];
+            let display_name = phoneListDisplayNames[phoneListDisplayNamesLength - 1][1];
+            console.log('Selected Project: ', this.selectedProject);
+
+            const phoneList = await this.pb.collection('phone_lists').create({
+                customer_id: this.authData.record.id,
+                stored_name,
+                display_name,
+            });
+
+            console.log(phoneList);
         },
         handleLogoutSubmit() {
             this.onLogout();
@@ -494,7 +518,7 @@ export default {
         },
         
         // ======================= Add/Delete Phone =======================
-        addPhone() {
+        async addPhone() {
             this.extension = this.tempExtension;
             this.selectedValue = this.tempSelectedValue;
             this.model = this.tempModel;
@@ -512,6 +536,7 @@ export default {
             
             this.innerModelText = this.getOptionText(this.model);
             this.innerProdFamText = this.getOptionText(this.selectedValue);
+
         },
         clickCancel() {
             this.buttonClicked = false;
@@ -568,16 +593,6 @@ export default {
             let phoneExists = this.currentPhoneList.some(phone => phone.ext === this.extension);
 
             if(!phoneExists) {
-                // console.log('Extension: ', this.extension, typeof this.extension);
-
-                // const phoneExtData = this.pb.collection('extensions').create({
-                //     user_input_object: this.userInputObjectData,
-                //     extension: this.extension,
-                //     part_num: "10075"
-                // });
-
-                // console.log('PHONE EXT DATA: ', phoneExtData);
-
                 this.currentPhoneList.push({
                     "ext": this.extension,
                     "modelDisplayName": this.innerModelText + ' (' + this.innerProdFamText + ')',
@@ -599,6 +614,12 @@ export default {
             
             this.$nextTick(() => {
                 this.$refs.phoneListingDiv[this.phoneIndex].click();
+            });
+
+            await this.pb.collection('phones').create({
+                // phone_list_id: phone_list.id,
+                user_input_object: listOfPhones[i],
+                extension: listOfPhones[i].ext,
             });
 
         },
