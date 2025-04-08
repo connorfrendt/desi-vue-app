@@ -221,6 +221,7 @@ export default {
 
             storedProjectName: '',
             phoneLists: {},
+            // phoneList:
 
             modelList: [],
             projectList: [],
@@ -354,13 +355,13 @@ export default {
             let display_name = phoneListDisplayNames[phoneListDisplayNamesLength - 1][1];
             console.log('Selected Project: ', this.selectedProject);
 
-            const phoneList = await this.pb.collection('phone_lists').create({
+            this.phoneList = await this.pb.collection('phone_lists').create({
                 customer_id: this.authData.record.id,
                 stored_name,
                 display_name,
             });
 
-            console.log(phoneList);
+            // console.log(this.phoneList);
         },
         handleLogoutSubmit() {
             this.onLogout();
@@ -518,7 +519,7 @@ export default {
         },
         
         // ======================= Add/Delete Phone =======================
-        async addPhone() {
+        addPhone() {
             this.extension = this.tempExtension;
             this.selectedValue = this.tempSelectedValue;
             this.model = this.tempModel;
@@ -536,7 +537,6 @@ export default {
             
             this.innerModelText = this.getOptionText(this.model);
             this.innerProdFamText = this.getOptionText(this.selectedValue);
-
         },
         clickCancel() {
             this.buttonClicked = false;
@@ -558,9 +558,9 @@ export default {
                 this.data = {};
             }
         },
-        userInputObjectUpdate(data) {
+        async userInputObjectUpdate(data) {
             this.userInputObjectData = data;
-
+            
             if(this.tempCurrentTemplateSelected) {
                 // let templatePhone = this.phoneList.find(phone => phone.ext === this.currentTemplateSelected).userData;
                 let templatePhone = this.currentPhoneList.find(phone => phone.ext === this.currentTemplateSelected).userData;
@@ -616,10 +616,12 @@ export default {
                 this.$refs.phoneListingDiv[this.phoneIndex].click();
             });
 
+            let currentPhone = this.currentPhoneList[this.currentPhoneList.length - 1];
+            // console.log('Phone List Here: ', this.phoneList)
             await this.pb.collection('phones').create({
-                // phone_list_id: phone_list.id,
-                user_input_object: listOfPhones[i],
-                extension: listOfPhones[i].ext,
+                phone_list_id: this.phoneList.id,
+                user_input_object: currentPhone,
+                extension: currentPhone.ext,
             });
 
         },
