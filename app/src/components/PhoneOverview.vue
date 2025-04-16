@@ -9,7 +9,7 @@
                     <font-awesome-icon icon="fa-regular fa-folder-open" style="margin-right: 5px;" />
                     Open
                 </div>
-                <div class="true-center header-button" @click="saveInfo">
+                <div class="true-center header-button">
                     <font-awesome-icon icon="fa-regular fa-floppy-disk" style="margin-right: 5px;" />
                     Save
                 </div>
@@ -26,7 +26,7 @@
                 </div>
             </div>  
             <div style="display: flex; margin-right: 25px;">
-                <div class="true-center header-button" @click="addProject">
+                <div class="true-center header-button" style="padding-right: 10px;" @click="addProject">
                     <font-awesome-icon icon="fa-solid fa-plus" style="margin-right: 5px;" />
                     Add
                 </div>
@@ -108,7 +108,9 @@
                         :disabled="tempExtension === '' || tempSelectedValue === '' || tempModel === ''">
                         OK
                     </button>
-                    <button class="ok-cancel-btn true-center" style="background-color: white;" @click="clickCancel">Cancel</button>
+                    <button class="ok-cancel-btn true-center" style="background-color: white;" @click="clickCancel">
+                        Cancel
+                    </button>
                 </div>
 
             </div>
@@ -221,14 +223,14 @@ export default {
 
             storedProjectName: '',
             phoneLists: {},
-            // phoneList:
+            phone: '',
 
             modelList: [],
             projectList: [],
 
             phoneIndex: 0,
             currentPhoneIndexClicked: -1,
-            
+
             modelNum: '',
 
             innerModelText: '',
@@ -273,56 +275,6 @@ export default {
         authData: Object,
     },
     methods: {
-        async saveInfo() {
-            console.log('Saving info...');
-
-            const storedAndDisplayNameEntries = Object.entries(this.projectDisplayNames);
-            const phoneListData = Object.entries(this.phoneLists);
-            
-            console.log('Phone List Data: ', phoneListData)
-            for (let i = 0; i < storedAndDisplayNameEntries.length; i++) {
-                const [stored_name, display_name] = storedAndDisplayNameEntries[i];
-
-                try {
-                    const phoneList = await this.pb.collection('phone_lists').create({
-                        customer_id: this.authData.record.id,
-                        stored_name,
-                        display_name,
-                    });
-
-                    const phoneListId = phoneList.id;
-                    console.log('Phone List Id: ', phoneListId);
-
-                    // for(let i = 0; i < phoneListData.length; i++) {
-                    //     let listOfPhones = phoneListData[i][1];
-                    //     console.log('List of Phones', listOfPhones);
-                    // }
-                } catch (error) {
-                    console.error(`Error saving phone list ${display_name}:`, error);
-                }
-            }
-            
-            // const phoneListData = Object.entries(this.phoneLists);
-            // for(let i = 0; i < phoneListData.length; i++) {
-            //     // console.log('PHONE LIST DATA: ', phoneListData[i][1], phoneListData[i][1].length);
-            //     let listOfPhones = phoneListData[i][1];
-            //     for(let i = 0; i < listOfPhones.length; i++) {
-            //         console.log('Each Phone: ', listOfPhones[i]);
-            //         try {
-            //             await this.pb.collection('phones').create({
-            //                 // phone_list_id: phone_list.id,
-            //                 user_input_object: listOfPhones[i],
-            //                 extension: listOfPhones[i].ext,
-            //             });
-            //         }
-            //         catch(error) {
-            //             console.error('ERROR HEEEERE', error);
-            //         }
-
-            //     }
-            // }
-            
-        },
         handleProjectChange() {
             this.phoneIndex = -1;
             this.currentPhoneIndexClicked = -1;
@@ -333,27 +285,33 @@ export default {
             this.currentPhoneIndexClicked = -1;
             this.data = {};
 
-            let nextProjectIndex = Object.keys(this.phoneLists).length + 1;
-            this.displayProjectName = "Phone List " + `${String.fromCharCode(64 + nextProjectIndex)}`;
+            // let nextProjectIndex = Object.keys(this.phoneLists).length + 1;
+            // this.displayProjectName = "Phone List " + `${String.fromCharCode(64 + nextProjectIndex)}`;
+            // this.storedProjectName = this.displayProjectName.replace(/^P/, 'p').replace(/\s+/g, '')
 
-            this.storedProjectName = this.displayProjectName.replace(/^P/, 'p').replace(/\s+/g, '')
+            this.displayProjectName = prompt('Enter a name for the new project:');
+            if(this.displayProjectName === null || this.displayProjectName === '') {
+                return;
+            }
+            this.storedProjectName = this.toCamelCase(this.displayProjectName);
+            // console.log('Stored Project: ', this.storedProjectName);
+
             this.$set(this.phoneLists, this.storedProjectName, []);
+            console.log('Phone Lists: ', this.phoneLists);
 
-            console.log('PHONE LIST: ', this.phoneLists);
             this.projectDisplayNames[this.storedProjectName] = this.displayProjectName;
             // this.selectedProject = this.displayProjectName;
             this.selectedProject = this.storedProjectName;
             
+            console.log('Project Display Names: ', this.projectDisplayNames);
             let phoneListDisplayNames = Object.entries(this.projectDisplayNames);
+            
+            console.log('Phone List Display Names: ', phoneListDisplayNames);
             let phoneListDisplayNamesLength = phoneListDisplayNames.length;
-            console.log('Phone List Display Names: ', this.projectDisplayNames);
-            console.log(phoneListDisplayNames.length);
-            console.log(phoneListDisplayNames[phoneListDisplayNamesLength - 1][1]);
             
             // this.selectedProject = this.displayProjectName;
             let stored_name = phoneListDisplayNames[phoneListDisplayNamesLength - 1][0];
             let display_name = phoneListDisplayNames[phoneListDisplayNamesLength - 1][1];
-            console.log('Selected Project: ', this.selectedProject);
 
             this.phoneList = await this.pb.collection('phone_lists').create({
                 customer_id: this.authData.record.id,
@@ -361,7 +319,19 @@ export default {
                 display_name,
             });
 
-            // console.log(this.phoneList);
+        },
+        toCamelCase(str) {
+            return str
+                .trim()
+                .toLowerCase()
+                .split(' ')
+                .map((word, index) => {
+                    if(index === 0) {
+                        return word;
+                    }
+                    return word.charAt(0).toUpperCase() + word.slice(1);
+                })
+                .join('');
         },
         handleLogoutSubmit() {
             this.onLogout();
@@ -541,7 +511,7 @@ export default {
         clickCancel() {
             this.buttonClicked = false;
         },
-        deletePhone(event, index) {
+        async deletePhone(event, index) {
             event.stopPropagation();
             if(confirm('Are you sure you want to delete this phone?')) {
                 // Finds the parent div of the trash can icon
@@ -550,30 +520,51 @@ export default {
                 // Finds the index of the phone in the phoneList that was clicked on
                 this.phoneIndex = this.currentPhoneList.findIndex(phone => phone.ext === parentDiv.querySelector('.phone-listing-ext').innerHTML);
                 
+                // console.log('phone index', this.phoneIndex);
+                // console.log('Current Phone List ', this.currentPhoneList);
+                
+                const phones = this.pb.collection('phones').getFullList().then(phones => console.log('Phones DB: ', phones));
+                console.log('Phones DB: ', phones);
+                
+                const phoneList = this.pb.collection('phone_lists').getFullList().then(phoneList => console.log('Phone List DB: ', phoneList));
+                console.log(phoneList);
+                // console.log('Selected Project: ', this.selectedProject);
+                // console.log('Current Ext: ', this.extension);
+
+                let phoneListIdOfCurrentPhoneList = await this.pb.collection('phone_lists').getFullList().then(phoneList => {
+                    return phoneList.find(phoneList => phoneList.stored_name === this.selectedProject).id;
+                });
+                console.log('Phone List Id Of Current Phone List: ', phoneListIdOfCurrentPhoneList);
+                
+                // DELETE FROM phones WHERE phone_list_id = phones.phoneListIdOfCurrentPhoneList AND extension = this.extension
+                await this.pb.collection('phones').getFullList().then(eachPhone => {
+                    console.log('Each Phone: ', eachPhone);
+                });
+
                 // Removes the phone from the phoneList
-                // this.phoneList.splice(this.phoneIndex, 1);
-                this.currentPhoneList.splice(this.phoneIndex, 1);
-                this.phoneIndex = -1;
-                this.currentPhoneIndexClicked = -1;
-                this.data = {};
+                // this.currentPhoneList.splice(this.phoneIndex, 1);
+                
+                // Removes phone from pocketbase
+                // this.pb.collection('phones').delete(phoneListIdOfCurrentPhoneList)
+                //     .then(() => {
+                //         console.log('Phone deleted successfully');
+                //     })
+                //     .catch(err => {
+                //         console.error('Error deleting phone: ', err);
+                //     });
+
+                // this.phoneIndex = -1;
+                // this.currentPhoneIndexClicked = -1;
+                // this.data = {};
             }
         },
         async userInputObjectUpdate(data) {
             this.userInputObjectData = data;
             
             if(this.tempCurrentTemplateSelected) {
-                // let templatePhone = this.phoneList.find(phone => phone.ext === this.currentTemplateSelected).userData;
                 let templatePhone = this.currentPhoneList.find(phone => phone.ext === this.currentTemplateSelected).userData;
                 let deepCopyTemplatePhone = JSON.parse(JSON.stringify(templatePhone));
-                // this.phoneList.push({
-                //     "ext": this.extension,
-                //     "modelDisplayName": this.innerModelText + ' (' + this.innerProdFamText + ')',
-                //     "productName": this.innerProdFamText,
-                //     "modelName": this.innerModelText,
-                //     "value": this.selectedValue,
-                //     "name": this.name,
-                //     "userData": deepCopyTemplatePhone,
-                // });
+                
                 this.currentPhoneList.push({
                     "ext": this.extension,
                     "modelDisplayName": this.innerModelText + ' (' + this.innerProdFamText + ')',
@@ -583,13 +574,11 @@ export default {
                     "name": this.name,
                     "userData": deepCopyTemplatePhone,
                 });
-                // this.phoneIndex = this.phoneList.length - 1;
                 this.phoneIndex = this.currentPhoneList.length - 1;
                 this.currentPhoneIndexClicked = this.phoneIndex;
             }
 
             // Check to see if the phone exists
-            // let phoneExists = this.phoneList.some(phone => phone.ext === this.extension);
             let phoneExists = this.currentPhoneList.some(phone => phone.ext === this.extension);
 
             if(!phoneExists) {
@@ -602,11 +591,21 @@ export default {
                     "name": this.name,
                     "userData": this.userInputObjectData,
                 });
-
-                // this.phoneIndex = this.phoneList.length - 1;
+                
                 this.phoneIndex = this.currentPhoneList.length - 1;
                 this.currentPhoneIndexClicked = this.phoneIndex;
+
+                let currentPhone = this.currentPhoneList[this.currentPhoneList.length - 1];
+
+                this.phone = await this.pb.collection('phones').create({
+                    phone_list_id: this.phoneList.id,
+                    user_input_object: currentPhone,
+                    extension: currentPhone.ext,
+                });
+
+                console.log('phone id', this.phone.id, typeof this.phone.id);
             }
+            console.log('phone id', this.phone.id);
             this.tempExtension = '';
             this.tempName = '';
             this.templateCheckBox = false;
@@ -616,20 +615,11 @@ export default {
                 this.$refs.phoneListingDiv[this.phoneIndex].click();
             });
 
-            let currentPhone = this.currentPhoneList[this.currentPhoneList.length - 1];
-            // console.log('Phone List Here: ', this.phoneList)
-            await this.pb.collection('phones').create({
-                phone_list_id: this.phoneList.id,
-                user_input_object: currentPhone,
-                extension: currentPhone.ext,
-            });
-
         },
         currentBoxUpdate(currentBox) {
             this.currentBox = currentBox;
 
             // This takes the current boxes information of the userInputObjectData, and updates the current box's information in the phoneList
-            // this.phoneList[this.phoneIndex].userData[0].objects[this.currentBox[0]] = this.userInputObjectData[0].objects[this.currentBox[0]];
             this.currentPhoneList[this.phoneIndex].userData[0].objects[this.currentBox[0]] = this.userInputObjectData[0].objects[this.currentBox[0]];
         },
         getModelNumber(file) {
@@ -647,14 +637,11 @@ export default {
             and tries to match with the ext in the phoneList that was clicked on.
             If true, it finds the index and sets it to this.phoneIndex
             If false, returns -1*/
-            // this.phoneIndex = this.phoneList.findIndex(phone => phone.ext === parentDiv.querySelector('div:first-child').innerHTML);
             this.phoneIndex = this.currentPhoneList.findIndex(phone => phone.ext === parentDiv.querySelector('div:first-child').innerHTML);
             this.currentPhoneIndexClicked = index;
-            // this.extension = this.phoneList[this.phoneIndex].ext;
             this.extension = this.currentPhoneList[this.phoneIndex].ext;
-
+            console.log('Current Extension: ', this.extension);
             // This changes the data to be updated with the phone that was clicked on
-            // this.data = this.phoneList[this.phoneIndex].userData[0];
             this.data = this.currentPhoneList[this.phoneIndex].userData[0];
         },
 
