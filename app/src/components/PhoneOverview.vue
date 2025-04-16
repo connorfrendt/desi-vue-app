@@ -263,6 +263,9 @@ export default {
             alignItems: 'center',
 
             testUser: '',
+
+            selectedPhoneListId: 0,
+            selectedPhoneId: 0,
         }
     },
     components: {
@@ -275,7 +278,18 @@ export default {
         authData: Object,
     },
     methods: {
-        handleProjectChange() {
+        async handleProjectChange() {
+            console.log('Changed!');
+            
+            // We know the selected project, so we can grab the id from the database of the selected project
+                // selectedPhoneListId
+            
+            let fullPhoneListDB = await this.pb.collection('phone_lists').getFullList();
+            let selectedPhoneList = fullPhoneListDB.find(phoneList => phoneList.stored_name === this.selectedProject);
+            console.log('Selected Phone List: \n', selectedPhoneList);
+            this.selectedPhoneListId = selectedPhoneList.id;
+            console.log('Selected Phone List Id: \n', this.selectedPhoneListId);
+
             this.phoneIndex = -1;
             this.currentPhoneIndexClicked = -1;
             this.data = {};
@@ -294,22 +308,16 @@ export default {
                 return;
             }
             this.storedProjectName = this.toCamelCase(this.displayProjectName);
-            // console.log('Stored Project: ', this.storedProjectName);
 
             this.$set(this.phoneLists, this.storedProjectName, []);
-            console.log('Phone Lists: ', this.phoneLists);
 
             this.projectDisplayNames[this.storedProjectName] = this.displayProjectName;
-            // this.selectedProject = this.displayProjectName;
             this.selectedProject = this.storedProjectName;
             
-            console.log('Project Display Names: ', this.projectDisplayNames);
             let phoneListDisplayNames = Object.entries(this.projectDisplayNames);
             
-            console.log('Phone List Display Names: ', phoneListDisplayNames);
             let phoneListDisplayNamesLength = phoneListDisplayNames.length;
             
-            // this.selectedProject = this.displayProjectName;
             let stored_name = phoneListDisplayNames[phoneListDisplayNamesLength - 1][0];
             let display_name = phoneListDisplayNames[phoneListDisplayNamesLength - 1][1];
 
@@ -318,6 +326,10 @@ export default {
                 stored_name,
                 display_name,
             });
+
+            let fullPhoneListDB = await this.pb.collection('phone_lists').getFullList();
+            let selectedPhoneList = fullPhoneListDB.find(phoneList => phoneList.stored_name === this.selectedProject);
+            this.selectedPhoneListId = selectedPhoneList.id;
 
         },
         toCamelCase(str) {
@@ -385,7 +397,7 @@ export default {
                     isItalics: item.isItalics,
                     isUnderline: item.isUnderline,
                 };
-                console.log('FONT: ', styles.fontStyle);
+                
                 myStyles += `
                     #input-box-${index} {
                         display: flex;
@@ -514,48 +526,29 @@ export default {
         async deletePhone(event, index) {
             event.stopPropagation();
             if(confirm('Are you sure you want to delete this phone?')) {
+
                 // Finds the parent div of the trash can icon
                 let parentDiv = event.target.closest('.phone-list');
                 console.log(index); // keeping this here because of parameter
+                
                 // Finds the index of the phone in the phoneList that was clicked on
                 this.phoneIndex = this.currentPhoneList.findIndex(phone => phone.ext === parentDiv.querySelector('.phone-listing-ext').innerHTML);
                 
-                // console.log('phone index', this.phoneIndex);
-                // console.log('Current Phone List ', this.currentPhoneList);
-                
-                const phones = this.pb.collection('phones').getFullList().then(phones => console.log('Phones DB: ', phones));
-                console.log('Phones DB: ', phones);
-                
-                const phoneList = this.pb.collection('phone_lists').getFullList().then(phoneList => console.log('Phone List DB: ', phoneList));
-                console.log(phoneList);
-                // console.log('Selected Project: ', this.selectedProject);
-                // console.log('Current Ext: ', this.extension);
-
-                let phoneListIdOfCurrentPhoneList = await this.pb.collection('phone_lists').getFullList().then(phoneList => {
-                    return phoneList.find(phoneList => phoneList.stored_name === this.selectedProject).id;
-                });
-                console.log('Phone List Id Of Current Phone List: ', phoneListIdOfCurrentPhoneList);
-                
-                // DELETE FROM phones WHERE phone_list_id = phones.phoneListIdOfCurrentPhoneList AND extension = this.extension
-                await this.pb.collection('phones').getFullList().then(eachPhone => {
-                    console.log('Each Phone: ', eachPhone);
-                });
-
                 // Removes the phone from the phoneList
-                // this.currentPhoneList.splice(this.phoneIndex, 1);
+                this.currentPhoneList.splice(this.phoneIndex, 1);
                 
                 // Removes phone from pocketbase
-                // this.pb.collection('phones').delete(phoneListIdOfCurrentPhoneList)
-                //     .then(() => {
-                //         console.log('Phone deleted successfully');
-                //     })
-                //     .catch(err => {
-                //         console.error('Error deleting phone: ', err);
-                //     });
+                await this.pb.collection('phones').delete(this.selectedPhoneId)
+                    .then(() => {
+                        console.log('Phone deleted successfully');
+                    })
+                    .catch(err => {
+                        console.error('Error deleting phone: ', err);
+                    });
 
-                // this.phoneIndex = -1;
-                // this.currentPhoneIndexClicked = -1;
-                // this.data = {};
+                this.phoneIndex = -1;
+                this.currentPhoneIndexClicked = -1;
+                this.data = {};
             }
         },
         async userInputObjectUpdate(data) {
@@ -596,14 +589,14 @@ export default {
                 this.currentPhoneIndexClicked = this.phoneIndex;
 
                 let currentPhone = this.currentPhoneList[this.currentPhoneList.length - 1];
-
+                console.log('SELECTED PHONE LIST ID: \n', this.selectedPhoneListId);
                 this.phone = await this.pb.collection('phones').create({
-                    phone_list_id: this.phoneList.id,
+                    phone_list_id: this.selectedPhoneListId,
                     user_input_object: currentPhone,
                     extension: currentPhone.ext,
                 });
 
-                console.log('phone id', this.phone.id, typeof this.phone.id);
+                // console.log('phone id', this.phone.id, typeof this.phone.id);
             }
             console.log('phone id', this.phone.id);
             this.tempExtension = '';
@@ -629,7 +622,7 @@ export default {
             const option = this.$el.querySelector(`option[value="${value}"]`);
             return option ? option.innerHTML : value;
         },
-        phoneClickedFunc(event, index) {
+        async phoneClickedFunc(event, index) {
             let clickedDiv = event.target;
             let parentDiv = clickedDiv.closest('.phone-listing');
             
@@ -640,7 +633,19 @@ export default {
             this.phoneIndex = this.currentPhoneList.findIndex(phone => phone.ext === parentDiv.querySelector('div:first-child').innerHTML);
             this.currentPhoneIndexClicked = index;
             this.extension = this.currentPhoneList[this.phoneIndex].ext;
-            console.log('Current Extension: ', this.extension);
+            // console.log('Current Extension: \n', this.extension);
+            // console.log('Current Phone List: \n', this.currentPhoneList);
+            // console.log('Selected Project: \n', this.selectedProject);
+
+            let fullPhoneDB = await this.pb.collection('phones').getFullList();
+            console.log('Full Phone DB: \n', fullPhoneDB);
+            let currentPhonesInSelectedPhoneList = fullPhoneDB.filter(phone => phone.phone_list_id === this.selectedPhoneListId);
+            console.log('Current Phones In Selected Phone List: \n', currentPhonesInSelectedPhoneList);
+            let selectedPhone = currentPhonesInSelectedPhoneList.find(phone => phone.extension === this.extension && phone.phone_list_id === this.selectedPhoneListId);
+            console.log('Selected Phone: \n', selectedPhone);
+            this.selectedPhoneId = selectedPhone.id;
+            console.log('Selected Phone Id: \n', selectedPhone.id);
+
             // This changes the data to be updated with the phone that was clicked on
             this.data = this.currentPhoneList[this.phoneIndex].userData[0];
         },
