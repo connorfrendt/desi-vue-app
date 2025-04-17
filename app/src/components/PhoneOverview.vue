@@ -197,6 +197,8 @@
 import PhoneType from './PhoneType.vue';
 import printJS from 'print-js';
 
+import { showEditPhoneListing, confirmEditPopup, cancelEditPopup } from '@/utils/phoneListingPopUp.js';
+
 export default {
     data() {
         return {
@@ -528,12 +530,12 @@ export default {
             if(confirm('Are you sure you want to delete this phone?')) {
 
                 // Finds the parent div of the trash can icon
-                let parentDiv = event.target.closest('.phone-list');
-                console.log(index); // keeping this here because of parameter
+                // let parentDiv = event.target.closest('.phone-list');
                 
                 // Finds the index of the phone in the phoneList that was clicked on
-                this.phoneIndex = this.currentPhoneList.findIndex(phone => phone.ext === parentDiv.querySelector('.phone-listing-ext').innerHTML);
-                
+                // this.phoneIndex = this.currentPhoneList.findIndex(phone => phone.ext === parentDiv.querySelector('.phone-listing-ext').innerHTML);
+                this.phoneIndex = index;
+
                 // Removes the phone from the phoneList
                 this.currentPhoneList.splice(this.phoneIndex, 1);
                 
@@ -651,28 +653,9 @@ export default {
         },
 
         // ======================= PHONE LISTING POPUP =======================
-        showEditPhoneListing() {
-            this.phoneListingClicked = true;
-            // this.extPopup = this.phoneList[this.phoneIndex].ext;
-            // this.namePopup = this.phoneList[this.phoneIndex].name;
-            // let currentUserData = this.phoneList[this.phoneIndex].userData[0];
-            this.extPopup = this.currentPhoneList[this.phoneIndex].ext;
-            this.namePopup = this.currentPhoneList[this.phoneIndex].name;
-            let currentUserData = this.currentPhoneList[this.phoneIndex].userData[0];
-            this.prodFamEditPopup = currentUserData.group;
-            this.modelEditPopup = currentUserData.description;
-            this.typeCodeEditPopup = currentUserData.typeCode;
-        },
-        confirmEditPopup() {
-            this.phoneListingClicked = false;
-            // this.phoneList[this.phoneIndex].ext = this.extPopup;
-            // this.phoneList[this.phoneIndex].name = this.namePopup;
-            this.currentPhoneList[this.phoneIndex].ext = this.extPopup;
-            this.currentPhoneList[this.phoneIndex].name = this.namePopup;
-        },
-        cancelEditPopup() {
-            this.phoneListingClicked = false;
-        },
+        showEditPhoneListing,
+        confirmEditPopup,
+        cancelEditPopup,
 
         /** *********** SIDEBAR RESIZING *********** */
         startResize(event) {
@@ -776,6 +759,8 @@ export default {
 <style scoped>
 .desi-logo {
     cursor: pointer;
+    height: 55px;
+    padding-right: 10px;
 }
 
 #header {
