@@ -24,15 +24,17 @@
                 <div class="true-center header-button" @click="zoomFunc">
                     Zoom
                 </div>
-            </div>  
+            </div>
             <div style="display: flex; margin-right: 25px;">
                 <div class="true-center header-button" style="padding-right: 10px;" @click="addProject">
                     <font-awesome-icon icon="fa-solid fa-plus" style="margin-right: 5px;" />
                     Add
                 </div>
+                <div class="true-center header-button" style="padding-right: 10px;" @click="editProject">
+                    <font-awesome-icon icon="fa-regular fa-pen-to-square" class="edit-icon" style="z-index: 2;" />
+                    Edit
+                </div>
                 <div class="simple-button true-center header-button" style="margin-right: 25px; padding-right: 10px; text-align: center;">
-                    <!-- Saved Projects
-                    <font-awesome-icon icon="fa-solid fa-angle-down" /> -->
                     <select v-model="selectedProject" @change="handleProjectChange">
                         <option value="">Select a project</option>
                         <option v-for="project in Object.keys(phoneLists)" :key="project" :value="project">{{ projectDisplayNames[project] }}</option>
@@ -93,7 +95,6 @@
                 </div>
                 <div v-if="templateCheckBox">
                     <select style="width: 365px;" v-model="tempCurrentTemplateSelected">
-                        <!-- <option v-if="phoneList.length === 0" value="">No Template</option> -->
                         <option v-if="currentPhoneList.length === 0" value="">No Template</option>
                         <option v-for="phone in modelList" :key="phone.ext" :value="phone.ext">{{ phone.ext }} <span v-if="phone.name">({{ phone.name }})</span></option>
                     </select>
@@ -198,6 +199,11 @@ import PhoneType from './PhoneType.vue';
 import printJS from 'print-js';
 
 import { showEditPhoneListing, confirmEditPopup, cancelEditPopup } from '@/utils/phoneListingPopUp.js';
+import {
+    startExtResize, resizeExt, stopExtResize,
+    startModelResize, resizeModel, stopModelResize,
+    startResize, resize, stopResize
+} from '@/utils/resizing.js';
 
 export default {
     data() {
@@ -280,6 +286,27 @@ export default {
         authData: Object,
     },
     methods: {
+        async editProject() {
+            // Grabs the full phone list from the database
+            let fullPhoneListDB = await this.pb.collection('phone_lists').getFullList();
+
+            // Finds the selected phone list in the database and grabs the id for updating
+            let selectedPhoneList = fullPhoneListDB.find(phoneList => phoneList.stored_name === this.selectedProject);
+            let selectedPhoneListId = selectedPhoneList.id;
+
+            // Prompts user to change the name of the project, and changes it in the database and code
+            this.displayProjectName = prompt('Enter a new name for the project');
+            this.storedProjectName = this.toCamelCase(this.displayProjectName);
+            this.$set(this.phoneLists, this.storedProjectName, []);
+            this.projectDisplayNames[this.storedProjectName] = this.displayProjectName;
+            this.selectedProject = this.storedProjectName;
+            
+            await this.pb.collection('phone_lists').update(selectedPhoneListId, {
+                stored_name: this.storedProjectName,
+                display_name: this.displayProjectName,
+            });
+
+        },
         async handleProjectChange() {
             console.log('Changed!');
             
@@ -658,77 +685,21 @@ export default {
         cancelEditPopup,
 
         /** *********** SIDEBAR RESIZING *********** */
-        startResize(event) {
-            this.isResizing = true;
-            this.initialWidth = this.$refs.draggableDiv.offsetWidth;
-            this.initialX = event.clientX;
-            document.addEventListener('mousemove', this.resize);
-            document.addEventListener('mouseup', this.stopResize);
-        },
-        resize(event) {
-            if(this.isResizing) {
-                const newWidth = this.initialWidth + (event.clientX - this.initialX);
-                this.$refs.draggableDiv.style.width = `${newWidth}px`;
-                this.currentSideBarWidth = this.$refs.draggableDiv.style.width;
-            }
-        },
-        stopResize() {
-            this.isResizing = false;
-            document.removeEventListener('mousemove', this.resize);
-            document.removeEventListener('mouseup', this.stopResize);
-        },
+        startResize,
+        resize,
+        stopResize,
 
         /** *********** EXTENSION RESIZING *********** */
-        startExtResize(event) {
-            this.isResizing = true;
-            this.initialWidth = this.$refs.draggableExtDiv.offsetWidth;
-            this.initialX = event.clientX;
-            document.addEventListener('mousemove', this.resizeExt);
-            document.addEventListener('mouseup', this.stopExtResize);
-        },
-        resizeExt(event) {
-            if(this.isResizing) {
-                const newWidth = this.initialWidth + (event.clientX - this.initialX);
-                // let draggableExtDivWidth = this.$refs.draggableExtDiv.style.width;
-                this.$refs.draggableExtDiv.style.width = `${newWidth}px`;
-                if(this.$refs.extensionDivs) {
-                    this.$refs.extensionDivs.forEach(div => {
-                        div.style.width = `${newWidth}px`;
-                    });
-                }
-            }
-        },
-        stopExtResize() {
-            this.isResizing = false;
-            document.removeEventListener('mousemove', this.resizeExt);
-            document.removeEventListener('mouseup', this.stopExtResize);
-        },
-        
+        startExtResize,
+        resizeExt,
+        stopExtResize,
 
         /** *********** MODEL RESIZING *********** */
-        startModelResize(event) {
-            this.isResizing = true;
-            this.initialWidth = this.$refs.draggableModelDiv.offsetWidth;
-            this.initialX = event.clientX;
-            document.addEventListener('mousemove', this.resizeModel);
-            document.addEventListener('mouseup', this.stopModelResize);
-        },
-        resizeModel(event) {
-            if(this.isResizing) {
-                const newWidth = this.initialWidth + (event.clientX - this.initialX);
-                this.$refs.draggableModelDiv.style.width = `${newWidth}px`;
-                if(this.$refs.modelDivs) {
-                    this.$refs.modelDivs.forEach(div => {
-                        div.style.width = `${newWidth}px`;
-                    });
-                }
-            }
-        },
-        stopModelResize() {
-            this.isResizing = false;
-            document.removeEventListener('mousemove', this.resizeModel);
-            document.removeEventListener('mouseup', this.stopModelResize);
-        },
+        startModelResize,
+        resizeModel,
+        stopModelResize,
+
+
         onlyShowExtensionsForCurrentPhoneModel() {
             // loop through phoneList, and make a list of all current models and their corresponding extensions, and return a list of extensions
             this.modelList = [];
