@@ -30,7 +30,7 @@
                     <font-awesome-icon icon="fa-solid fa-plus" style="margin-right: 5px;" />
                     Add
                 </div>
-                <div class="true-center header-button" style="padding-right: 10px;" @click="editProject">
+                <div class="true-center header-button" style="padding-right: 40px;" @click="editProject">
                     <font-awesome-icon icon="fa-regular fa-pen-to-square" class="edit-icon" style="z-index: 2;" />
                     Edit
                 </div>
@@ -296,26 +296,27 @@ export default {
             console.log(selectedPhoneListId);
 
             // Prompts user to change the name of the project, and changes it in the database and code
-            // this.displayProjectName = prompt('Enter a new name for the project');
+            this.displayProjectName = prompt('Enter a new name for the project');
             // let newDisplayName = prompt('Enter a new name for the project');
-            // this.storedProjectName = this.toCamelCase(newProjectName);
+            this.storedProjectName = this.toCamelCase(this.displayProjectName);
             // let newStoredName = this.toCamelCase(newDisplayName);
             
-            console.log('Selected Project: ', this.selectedProject);
-            let foo = Object.entries(this.projectDisplayNames);
+            // console.log('Selected Project: ', this.selectedProject);
+            // let foo = Object.entries(this.projectDisplayNames);
                 // .find(phoneList => phoneList.key === this.selectedProject);
-            console.log('Foo: ', foo.find(phoneList => phoneList[0] === this.selectedProject));
-            let fooFind = foo.find(phoneList => phoneList[0] === this.selectedProject);
-            console.log('Foo Find: ', fooFind);
-            // this.$set(this.phoneLists, this.storedProjectName, []);
+            // console.log('Foo: ', foo.find(phoneList => phoneList[0] === this.selectedProject));
+            // let fooFind = foo.find(phoneList => phoneList[0] === this.selectedProject);
+            // console.log('Foo Find: ', fooFind);
+            this.$set(this.phoneLists, this.storedProjectName, []);
             this.projectDisplayNames[this.storedProjectName] = this.displayProjectName;
-            console.log('Project Display Names: \n', this.projectDisplayNames);
-            // this.selectedProject = this.storedProjectName;
+            // console.log('Project Display Names: \n', this.projectDisplayNames);
+
+            this.selectedProject = this.storedProjectName;
             
-            // await this.pb.collection('phone_lists').update(selectedPhoneListId, {
-            //     stored_name: this.storedProjectName,
-            //     display_name: this.displayProjectName,
-            // });
+            await this.pb.collection('phone_lists').update(selectedPhoneListId, {
+                stored_name: this.storedProjectName,
+                display_name: this.displayProjectName,
+            });
 
         },
         async handleProjectChange() {
