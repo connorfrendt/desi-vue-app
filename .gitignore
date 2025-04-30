@@ -1,7 +1,6 @@
 .DS_Store
 node_modules
 /dist
-pb_data
 
 # local env files
 .env.local
@@ -21,3 +20,31 @@ pnpm-debug.log*
 *.njsproj
 *.sln
 *.sw?
+
+# Go build
+*.exe
+*.test
+*.out
+*.log
+
+# Compiled object files
+*.o
+*.a
+
+# IDE/editor stuff
+.vscode/
+*.swp
+*.swo
+
+# Dependency directories
+vendor/
+
+# PocketBase DB/data files
+pb_data/
+pb_migrations/
+pktbase-dev/
+temp/
+
+# OS-generated files
+.DS_Store
+Thumbs.db
