@@ -10,3 +10,4 @@ require (
 )
 
 replace github.com/pocketbase/pocketbase => ./pktbase
+require github.com/pocketbase/pocketbase v1.23.0
