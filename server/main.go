@@ -8,6 +8,7 @@ import (
 )
 
 func main() {
+	
     app := pocketbase.New()
 
     app.OnBeforeServe().Add(func(e *pocketbase.HooksEvent) error {
