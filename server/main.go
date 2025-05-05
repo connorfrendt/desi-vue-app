@@ -5,7 +5,6 @@ import (
     "os"
 
     "github.com/pocketbase/pocketbase"
-    "github.com/pocketbase/pocketbase/models"
 )
 
 func main() {
@@ -16,25 +15,30 @@ func main() {
         password := os.Getenv("PB_ADMIN_PASSWORD")
 
         if email == "" || password == "" {
-            log.Println("Admin credentials not provided in env vars.")
+            log.Println("Admin credentials not provided.")
             return nil
         }
 
-        if _, err := app.Dao().FindAdminByEmail(email); err == nil {
-            return nil // Admin already exists
+        // Check if the admin already exists
+        existing, _ := app.Dao().FindAdminByEmail(email)
+        if existing != nil {
+            log.Println("Admin already exists.")
+            return nil
         }
 
-        admin := &models.Admin{
-            Email:    email,
-            Password: password,
+        // Create a new admin
+        admin, err := app.NewAdmin(email, password)
+        if err != nil {
+            log.Println("Error creating admin:", err)
+            return err
         }
 
         if err := app.Dao().SaveAdmin(admin); err != nil {
-            log.Println("Failed to create admin:", err)
-        } else {
-            log.Println("Superadmin created.")
+            log.Println("Failed to save admin:", err)
+            return err
         }
 
+        log.Println("Superadmin created.")
         return nil
     })
 
