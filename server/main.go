@@ -2,28 +2,37 @@ package main
 
 import (
     "log"
+    "os"
 
     "github.com/pocketbase/pocketbase"
     "github.com/pocketbase/pocketbase/models"
-    "github.com/pocketbase/pocketbase/tools/security"
 )
 
 func main() {
     app := pocketbase.New()
 
     app.OnBeforeServe().Add(func(e *pocketbase.HooksEvent) error {
-        admins, _ := app.Dao().FindAdminByEmail("admin@example.com")
-        if admins == nil {
-            admin := &models.Admin{
-                Email:    "admin@example.com",
-                Password: "supersecret", // Or use: security.NewPassword("supersecret")
-            }
-            err := app.Dao().SaveAdmin(admin)
-            if err != nil {
-                log.Println("Failed to create admin:", err)
-            } else {
-                log.Println("Superadmin created.")
-            }
+        email := os.Getenv("PB_ADMIN_EMAIL")
+        password := os.Getenv("PB_ADMIN_PASSWORD")
+
+        if email == "" || password == "" {
+            log.Println("Admin credentials not provided in env vars.")
+            return nil
+        }
+
+        if _, err := app.Dao().FindAdminByEmail(email); err == nil {
+            return nil // Admin already exists
+        }
+
+        admin := &models.Admin{
+            Email:    email,
+            Password: password,
+        }
+
+        if err := app.Dao().SaveAdmin(admin); err != nil {
+            log.Println("Failed to create admin:", err)
+        } else {
+            log.Println("Superadmin created.")
         }
 
         return nil
