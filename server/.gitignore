@@ -2,6 +2,7 @@
 node_modules
 /dist
 ./pktbase/pb_data
+./pktbase-dev/pb_data
 
 # local env files
 .env.local
