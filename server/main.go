@@ -1,49 +1,37 @@
 package main
 
 import (
-    "log"
-    "os"
+	"log"
 
-    "github.com/pocketbase/pocketbase"
+	"github.com/pocketbase/pocketbase"
+	"github.com/pocketbase/pocketbase/models"
 )
 
 func main() {
-	
-    app := pocketbase.New()
+	app := pocketbase.New()
 
-    app.OnBeforeServe().Add(func(e *pocketbase.HooksEvent) error {
-        email := os.Getenv("PB_ADMIN_EMAIL")
-        password := os.Getenv("PB_ADMIN_PASSWORD")
+	app.OnBeforeServe().Add(func(e any) error {
+		admins, err := app.Dao().FindAdmins()
+		if err != nil {
+			return err
+		}
 
-        if email == "" || password == "" {
-            log.Println("Admin credentials not provided.")
-            return nil
-        }
+		if len(admins) == 0 {
+			log.Println("No admin users found. Creating default admin...")
 
-        // Check if the admin already exists
-        existing, _ := app.Dao().FindAdminByEmail(email)
-        if existing != nil {
-            log.Println("Admin already exists.")
-            return nil
-        }
+			admin := &models.Admin{}
+			admin.Email = os.Getenv("PB_ADMIN_EMAIL")
+			admin.SetPassword(os.Getenv("PB_ADMIN_PASS"))
 
-        // Create a new admin
-        admin, err := app.NewAdmin(email, password)
-        if err != nil {
-            log.Println("Error creating admin:", err)
-            return err
-        }
+			if err := app.Dao().SaveAdmin(admin); err != nil {
+				return err
+			}
+		}
 
-        if err := app.Dao().SaveAdmin(admin); err != nil {
-            log.Println("Failed to save admin:", err)
-            return err
-        }
+		return nil
+	})
 
-        log.Println("Superadmin created.")
-        return nil
-    })
-
-    if err := app.Start(); err != nil {
-        log.Fatal(err)
-    }
+	if err := app.Start(); err != nil {
+		log.Fatal(err)
+	}
 }
