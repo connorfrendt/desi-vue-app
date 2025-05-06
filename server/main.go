@@ -10,7 +10,7 @@ import (
 func main() {
 	app := pocketbase.New()
 
-	app.OnBeforeServe().Add(func(e any) error {
+	app.App().OnBeforeServe().Add(func(e any) error {
 		admins, err := app.Dao().FindAdmins()
 		if err != nil {
 			return err
