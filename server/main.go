@@ -3,8 +3,8 @@ package main
 import (
 	"log"
 	"os"
+
 	"github.com/pocketbase/pocketbase"
-	"github.com/pocketbase/pocketbase/models"
 )
 
 func main() {
@@ -19,7 +19,7 @@ func main() {
 		if len(admins) == 0 {
 			log.Println("No admin users found. Creating default admin...")
 
-			admin := &models.Admin{}
+			admin := app.NewAdmin()
 			admin.Email = os.Getenv("PB_ADMIN_EMAIL")
 			admin.SetPassword(os.Getenv("PB_ADMIN_PASS"))
 
