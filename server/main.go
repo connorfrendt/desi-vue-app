@@ -6,6 +6,10 @@ import (
 )
 
 func main() {
+	port := os.Getenv("PORT")
+	if port != "" {
+		app.SetAddress(":" + port)
+	}
     app := pocketbase.New()
 
     // app.OnBeforeServe().Add(func(e *core.ServeEvent) error {
