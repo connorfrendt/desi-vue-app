@@ -2,10 +2,7 @@ package main
 
 import (
     "log"
-    "os"
-
     "github.com/pocketbase/pocketbase"
-    "github.com/pocketbase/pocketbase/core"
 )
 
 func main() {
