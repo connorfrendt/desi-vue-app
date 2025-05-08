@@ -41,9 +41,6 @@ vendor/
 
 # PocketBase DB/data files
 pb_data/
-pb_migrations/
-pktbase-dev/
-temp/
 
 # OS-generated files
 .DS_Store
