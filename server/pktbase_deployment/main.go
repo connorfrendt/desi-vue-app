@@ -3,6 +3,7 @@ package main
 import (
 	"log"
 	"os"
+
 	"github.com/pocketbase/pocketbase"
 	"github.com/pocketbase/pocketbase/models"
 )
@@ -10,36 +11,22 @@ import (
 func main() {
 	app := pocketbase.New()
 
-	app.OnBeforeServe().Add(func(e *pocketbase.ServeEvent) error {
-		// Check if any admins exist
+	app.OnBeforeServe().Add(func(e *core.ServeEvent) error {
 		admins, err := app.Dao().FindAdmin()
-		if err != nil {
-			return err
-		}
-
-		if len(admins) == 0 {
+		if err != nil || len(admins) == 0 {
 			email := os.Getenv("PB_ADMIN_EMAIL")
 			password := os.Getenv("PB_ADMIN_PASSWORD")
 
-			if email == "" || password == "" {
-				log.Println("⚠️ No admin found, and PB_ADMIN_EMAIL or PB_ADMIN_PASSWORD not set — cannot create admin.")
-				return nil // Don't crash; just log it
-			}
-
-			admin := &models.Admin{Email: email}
-			if err := admin.SetPassword(password); err != nil {
-				return err
-			}
+			admin := &models.Admin{}
+			admin.Email = email
+			admin.SetPassword(password)
 
 			if err := app.Dao().SaveAdmin(admin); err != nil {
-				return err
+				log.Fatalf("Failed to create admin user: %v", err)
 			}
 
-			log.Println("✅ Admin user created from environment variables.")
-		} else {
-			log.Println("ℹ️ Admin user already exists. Skipping creation.")
+			log.Println("✅ Admin user created")
 		}
-
 		return nil
 	})
 
