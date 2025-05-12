@@ -5,28 +5,34 @@ import (
 	"os"
 
 	"github.com/pocketbase/pocketbase"
-	"github.com/pocketbase/pocketbase/models"
+	"github.com/pocketbase/pocketbase/core"
 )
 
 func main() {
 	app := pocketbase.New()
 
 	app.OnBeforeServe().Add(func(e *core.ServeEvent) error {
-		admins, err := app.Dao().FindAdmin()
-		if err != nil || len(admins) == 0 {
-			email := os.Getenv("PB_ADMIN_EMAIL")
-			password := os.Getenv("PB_ADMIN_PASSWORD")
+		email := os.Getenv("PB_ADMIN_EMAIL")
+		password := os.Getenv("PB_ADMIN_PASSWORD")
 
-			admin := &models.Admin{}
-			admin.Email = email
-			admin.SetPassword(password)
-
-			if err := app.Dao().SaveAdmin(admin); err != nil {
-				log.Fatalf("Failed to create admin user: %v", err)
-			}
-
-			log.Println("✅ Admin user created")
+		// Check if admin exists
+		existing, err := app.Dao().FindAdminByEmail(email)
+		if err == nil && existing != nil {
+			log.Println("✅ Admin already exists")
+			return nil
 		}
+
+		// Create admin via the internal REST API handler
+		admin, err := app.NewAdmin(email, password)
+		if err != nil {
+			log.Fatalf("❌ Failed to create admin: %v", err)
+		}
+
+		if err := app.Dao().SaveAdmin(admin); err != nil {
+			log.Fatalf("❌ Failed to save admin: %v", err)
+		}
+
+		log.Println("✅ Admin user created successfully")
 		return nil
 	})
 
