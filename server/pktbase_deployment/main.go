@@ -45,7 +45,7 @@ func main() {
 		// 	return err
 		// }
 
-		log.Println("Admin created successfully")
+		// log.Println("Admin created successfully")
 		return nil
 	})
 
