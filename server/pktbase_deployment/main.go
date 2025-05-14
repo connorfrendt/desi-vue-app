@@ -11,18 +11,18 @@ import (
 
 func main() {
 	app := pocketbase.New()
+	log.Println("THIS THING HERE")
+	// app.OnAfterBootstrap().Add(func(e *core.BootstrapEvent) error {
+	// 	adminEmail := os.Getenv("PB_ADMIN_EMAIL")
+	// 	adminPassword := os.Getenv("PB_ADMIN_PASSWORD")
 
-	app.OnAfterBootstrap().Add(func(e *core.BootstrapEvent) error {
-		adminEmail := os.Getenv("PB_ADMIN_EMAIL")
-		adminPassword := os.Getenv("PB_ADMIN_PASSWORD")
+	// 	log.Println("Admin email:", adminEmail)
+	// 	log.Println("Admin password:", adminPassword)
 
-		log.Println("Admin email:", adminEmail)
-		log.Println("Admin password:", adminPassword)
-
-		if adminEmail == "" || adminPassword == "" {
-			log.Println("PB_ADMIN_EMAIL or PB_ADMIN_PASSWORD not set")
-			return nil
-		}
+	// 	if adminEmail == "" || adminPassword == "" {
+	// 		log.Println("PB_ADMIN_EMAIL or PB_ADMIN_PASSWORD not set")
+	// 		return nil
+	// 	}
 
 		// Check if admin already exists
 		// _, err := app.Dao().FindAdminByEmail(adminEmail)
@@ -46,8 +46,8 @@ func main() {
 		// }
 
 		// log.Println("Admin created successfully")
-		return nil
-	})
+	// 	return nil
+	// })
 
 	if err := app.Start(); err != nil {
 		log.Fatal(err)
