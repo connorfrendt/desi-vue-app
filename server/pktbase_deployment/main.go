@@ -6,7 +6,7 @@ import (
 
 	"github.com/pocketbase/pocketbase"
 	"github.com/pocketbase/pocketbase/core"
-	"github.com/pocketbase/pocketbase/models"
+	// "github.com/pocketbase/pocketbase/models"
 )
 
 func main() {
@@ -32,9 +32,9 @@ func main() {
 		// }
 
 		// Create new admin
-		admin := &models.Admin{
-			Email: adminEmail,
-		}
+		// admin := &models.Admin{
+		// 	Email: adminEmail,
+		// }
 		// if err := admin.SetPassword(adminPassword); err != nil {
 		// 	log.Printf("Error setting admin password: %v", err)
 		// 	return err
