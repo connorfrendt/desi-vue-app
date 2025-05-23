@@ -1,6 +1,11 @@
 <template>
     <section>
-        
+        <div>
+            <a href="https://labels.desi.com/" target="_blank">
+                <img class="desi-logo" src="../assets/desi-logo.png" />
+            </a>
+        </div>
+
         <div class="sign-in-log-in" v-if="method === 'signin'">
             <form @submit.prevent="handleSignInSubmit(profile)">
                 <div class="sign-in">
@@ -22,16 +27,16 @@
                         <div v-if="error" class="error-message">{{ error }}</div>
                         
                         <div class="input-element" style="grid-column: 1 / span 2;">
-                            <button>Log In</button>
+                            <button class="sign-in-log-in-button">Log In</button>
                         </div>
                     </div>
-
-                    <div style="border-top: 1px solid black;">
+                    
+                    <div style="border-top: 2px solid #1b255f; margin: 0 10px;">
                         <div class="input-element">
                             Need to register?
                         </div>
                         <div class="input-element">
-                            <button type="button" @click="method = 'signup'">Sign Up</button>
+                            <button class="sign-in-log-in-button" type="button" @click="method = 'signup'">Sign Up</button>
                         </div>
                     </div>
                 </div>
@@ -79,7 +84,7 @@
                     </div>
 
 
-                    <div style="border-top: 1px solid black;">
+                    <div style="border-top: 2px solid #1b255f; margin: 0 10px;">
                         <div class="input-element">
                             Already have an account?
                         </div>
@@ -151,28 +156,46 @@ export default {
 </script>
 
 <style scoped>
-label {
-    display: block;
-    padding: 100px 10px;
+.desi-logo {
+    cursor: pointer;
+    height: 55px;
+    padding: 10px;
 }
 
 .sign-in-log-in {
-    display: flex;
-    justify-content: flex-end;
+    /* background-color: white; */
+    margin: 50px 20px 20px 20px;
 }
 
 .sign-in {
-    display: flex;
-    flex-direction: column;
-    padding: 10px;
-    background: rgb(230, 228, 228);
+    background: rgb(223, 223, 223);
+    margin: 0 200px 0 200px;
     text-align: center;
-    height: 100vh;
-    width: 30vw;
+    border: 3px solid #1b255f;
+    border-radius: 5px;
 }
 
 .input-element {
     padding: 50px 10px 10px 10px;
+}
+
+.sign-in-log-in-button {
+    all: unset;
+    cursor: pointer;
+    background-color: white;
+    border: 2px solid rgba(27, 37, 95, 1);
+    border-radius: 5px;
+    padding: 10px;
+}
+
+.sign-in-log-in-button:hover {
+    background-color: rgba(27, 37, 95, 0.5);
+    color: white;
+}
+
+.sign-in-log-in-button:active {
+    background-color: rgba(27, 37, 95, 1);
+    color: white;
 }
 
 .error-message {

@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div style="display: flex; justify-content: space-between; background-color: slategray;">
+        <div class="main-header">
             <div id="header" class="">
                 <a href="https://labels.desi.com/" target="_blank">
                     <img class="desi-logo" src="../assets/desi-logo.png" />
@@ -154,7 +154,7 @@
                 </div>
             </div>
 
-            <div id="drag-handle" @mousedown="startResize" style="cursor: ew-resize; height: 96vh; width: 5px; background-color: darkgray;"></div>
+            <div id="drag-handle" @mousedown="startResize"></div>
             
         </div>
 
@@ -674,18 +674,10 @@ export default {
             this.phoneIndex = this.currentPhoneList.findIndex(phone => phone.ext === parentDiv.querySelector('div:first-child').innerHTML);
             this.currentPhoneIndexClicked = index;
             this.extension = this.currentPhoneList[this.phoneIndex].ext;
-            // console.log('Current Extension: \n', this.extension);
-            // console.log('Current Phone List: \n', this.currentPhoneList);
-            // console.log('Selected Project: \n', this.selectedProject);
-
             let fullPhoneDB = await this.pb.collection('phones').getFullList();
-            console.log('Full Phone DB: \n', fullPhoneDB);
             let currentPhonesInSelectedPhoneList = fullPhoneDB.filter(phone => phone.phone_list_id === this.selectedPhoneListId);
-            console.log('Current Phones In Selected Phone List: \n', currentPhonesInSelectedPhoneList);
             let selectedPhone = currentPhonesInSelectedPhoneList.find(phone => phone.extension === this.extension && phone.phone_list_id === this.selectedPhoneListId);
-            console.log('Selected Phone: \n', selectedPhone);
             this.selectedPhoneId = selectedPhone.id;
-            console.log('Selected Phone Id: \n', selectedPhone.id);
 
             // This changes the data to be updated with the phone that was clicked on
             this.data = this.currentPhoneList[this.phoneIndex].userData[0];
@@ -746,18 +738,24 @@ export default {
     padding-right: 10px;
 }
 
+.main-header {
+    background-color: rgb(255, 255, 255);
+    display: flex;
+    justify-content: space-between;
+}
+
 #header {
     display: flex;
     padding: 0 20px;
 }
-
 .header-button {
     margin: auto;
     height: 100%;
     width: 80px;
 }
 .header-button:hover {
-    background-color: rgb(162, 162, 162);
+    background-color: rgba(27, 37, 95, 1);
+    color: lightgray;
     transition: 0.2s;
     cursor: pointer;
 }
@@ -826,7 +824,7 @@ export default {
 #drag-handle {
     cursor: ew-resize;
     width: 10px;
-    background-color: darkgray;
+    background-color: rgba(27, 37, 95, 1);
 }
 
 #draggable-side-bar {
@@ -836,7 +834,7 @@ export default {
     width: 350px;
     min-width: 100px;
     max-width: 550px;
-    background-color: slategrey;
+    background-color: white;
     position: relative;
     overflow: hidden;
     flex-shrink: 0;
@@ -895,7 +893,7 @@ export default {
     flex-shrink: 0;
 }
 .phone-listing.active {
-    border: 2px solid blue;
+    border: 2px solid rgba(27, 37, 95, 1);
     border-radius: 5px;
 }
 
