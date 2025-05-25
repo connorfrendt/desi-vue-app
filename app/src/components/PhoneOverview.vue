@@ -154,7 +154,9 @@
                 </div>
             </div>
 
-            <div id="drag-handle" @mousedown="startResize"></div>
+            <div id="drag-handle" @mousedown="startResize">
+                <font-awesome-icon icon="fa-solid fa-grip-lines-vertical" class="drag-lines" />
+            </div>
             
         </div>
 
@@ -821,10 +823,18 @@ export default {
     cursor: ew-resize;
 }
 
+.drag-lines {
+    color: white;
+
+}
+
 #drag-handle {
     cursor: ew-resize;
     width: 10px;
     background-color: rgba(27, 37, 95, 1);
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 #draggable-side-bar {
