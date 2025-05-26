@@ -1,14 +1,19 @@
 <template>
     <section style="display: grid; grid-template-columns: repeat(2, 1fr);">
-        <div style="padding-top: 20px;">
-            <div style="text-align: center;">
-                <a href="https://labels.desi.com/" target="_blank">
-                    <img class="desi-logo" src="../assets/desi-logo.png" />
-                </a>
+        <div class="desi-picture">
+            <div class="desi-welcome">
+                <div style="text-align: center;">
+                    <a href="https://labels.desi.com/" target="_blank">
+                        <img class="desi-logo" src="../assets/desi-logo.png" />
+                    </a>
+                </div>
+    
+                <div class="welcome"><b>Welcome!</b></div>
+
             </div>
         </div>
     
-        <div>
+        <div style="height: 100vh;">
             <div class="sign-in-log-in" v-if="method === 'signin'">
                 <form @submit.prevent="handleSignInSubmit(profile)">
                     <div class="sign-in">
@@ -142,7 +147,7 @@ export default {
         },
         'profile.password'() {
             if (this.error) this.error = '';
-        }
+        },
     }
 };
 </script>
@@ -151,24 +156,47 @@ export default {
 .desi-logo {
     cursor: pointer;
     height: 55px;
-    padding: 10px;
-}
+    padding: 100px 10px 10px 10px;
+}   
 
 .sign-in-log-in {
     /* margin: 50px 20px 20px 20px; */
+    /* background-image: url('../assets/blue_tech_bg.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat; */
 }
 
 .sign-in {
-    background: rgb(223, 223, 223);
     text-align: center;
     border-left: 3px solid #1b255f;
     height: 100vh;
+}
+
+.welcome {
+    text-align: center;
+    padding-top: 100px;
+    font-size: 50px;
+    color: #1b255f;
 }
 
 .elements {
     display: flex;
     align-items: center;
     flex-direction: column;
+}
+
+.desi-welcome {
+    /* padding-top: 20px; */
+    height: 100vh;
+    background-color: rgba(255, 255, 255, 0.2);
+}
+
+.desi-picture {
+    background-image: url('../assets/blue_tech_bg.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
 }
 
 .input-element {
