@@ -1,91 +1,94 @@
 <template>
-    <section style="display: grid; grid-template-columns: repeat(2, 1fr);">
-        <div class="desi-picture">
-            <div class="desi-welcome">
-                <div style="text-align: center;">
-                    <a href="https://labels.desi.com/" target="_blank">
-                        <img class="desi-logo" src="../assets/desi-logo.png" />
-                    </a>
-                </div>
-    
-                <div class="welcome"><b>Welcome!</b></div>
+    <section class="desi-picture">
+        <div style="display: grid; grid-template-columns: repeat(2, 1fr);">
 
-            </div>
-        </div>
-    
-        <div style="height: 100vh;">
-            <div class="sign-in-log-in" v-if="method === 'signin'">
-                <form @submit.prevent="handleSignInSubmit(profile)">
-                    <div class="sign-in">
-                        <div class="elements">
-                            <div style="display: flex; align-items: center;" class="input-element">
-                                <input class="input-field" v-model="profile.email" placeholder="Email">
-                            </div>
-                        
-                            <div style="display: flex; align-items: center;" class="input-element">
-                                <input class="input-field" type="password" v-model="profile.password" placeholder="Password">
-                            </div>
-    
-                            <div v-if="error" class="error-message">{{ error }}</div>
-                            
-                            <div class="input-element" style="grid-column: 1 / span 2;">
-                                <button class="sign-in-log-in-button">Log In</button>
-                            </div>
-                        </div>
-                        
-                        <div style="border-top: 2px solid #1b255f; margin: 0 10px;">
-                            <div class="input-element">
-                                Need to register?
-                            </div>
-                            <div class="input-element">
-                                <button class="sign-in-log-in-button" type="button" @click="method = 'signup'">Sign Up</button>
-                            </div>
-                        </div>
+            <div>
+                <div class="desi-welcome">
+                    <div style="text-align: center;">
+                        <a href="https://labels.desi.com/" target="_blank">
+                            <img class="desi-logo" src="../assets/desi-logo.png" />
+                        </a>
                     </div>
+        
+                    <div class="welcome"><b>Welcome!</b></div>
     
-                </form>
+                </div>
             </div>
-    
-            <div class="sign-in-log-in" v-else>
-                <form @submit.prevent="handleSignUpSubmit(profile)">
-                    <div class="sign-in">
-                        <div class="elements">
-                            <div style="display: flex; align-items: center;" class="input-element">
-                                <input class="input-field" v-model="profile.email" placeholder="Email">
+        
+            <div style="height: 100vh;">
+                <div class="sign-in-log-in" v-if="method === 'signin'">
+                    <form @submit.prevent="handleSignInSubmit(profile)">
+                        <div class="sign-in">
+                            <div class="elements">
+                                <div style="display: flex; align-items: center;" class="input-element">
+                                    <input class="input-field" v-model="profile.email" placeholder="Email">
+                                </div>
+                            
+                                <div style="display: flex; align-items: center;" class="input-element">
+                                    <input class="input-field" type="password" v-model="profile.password" placeholder="Password">
+                                </div>
+        
+                                <div v-if="error" class="error-message">{{ error }}</div>
+                                
+                                <div class="input-element" style="grid-column: 1 / span 2;">
+                                    <button class="sign-in-log-in-button">Log In</button>
+                                </div>
                             </div>
                             
-                            <div style="display: flex; align-items: center;" class="input-element">
-                                <input class="input-field" type="password" v-model="profile.password" placeholder="Password" required>
-                            </div>
-                            
-                            <div style="display: flex; align-items: center;" class="input-element">
-                                <input class="input-field" type="password" v-model="profile.passwordConfirm" placeholder="Confirm Password" required>
-                            </div>
-                            
-                            <div style="display: flex; align-items: center;" class="input-element">
-                                <input class="input-field" type="text" v-model="profile.name" placeholder="Name" required>
-                            </div>
-    
-                            <div v-if="error" class="error-message">{{ error }}</div>
-    
-                            <div class="input-element" style="grid-column: 1 / span 2;">
-                                <button class="sign-in-log-in-button">Sign Up</button>
+                            <div style="border-top: 2px solid #1b255f; margin: 0 10px;">
+                                <div class="input-element">
+                                    Need to register?
+                                </div>
+                                <div class="input-element">
+                                    <button class="sign-in-log-in-button" type="button" @click="method = 'signup'">Sign Up</button>
+                                </div>
                             </div>
                         </div>
-    
-    
-                        <div style="border-top: 2px solid #1b255f; margin: 0 10px;">
-                            <div class="input-element">
-                                Already have an account?
+        
+                    </form>
+                </div>
+        
+                <div class="sign-in-log-in" v-else>
+                    <form @submit.prevent="handleSignUpSubmit(profile)">
+                        <div class="sign-in">
+                            <div class="elements">
+                                <div style="display: flex; align-items: center;" class="input-element">
+                                    <input class="input-field" v-model="profile.email" placeholder="Email">
+                                </div>
+                                
+                                <div style="display: flex; align-items: center;" class="input-element">
+                                    <input class="input-field" type="password" v-model="profile.password" placeholder="Password" required>
+                                </div>
+                                
+                                <div style="display: flex; align-items: center;" class="input-element">
+                                    <input class="input-field" type="password" v-model="profile.passwordConfirm" placeholder="Confirm Password" required>
+                                </div>
+                                
+                                <div style="display: flex; align-items: center;" class="input-element">
+                                    <input class="input-field" type="text" v-model="profile.name" placeholder="Name" required>
+                                </div>
+        
+                                <div v-if="error" class="error-message">{{ error }}</div>
+        
+                                <div class="input-element" style="grid-column: 1 / span 2;">
+                                    <button class="sign-in-log-in-button">Sign Up</button>
+                                </div>
                             </div>
-                            <div class="input-element">
-                                <button class="sign-in-log-in-button" type="button" @click="method = 'signin'">Go to Sign In</button>
+        
+        
+                            <div style="border-top: 2px solid #1b255f; margin: 0 10px;">
+                                <div class="input-element">
+                                    Already have an account?
+                                </div>
+                                <div class="input-element">
+                                    <button class="sign-in-log-in-button" type="button" @click="method = 'signin'">Go to Sign In</button>
+                                </div>
                             </div>
+                            
                         </div>
                         
-                    </div>
-                    
-                </form>
+                    </form>
+                </div>
             </div>
         </div>
     </section>
