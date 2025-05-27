@@ -741,7 +741,7 @@ export default {
 }
 
 .main-header {
-    background-color: rgb(255, 255, 255);
+    background-color: rgb(121, 210, 255);
     display: flex;
     justify-content: space-between;
 }
@@ -756,7 +756,7 @@ export default {
     width: 80px;
 }
 .header-button:hover {
-    background-color: rgba(27, 37, 95, 1);
+    background-color: rgba(27, 37, 95, 0.5);
     color: lightgray;
     transition: 0.2s;
     cursor: pointer;
@@ -844,7 +844,7 @@ export default {
     width: 350px;
     min-width: 100px;
     max-width: 550px;
-    background-color: white;
+    background-color: #79d2ff;
     position: relative;
     overflow: hidden;
     flex-shrink: 0;

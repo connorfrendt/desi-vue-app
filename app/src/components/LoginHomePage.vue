@@ -8,7 +8,7 @@
                     </a>
                 </div>
     
-                <div class="welcome"><b>Welcome!</b></div>
+                <div class="welcome roboto-welcome"><b>Welcome!</b></div>
 
             </div>
         </div>
@@ -153,6 +153,8 @@ export default {
 </script>
 
 <style scoped>
+@import url('https://fonts.googleapis.com/css2?family=Host+Grotesk:ital,wght@0,300..800;1,300..800&family=Kantumruy+Pro:ital,wght@0,100..700;1,100..700&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
+
 .desi-logo {
     cursor: pointer;
     height: 55px;
@@ -169,7 +171,8 @@ export default {
 
 .sign-in {
     text-align: center;
-    border-left: 3px solid #1b255f;
+    /* border-left: 3px solid #1b255f; */
+    background-color: #ffffffb0;
     height: 100vh;
 }
 
@@ -180,23 +183,38 @@ export default {
     color: #1b255f;
 }
 
+.roboto-welcome {
+  font-family: "Roboto", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 800;
+  font-style: normal;
+  font-variation-settings:
+    "wdth" 100;
+}
+
 .elements {
     display: flex;
     align-items: center;
     flex-direction: column;
+    padding-top: 120px;
 }
 
 .desi-welcome {
     /* padding-top: 20px; */
     height: 100vh;
-    background-color: rgba(255, 255, 255, 0.2);
-}
-
-.desi-picture {
-    background-image: url('../assets/blue_tech_bg.jpg');
+    background-image:
+        radial-gradient(circle at center,  rgba(117, 188, 255, 0.5), rgba(117, 188, 255, 0.5)),
+        url('../assets/light_blue_bg.jpg');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
+}
+
+.desi-picture {
+    /* background-image: url('../assets/blue_tech_bg.jpg'); */
+    /* background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat; */
 }
 
 .input-element {
