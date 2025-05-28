@@ -844,7 +844,8 @@ export default {
     width: 350px;
     min-width: 100px;
     max-width: 550px;
-    background-color: #79d2ff;
+    /* background-color: #79d2ff; */
+    background-color: black;
     position: relative;
     overflow: hidden;
     flex-shrink: 0;
