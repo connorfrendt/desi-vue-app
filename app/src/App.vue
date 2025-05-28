@@ -17,7 +17,8 @@ export default {
 
 <style>
 body {
-    background-color: #a0a0a0;
+    /* background-color: #a0a0a0; */
+    background-color: rgba(75, 122, 138, 0.776);
     margin: 0;
 }
 </style>

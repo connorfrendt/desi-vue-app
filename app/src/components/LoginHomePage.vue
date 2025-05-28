@@ -1,6 +1,6 @@
 <template>
     <section class="desi-picture">
-        <div style="display: grid; grid-template-columns: repeat(2, 1fr);">
+        <div style="display: grid; grid-template-columns: repeat(2, 1fr); padding: 0 100px;">
 
             <div>
                 <div class="desi-welcome">
@@ -15,7 +15,7 @@
                 </div>
             </div>
         
-            <div style="height: 100vh;">
+            <div style="height: 100vh; padding: 0 30px;">
                 <div class="sign-in-log-in" v-if="method === 'signin'">
                     <form @submit.prevent="handleSignInSubmit(profile)">
                         <div class="sign-in">
@@ -35,7 +35,7 @@
                                 </div>
                             </div>
                             
-                            <div style="border-top: 2px solid #1b255f; margin: 0 10px;">
+                            <div class="register">
                                 <div class="input-element">
                                     Need to register?
                                 </div>
@@ -76,7 +76,7 @@
                             </div>
         
         
-                            <div style="border-top: 2px solid #1b255f; margin: 0 10px;">
+                            <div class="register">
                                 <div class="input-element">
                                     Already have an account?
                                 </div>
@@ -172,8 +172,13 @@ export default {
 
 .sign-in {
     text-align: center;
-    border-left: 3px solid #1b255f;
-    height: 100vh;
+    height: 90vh;
+    margin: 50px;
+    background-color: #b2dcfc;
+    border-radius: 5px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 }
 
 .welcome {
@@ -192,11 +197,11 @@ export default {
 .desi-welcome {
     /* padding-top: 20px; */
     height: 100vh;
-    background-color: rgba(255, 255, 255, 0.2);
+    /* background-color: rgba(255, 255, 255, 0.2); */
 }
 
 .desi-picture {
-    background-image: url('../assets/blue_tech_bg.jpg');
+    background-image: url('../assets/light_blue_bg.jpg');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
@@ -236,5 +241,10 @@ export default {
     display: flex;
     justify-content: center;
     grid-column: span 2;
+}
+
+.register {
+    border-top: 2px solid #1b255f;
+    margin: 20px;
 }
 </style>
