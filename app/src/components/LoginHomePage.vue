@@ -10,7 +10,7 @@
                         </a>
                     </div>
         
-                    <div class="welcome"><b>Welcome!</b></div>
+                    <div class="welcome roboto-welcome"><b>Welcome!</b></div>
     
                 </div>
             </div>
@@ -20,6 +20,8 @@
                     <form @submit.prevent="handleSignInSubmit(profile)">
                         <div class="sign-in">
                             <div class="elements">
+                                <div class="flavor roboto-welcome">Sign In to Continue</div>
+
                                 <div style="display: flex; align-items: center;" class="input-element">
                                     <input class="input-field" v-model="profile.email" placeholder="Email">
                                 </div>
@@ -36,7 +38,7 @@
                             </div>
                             
                             <div class="register">
-                                <div class="input-element">
+                                <div class="input-element roboto-welcome">
                                     Need to register?
                                 </div>
                                 <div class="input-element">
@@ -52,6 +54,8 @@
                     <form @submit.prevent="handleSignUpSubmit(profile)">
                         <div class="sign-in">
                             <div class="elements">
+                                <div class="flavor roboto-welcome">Create an Account</div>
+
                                 <div style="display: flex; align-items: center;" class="input-element">
                                     <input class="input-field" v-model="profile.email" placeholder="Email">
                                 </div>
@@ -77,7 +81,7 @@
         
         
                             <div class="register">
-                                <div class="input-element">
+                                <div class="input-element roboto-welcome">
                                     Already have an account?
                                 </div>
                                 <div class="input-element">
@@ -203,7 +207,11 @@ export default {
     display: flex;
     align-items: center;
     flex-direction: column;
-    padding-top: 120px;
+    /* padding: 10px; */
+}
+
+.flavor {
+    padding: 50px 10px;
 }
 
 .desi-welcome {
@@ -225,7 +233,8 @@ export default {
 }
 
 .input-element {
-    padding: 50px 10px 10px 10px;
+    /* padding: 50px 10px 10px 10px; */
+    padding: 20px 10px;
 }
 
 .input-field {
@@ -237,7 +246,7 @@ export default {
     all: unset;
     cursor: pointer;
     background-color: white;
-    border: 2px solid rgba(27, 37, 95, 1);
+    border: 2px solid #1b255f;
     border-radius: 5px;
     padding: 10px;
 }

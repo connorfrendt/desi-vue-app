@@ -37,7 +37,7 @@
                 <div class="simple-button true-center header-button" style="margin-right: 25px; padding-right: 10px; text-align: center;">
                     <select v-model="selectedProject" @change="handleProjectChange">
                         <option value="">Select a project</option>
-                        <option v-for="project in Object.keys(phoneLists)" :key="project" :value="project">{{ projectDisplayNames[project] }}</option>
+                        <option v-for="project in Object.keys(phoneListsFromDB)" :key="project" :value="project">{{ projectDisplayNames[project.display_name] }}</option>
                     </select>
                 </div>
                 <div style="margin: auto; height: 100%; width: 80px; display: flex; align-items: center;">
@@ -229,14 +229,17 @@ export default {
             selectedProject: '',
             
             displayProjectName: '',
+            displayProjectNameFromDB: {},
             projectDisplayNames: {},
+            projectDisplayNamesFromDB: {},
 
             storedProjectName: '',
-            phoneLists: {},
+            phoneLists: {}, // The literal phone list connected to it's list of phones (Project A: [// each phone here])
+            phoneListsFromDB: {},
             phone: '',
 
-            modelList: [],
-            projectList: [],
+            modelList: [], // This is for the adding phone pop up
+            projectList: [], // This is for the adding phone pop up
 
             phoneIndex: 0,
             currentPhoneIndexClicked: -1,
@@ -262,7 +265,7 @@ export default {
             prodFamEditPopup: '',
             modelEditPopup: '',
             typeCodeEditPopup: '',
-
+            
             tempCurrentTemplateSelected: '',
             currentTemplateSelected: '',
 
@@ -287,6 +290,15 @@ export default {
         pb: Object,
         authData: Object,
     },
+    created() {
+        this.pb.collection('phone_lists').getFullList().then(records => {
+            this.phoneListsFromDB = records;
+            console.log('Phone Lists From DB: ', this.phoneListsFromDB);
+        });
+        
+        // console.log('Project Display Names: ', this.projectDisplayNames);
+        // this.displayProjectNameFromDB = 
+    },
     methods: {
         async editProject() {
             // Grabs the full phone list from the database
@@ -299,20 +311,12 @@ export default {
 
             // Prompts user to change the name of the project, and changes it in the database and code
             this.displayProjectName = prompt('Enter a new name for the project');
-            // let newDisplayName = prompt('Enter a new name for the project');
             this.storedProjectName = this.toCamelCase(this.displayProjectName);
-            // let newStoredName = this.toCamelCase(newDisplayName);
             
-            // console.log('Selected Project: ', this.selectedProject);
-            // let foo = Object.entries(this.projectDisplayNames);
-                // .find(phoneList => phoneList.key === this.selectedProject);
-            // console.log('Foo: ', foo.find(phoneList => phoneList[0] === this.selectedProject));
-            // let fooFind = foo.find(phoneList => phoneList[0] === this.selectedProject);
-            // console.log('Foo Find: ', fooFind);
             this.$set(this.phoneLists, this.storedProjectName, []);
+            
+            // This edits the obj (projectDisplayNames) with { storedProjectName: displayProjectName }
             this.projectDisplayNames[this.storedProjectName] = this.displayProjectName;
-            // console.log('Project Display Names: \n', this.projectDisplayNames);
-
             this.selectedProject = this.storedProjectName;
             
             await this.pb.collection('phone_lists').update(selectedPhoneListId, {
@@ -325,13 +329,12 @@ export default {
             console.log('Changed!');
             
             // We know the selected project, so we can grab the id from the database of the selected project
-                // selectedPhoneListId
-            
             let fullPhoneListDB = await this.pb.collection('phone_lists').getFullList();
-            let selectedPhoneList = fullPhoneListDB.find(phoneList => phoneList.stored_name === this.selectedProject);
-            console.log('Selected Phone List: \n', selectedPhoneList);
-            this.selectedPhoneListId = selectedPhoneList.id;
-            console.log('Selected Phone List Id: \n', this.selectedPhoneListId);
+            console.log('Full Phone List DB: ', fullPhoneListDB)
+            // let selectedPhoneList = fullPhoneListDB.find(phoneList => phoneList.stored_name === this.selectedProject);
+            // console.log('Selected Phone List: \n', selectedPhoneList);
+            // this.selectedPhoneListId = selectedPhoneList.id;
+            // console.log('Selected Phone List Id: \n', this.selectedPhoneListId);
 
             this.phoneIndex = -1;
             this.currentPhoneIndexClicked = -1;
@@ -342,23 +345,26 @@ export default {
             this.currentPhoneIndexClicked = -1;
             this.data = {};
 
-            // let nextProjectIndex = Object.keys(this.phoneLists).length + 1;
-            // this.displayProjectName = "Phone List " + `${String.fromCharCode(64 + nextProjectIndex)}`;
-            // this.storedProjectName = this.displayProjectName.replace(/^P/, 'p').replace(/\s+/g, '')
-
+            // Stores the project name that will be displayed
             this.displayProjectName = prompt('Enter a name for the new project:');
+
             if(this.displayProjectName === null || this.displayProjectName === '') {
                 return;
             }
+
+            // Stores the prjoect name that will be stored
             this.storedProjectName = this.toCamelCase(this.displayProjectName);
 
             this.$set(this.phoneLists, this.storedProjectName, []);
 
+            // This edits the obj (projectDisplayNames) with { storedProjectName: displayProjectName }
             this.projectDisplayNames[this.storedProjectName] = this.displayProjectName;
             this.selectedProject = this.storedProjectName;
-            
+
+            // console.log('Project Display Names: ', this.projectDisplayNames);
             let phoneListDisplayNames = Object.entries(this.projectDisplayNames);
             
+            // console.log('Phone List Display Names: ', phoneListDisplayNames);
             let phoneListDisplayNamesLength = phoneListDisplayNames.length;
             
             let stored_name = phoneListDisplayNames[phoneListDisplayNamesLength - 1][0];
@@ -373,7 +379,7 @@ export default {
             let fullPhoneListDB = await this.pb.collection('phone_lists').getFullList();
             let selectedPhoneList = fullPhoneListDB.find(phoneList => phoneList.stored_name === this.selectedProject);
             this.selectedPhoneListId = selectedPhoneList.id;
-
+            console.log('Phone Lists: ', this.phoneLists);
         },
         toCamelCase(str) {
             return str
@@ -562,6 +568,8 @@ export default {
             
             this.innerModelText = this.getOptionText(this.model);
             this.innerProdFamText = this.getOptionText(this.selectedValue);
+
+            console.log('Phone List: ', this.phoneList);
         },
         clickCancel() {
             this.buttonClicked = false;
@@ -741,7 +749,7 @@ export default {
 }
 
 .main-header {
-    background-color: rgb(121, 210, 255);
+    background-color: rgb(154 160 199);
     display: flex;
     justify-content: space-between;
 }
@@ -762,7 +770,7 @@ export default {
     cursor: pointer;
 }
 .header-button:active {
-    background-color: gray;
+    background-color: #1b255f;
 }
 
 .ok-cancel-btn {
@@ -831,7 +839,8 @@ export default {
 #drag-handle {
     cursor: ew-resize;
     width: 10px;
-    background-color: rgba(27, 37, 95, 1);
+    /* background-color: rgba(27, 37, 95, 1); */
+    background-color: rgba(0, 0, 0);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -844,10 +853,10 @@ export default {
     width: 350px;
     min-width: 100px;
     max-width: 550px;
-    /* background-color: #79d2ff; */
-    background-color: black;
+    background-color: #1b255f;
     position: relative;
-    overflow: hidden;
+    overflow-y: auto;
+    overflow-x: hidden;
     flex-shrink: 0;
 }
 
@@ -904,7 +913,8 @@ export default {
     flex-shrink: 0;
 }
 .phone-listing.active {
-    border: 2px solid rgba(27, 37, 95, 1);
+    /* border: 2px solid rgba(27, 37, 95, 1); */
+    border: 2px solid rgb(134, 152, 255);
     border-radius: 5px;
 }
 

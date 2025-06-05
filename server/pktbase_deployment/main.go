@@ -11,7 +11,7 @@ import (
 
 func main() {
 	app := pocketbase.New()
-	log.Println("THIS THING HERE")
+	
 	// app.OnAfterBootstrap().Add(func(e *core.BootstrapEvent) error {
 	// 	adminEmail := os.Getenv("PB_ADMIN_EMAIL")
 	// 	adminPassword := os.Getenv("PB_ADMIN_PASSWORD")
