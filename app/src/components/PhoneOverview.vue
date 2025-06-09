@@ -37,7 +37,7 @@
                 <div class="simple-button true-center header-button" style="margin-right: 25px; padding-right: 10px; text-align: center;">
                     <select v-model="selectedProject" @change="handleProjectChange">
                         <option value="">Select a project</option>
-                        <option v-for="project in Object.keys(phoneListsFromDB)" :key="project" :value="project">{{ projectDisplayNames[project.display_name] }}</option>
+                        <option v-for="project in Object.keys(phoneListsFromDB)" :key="project" :value="project">{{ projectDisplayNamesFromDB[project] }}</option>
                     </select>
                 </div>
                 <div style="margin: auto; height: 100%; width: 80px; display: flex; align-items: center;">
@@ -229,14 +229,17 @@ export default {
             selectedProject: '',
             
             displayProjectName: '',
-            displayProjectNameFromDB: {},
+            displayProjectNameFromDB: '',
             projectDisplayNames: {},
             projectDisplayNamesFromDB: {},
 
             storedProjectName: '',
+            storedProjectNameFromDB: '',
             phoneLists: {}, // The literal phone list connected to it's list of phones (Project A: [// each phone here])
             phoneListsFromDB: {},
             phone: '',
+
+            recordsFromDB: {},
 
             modelList: [], // This is for the adding phone pop up
             projectList: [], // This is for the adding phone pop up
@@ -292,54 +295,20 @@ export default {
     },
     created() {
         this.pb.collection('phone_lists').getFullList().then(records => {
-            this.phoneListsFromDB = records;
-            console.log('Phone Lists From DB: ', this.phoneListsFromDB);
+            this.recordsFromDB = records;
+            console.log('Phone Lists From DB: ', this.recordsFromDB);
+            console.log(this.recordsFromDB[0].stored_name);
+            this.storedProjectNameFromDB = this.recordsFromDB[0].stored_name;
+            console.log(this.recordsFromDB[0].display_name);
+            this.displayProjectNameFromDB = this.recordsFromDB[0].display_name;
+            this.$set(this.phoneListsFromDB, this.storedProjectNameFromDB, []);
+            this.projectDisplayNamesFromDB[this.storedProjectNameFromDB] = this.displayProjectNameFromDB;
         });
-        
+        // this.projectDisplayNamesFromDB
         // console.log('Project Display Names: ', this.projectDisplayNames);
         // this.displayProjectNameFromDB = 
     },
     methods: {
-        async editProject() {
-            // Grabs the full phone list from the database
-            let fullPhoneListDB = await this.pb.collection('phone_lists').getFullList();
-
-            // Finds the selected phone list in the database and grabs the id for updating
-            let selectedPhoneList = fullPhoneListDB.find(phoneList => phoneList.stored_name === this.selectedProject);
-            let selectedPhoneListId = selectedPhoneList.id;
-            console.log(selectedPhoneListId);
-
-            // Prompts user to change the name of the project, and changes it in the database and code
-            this.displayProjectName = prompt('Enter a new name for the project');
-            this.storedProjectName = this.toCamelCase(this.displayProjectName);
-            
-            this.$set(this.phoneLists, this.storedProjectName, []);
-            
-            // This edits the obj (projectDisplayNames) with { storedProjectName: displayProjectName }
-            this.projectDisplayNames[this.storedProjectName] = this.displayProjectName;
-            this.selectedProject = this.storedProjectName;
-            
-            await this.pb.collection('phone_lists').update(selectedPhoneListId, {
-                stored_name: this.storedProjectName,
-                display_name: this.displayProjectName,
-            });
-
-        },
-        async handleProjectChange() {
-            console.log('Changed!');
-            
-            // We know the selected project, so we can grab the id from the database of the selected project
-            let fullPhoneListDB = await this.pb.collection('phone_lists').getFullList();
-            console.log('Full Phone List DB: ', fullPhoneListDB)
-            // let selectedPhoneList = fullPhoneListDB.find(phoneList => phoneList.stored_name === this.selectedProject);
-            // console.log('Selected Phone List: \n', selectedPhoneList);
-            // this.selectedPhoneListId = selectedPhoneList.id;
-            // console.log('Selected Phone List Id: \n', this.selectedPhoneListId);
-
-            this.phoneIndex = -1;
-            this.currentPhoneIndexClicked = -1;
-            this.data = {};
-        },
         async addProject() {
             this.phoneIndex = -1;
             this.currentPhoneIndexClicked = -1;
@@ -379,8 +348,50 @@ export default {
             let fullPhoneListDB = await this.pb.collection('phone_lists').getFullList();
             let selectedPhoneList = fullPhoneListDB.find(phoneList => phoneList.stored_name === this.selectedProject);
             this.selectedPhoneListId = selectedPhoneList.id;
+            console.log('Selected Phone List ID: ', this.selectedPhoneListId);
             console.log('Phone Lists: ', this.phoneLists);
         },
+        async editProject() {
+            // Grabs the full phone list from the database
+            let fullPhoneListDB = await this.pb.collection('phone_lists').getFullList();
+
+            // Finds the selected phone list in the database and grabs the id for updating
+            let selectedPhoneList = fullPhoneListDB.find(phoneList => phoneList.stored_name === this.selectedProject);
+            let selectedPhoneListId = selectedPhoneList.id;
+            console.log(selectedPhoneListId);
+
+            // Prompts user to change the name of the project, and changes it in the database and code
+            this.displayProjectName = prompt('Enter a new name for the project');
+            this.storedProjectName = this.toCamelCase(this.displayProjectName);
+            
+            this.$set(this.phoneLists, this.storedProjectName, []);
+            
+            // This edits the obj (projectDisplayNames) with { storedProjectName: displayProjectName }
+            this.projectDisplayNames[this.storedProjectName] = this.displayProjectName;
+            this.selectedProject = this.storedProjectName;
+            
+            await this.pb.collection('phone_lists').update(selectedPhoneListId, {
+                stored_name: this.storedProjectName,
+                display_name: this.displayProjectName,
+            });
+
+        },
+        async handleProjectChange() {
+            console.log('Changed!');
+            
+            // We know the selected project, so we can grab the id from the database of the selected project
+            let fullPhoneListDB = await this.pb.collection('phone_lists').getFullList();
+            console.log('Full Phone List DB: ', fullPhoneListDB)
+            // let selectedPhoneList = fullPhoneListDB.find(phoneList => phoneList.stored_name === this.selectedProject);
+            // console.log('Selected Phone List: \n', selectedPhoneList);
+            // this.selectedPhoneListId = selectedPhoneList.id;
+            // console.log('Selected Phone List Id: \n', this.selectedPhoneListId);
+            console.log('Project Display Names: ', this.projectDisplayNames);
+            this.phoneIndex = -1;
+            this.currentPhoneIndexClicked = -1;
+            this.data = {};
+        },
+        
         toCamelCase(str) {
             return str
                 .trim()
