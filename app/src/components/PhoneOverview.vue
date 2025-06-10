@@ -238,6 +238,7 @@ export default {
             phoneLists: {}, // The literal phone list connected to it's list of phones (Project A: [// each phone here])
             phoneListsFromDB: {},
             phone: '',
+            phoneListDisplayNamesFromDB: [],
 
             recordsFromDB: {},
 
@@ -296,13 +297,33 @@ export default {
     created() {
         this.pb.collection('phone_lists').getFullList().then(records => {
             this.recordsFromDB = records;
-            console.log('Phone Lists From DB: ', this.recordsFromDB);
-            console.log(this.recordsFromDB[0].stored_name);
-            this.storedProjectNameFromDB = this.recordsFromDB[0].stored_name;
-            console.log(this.recordsFromDB[0].display_name);
-            this.displayProjectNameFromDB = this.recordsFromDB[0].display_name;
-            this.$set(this.phoneListsFromDB, this.storedProjectNameFromDB, []);
-            this.projectDisplayNamesFromDB[this.storedProjectNameFromDB] = this.displayProjectNameFromDB;
+            console.log('Records From DB', this.recordsFromDB);
+            // Project Display Names first
+            for(let i = 0; i < this.recordsFromDB.length; i++) {
+                this.storedProjectNameFromDB = this.recordsFromDB[i].stored_name;
+                this.displayProjectNameFromDB = this.recordsFromDB[i].display_name;
+                this.projectDisplayNamesFromDB[this.storedProjectNameFromDB] = this.displayProjectNameFromDB;
+
+                this.$set(this.phoneListsFromDB, this.storedProjectNameFromDB, []);
+            }
+            console.log('Project Display Names From DB: ', this.projectDisplayNamesFromDB);
+            console.log('Phone Lists From DB: ', this.phoneListsFromDB);
+
+            // I need to populate a list (array):
+            /*
+                [
+                    ['phoneListA', 'Phone List A'],
+                    ['phoneListB', 'Phone List B'],
+                    ['phoneListC', 'Phone List C'],
+                ]
+            */
+
+            // this.$set(this.phoneListsFromDB, this.storedProjectNameFromDB, []);
+            
+            // this.projectDisplayNamesFromDB[this.storedProjectNameFromDB] = this.displayProjectNameFromDB;
+            
+            // this.phoneListDisplayNamesFromDB = Object.entries(this.projectDisplayNamesFromDB);
+            
         });
         // this.projectDisplayNamesFromDB
         // console.log('Project Display Names: ', this.projectDisplayNames);
@@ -329,11 +350,7 @@ export default {
             // This edits the obj (projectDisplayNames) with { storedProjectName: displayProjectName }
             this.projectDisplayNames[this.storedProjectName] = this.displayProjectName;
             this.selectedProject = this.storedProjectName;
-
-            // console.log('Project Display Names: ', this.projectDisplayNames);
             let phoneListDisplayNames = Object.entries(this.projectDisplayNames);
-            
-            // console.log('Phone List Display Names: ', phoneListDisplayNames);
             let phoneListDisplayNamesLength = phoneListDisplayNames.length;
             
             let stored_name = phoneListDisplayNames[phoneListDisplayNamesLength - 1][0];
@@ -348,8 +365,6 @@ export default {
             let fullPhoneListDB = await this.pb.collection('phone_lists').getFullList();
             let selectedPhoneList = fullPhoneListDB.find(phoneList => phoneList.stored_name === this.selectedProject);
             this.selectedPhoneListId = selectedPhoneList.id;
-            console.log('Selected Phone List ID: ', this.selectedPhoneListId);
-            console.log('Phone Lists: ', this.phoneLists);
         },
         async editProject() {
             // Grabs the full phone list from the database
