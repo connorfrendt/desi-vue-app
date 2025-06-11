@@ -308,21 +308,8 @@ export default {
             }
             console.log('Project Display Names From DB: ', this.projectDisplayNamesFromDB);
             console.log('Phone Lists From DB: ', this.phoneListsFromDB);
-
-            // I need to populate a list (array):
-            /*
-                [
-                    ['phoneListA', 'Phone List A'],
-                    ['phoneListB', 'Phone List B'],
-                    ['phoneListC', 'Phone List C'],
-                ]
-            */
-
-            // this.$set(this.phoneListsFromDB, this.storedProjectNameFromDB, []);
-            
-            // this.projectDisplayNamesFromDB[this.storedProjectNameFromDB] = this.displayProjectNameFromDB;
-            
-            // this.phoneListDisplayNamesFromDB = Object.entries(this.projectDisplayNamesFromDB);
+            this.phoneListDisplayNamesFromDB = Object.entries(this.projectDisplayNamesFromDB);
+            console.log('Phone List Display Names From DB: ', this.phoneListDisplayNamesFromDB)
             
         });
         // this.projectDisplayNamesFromDB
@@ -393,15 +380,15 @@ export default {
         },
         async handleProjectChange() {
             console.log('Changed!');
-            
+            console.log('Selected: ', this.selectedProject)
             // We know the selected project, so we can grab the id from the database of the selected project
             let fullPhoneListDB = await this.pb.collection('phone_lists').getFullList();
-            console.log('Full Phone List DB: ', fullPhoneListDB)
-            // let selectedPhoneList = fullPhoneListDB.find(phoneList => phoneList.stored_name === this.selectedProject);
-            // console.log('Selected Phone List: \n', selectedPhoneList);
-            // this.selectedPhoneListId = selectedPhoneList.id;
-            // console.log('Selected Phone List Id: \n', this.selectedPhoneListId);
-            console.log('Project Display Names: ', this.projectDisplayNames);
+            
+            let selectedPhoneList = fullPhoneListDB.find(phoneList => phoneList.stored_name === this.selectedProject);
+            console.log('Selected Phone List: \n', selectedPhoneList);
+            this.selectedPhoneListId = selectedPhoneList.id;
+            console.log('Selected Phone List Id: \n', this.selectedPhoneListId);
+            console.log('Project Display Names From DB: ', this.projectDisplayNamesFromDB);
             this.phoneIndex = -1;
             this.currentPhoneIndexClicked = -1;
             this.data = {};
@@ -579,6 +566,9 @@ export default {
         addPhone() {
             this.extension = this.tempExtension;
             this.selectedValue = this.tempSelectedValue;
+            console.log(this.selectedPhoneListId);
+            console.log('Current Phone List: ', this.currentPhoneList);
+            console.log(this.projectList);
             this.model = this.tempModel;
             this.name = this.tempName;
             this.currentTemplateSelected = this.tempCurrentTemplateSelected;
@@ -594,8 +584,6 @@ export default {
             
             this.innerModelText = this.getOptionText(this.model);
             this.innerProdFamText = this.getOptionText(this.selectedValue);
-
-            console.log('Phone List: ', this.phoneList);
         },
         clickCancel() {
             this.buttonClicked = false;
@@ -629,6 +617,7 @@ export default {
             }
         },
         async userInputObjectUpdate(data) {
+            console.log('************HERE************');
             this.userInputObjectData = data;
             
             if(this.tempCurrentTemplateSelected) {
@@ -649,7 +638,10 @@ export default {
             }
 
             // Check to see if the phone exists
+            console.log('before');
+            console.log(this.currentPhoneList);
             let phoneExists = this.currentPhoneList.some(phone => phone.ext === this.extension);
+            console.log('after');
 
             if(!phoneExists) {
                 this.currentPhoneList.push({
@@ -758,7 +750,7 @@ export default {
     },
     computed: {
         currentPhoneList() {
-            return this.phoneLists[this.selectedProject];
+            return this.phoneListsFromDB[this.selectedProject];
         },
     },
     mounted() {
