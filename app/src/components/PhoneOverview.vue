@@ -297,7 +297,7 @@ export default {
     created() {
         this.pb.collection('phone_lists').getFullList().then(records => {
             this.recordsFromDB = records;
-            console.log('Records From DB', this.recordsFromDB);
+            // console.log('Records From DB', this.recordsFromDB);
             // Project Display Names first
             for(let i = 0; i < this.recordsFromDB.length; i++) {
                 this.storedProjectNameFromDB = this.recordsFromDB[i].stored_name;
@@ -306,15 +306,26 @@ export default {
 
                 this.$set(this.phoneListsFromDB, this.storedProjectNameFromDB, []);
             }
-            console.log('Project Display Names From DB: ', this.projectDisplayNamesFromDB);
-            console.log('Phone Lists From DB: ', this.phoneListsFromDB);
+            // console.log('Project Display Names From DB: ', this.projectDisplayNamesFromDB);
+            
             this.phoneListDisplayNamesFromDB = Object.entries(this.projectDisplayNamesFromDB);
-            console.log('Phone List Display Names From DB: ', this.phoneListDisplayNamesFromDB)
+            // console.log('Phone List Display Names From DB: ', this.phoneListDisplayNamesFromDB)
             
         });
-        // this.projectDisplayNamesFromDB
-        // console.log('Project Display Names: ', this.projectDisplayNames);
-        // this.displayProjectNameFromDB = 
+
+        this.pb.collection('phones').getFullList({
+            expand: 'phone_list_id'
+        }).then(data => {
+            console.log('Phone List From DB: ', this.phoneListsFromDB);
+            let currentPhoneListFromDB = '';
+            let currentPhoneFromDB = '';
+            for(let i = 0; i < data.length; i++) {
+                currentPhoneListFromDB = data[i].expand.phone_list_id.stored_name;
+                currentPhoneFromDB = data[i].user_input_object;
+                this.phoneListsFromDB[currentPhoneListFromDB].push(currentPhoneFromDB);
+            }
+        })
+ 
     },
     methods: {
         async addProject() {
@@ -352,6 +363,8 @@ export default {
             let fullPhoneListDB = await this.pb.collection('phone_lists').getFullList();
             let selectedPhoneList = fullPhoneListDB.find(phoneList => phoneList.stored_name === this.selectedProject);
             this.selectedPhoneListId = selectedPhoneList.id;
+
+            console.log('Current Phone List Here ', this.currentPhoneList);
         },
         async editProject() {
             // Grabs the full phone list from the database
@@ -389,6 +402,8 @@ export default {
             this.selectedPhoneListId = selectedPhoneList.id;
             console.log('Selected Phone List Id: \n', this.selectedPhoneListId);
             console.log('Project Display Names From DB: ', this.projectDisplayNamesFromDB);
+
+            console.log('Current Phone List: ', this.currentPhoneList);
             this.phoneIndex = -1;
             this.currentPhoneIndexClicked = -1;
             this.data = {};
@@ -584,6 +599,13 @@ export default {
             
             this.innerModelText = this.getOptionText(this.model);
             this.innerProdFamText = this.getOptionText(this.selectedValue);
+            console.log('Current Phone List Here ', this.currentPhoneList);
+
+
+            /*
+            The currentPhoneList needs to be pulled from the database
+            We have the selected phone list id, and then pull the which ever phones have that id as their "phone_list_id"
+            */
         },
         clickCancel() {
             this.buttonClicked = false;
@@ -750,6 +772,9 @@ export default {
     },
     computed: {
         currentPhoneList() {
+            console.log('PHONE LIST FROM DB: ', this.phoneListsFromDB);
+            console.log('SELECTED PROJECT: ', this.selectedProject);
+            
             return this.phoneListsFromDB[this.selectedProject];
         },
     },
