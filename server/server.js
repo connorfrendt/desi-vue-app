@@ -3,8 +3,12 @@ const app = express();
 const PORT = 3000;
 const fs = require('fs');
 const path = require('path');
+const cors = require('cors');
 
 console.log('******************************');
+
+app.use(cors());
+
 app.get('/api/files', (req, res) => {
     const subdirectory = req.query.subdirectory || '';
     const directoryPath = path.join(__dirname, '../app/public/json/new-json-files/', subdirectory);
