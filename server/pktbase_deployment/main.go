@@ -10,7 +10,11 @@ import (
 )
 
 func main() {
-	app := pocketbase.New()
+	// app := pocketbase.New()
+
+	app := pocketbase.NewWithConfig(pocketbase.Config{
+		DefaultDataDir: "/pb_data",
+	})
 	
 	// app.OnAfterBootstrap().Add(func(e *core.BootstrapEvent) error {
 	// 	adminEmail := os.Getenv("PB_ADMIN_EMAIL")
