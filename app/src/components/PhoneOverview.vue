@@ -525,7 +525,17 @@ export default {
             // Instead of tempSelectedValue, I need the innerHTML of the option
             let innerHTMLText = this.getOptionText(this.tempSelectedValue);
 
-            return fetch(`/api/files/${innerHTMLText}/${phone}`)
+            // return fetch(`/api/files/${innerHTMLText}/${phone}`)
+            //     .then(response => {
+            //         return response.json();
+            //     })
+            //     .then(data => {
+            //         this.data = data;
+            //     })
+            //     .catch(error => {
+            //         console.log('Error: ', error);
+            //     });
+            return fetch(`https://desi-vue-app-server.onrender.com/api/files/${innerHTMLText}/${phone}`)
                 .then(response => {
                     return response.json();
                 })
@@ -537,7 +547,17 @@ export default {
                 });
         },
         fetchFolders() {
-            fetch('/api/files')
+            // fetch('/api/files')
+            //     .then(response => {
+            //         return response.json();
+            //     })
+            //     .then(data => {
+            //         this.folders = data;
+            //     })
+            //     .catch(err => {
+            //         console.error('ERROR: ', err);
+            //     });
+            fetch('https://desi-vue-app-server.onrender.com/api/files')
                 .then(response => {
                     return response.json();
                 })
@@ -549,7 +569,17 @@ export default {
                 });
         },
         fetchModels(subdirectory) {
-            fetch(`/api/files?subdirectory=${subdirectory}`)
+            // fetch(`/api/files?subdirectory=${subdirectory}`)
+            //     .then(response =>{
+            //         return response.json();
+            //     })
+            //     .then(data => {
+            //         this.models = data;
+            //     })
+            //     .catch(err => {
+            //         console.error('ERROR ERROR: ', err);
+            //     });
+            fetch(`https://desi-vue-app-server.onrender.com/api/files?subdirectory=${subdirectory}`)
                 .then(response =>{
                     return response.json();
                 })
