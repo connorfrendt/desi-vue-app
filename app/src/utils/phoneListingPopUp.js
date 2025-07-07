@@ -8,10 +8,29 @@ export function showEditPhoneListing() {
     this.typeCodeEditPopup = currentUserData.typeCode;
 }
 
-export function confirmEditPopup() {
+export async function confirmEditPopup() {
+    const records = await this.pb.collection('phones').getFullList();
+    console.log('RECORDS', records);
+    this.currentPhone = records.filter(
+        ele => ele.phone_list_id === this.selectedPhoneListId && ele.extension === this.extension
+    );
+
+    let userInputObject = this.currentPhone[0].user_input_object;
+    userInputObject.ext = this.extPopup;
+    userInputObject.name = this.namePopup;
+    console.log('UIO: ', userInputObject);
+
     this.phoneListingClicked = false;
+    
     this.currentPhoneList[this.phoneIndex].ext = this.extPopup;
     this.currentPhoneList[this.phoneIndex].name = this.namePopup;
+    
+    await this.pb.collection('phones').update(this.selectedPhoneId, {
+        extension: this.extPopup,
+        user_input_object: {
+            ...userInputObject
+        }
+    });
 }
 
 export function cancelEditPopup() {

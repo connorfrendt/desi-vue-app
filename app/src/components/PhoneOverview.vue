@@ -143,7 +143,10 @@
                         <div class="phone-listing-model" ref="modelDivs">{{ phone.modelDisplayName }}</div>
                         <div class="phone-listing-name">{{ phone.name }}</div>
                     </div>
-                    <div id="edit-trash-div" v-if="index === currentPhoneIndexClicked || index === phoneIndex" style="display: flex;">
+                    <div id="edit-trash-div"
+                        v-if="index === currentPhoneIndexClicked || index === phoneIndex"
+                        style="display: flex;"
+                        >
                         <div @click="showEditPhoneListing" class="edit-button">
                             <font-awesome-icon icon="fa-regular fa-pen-to-square" class="edit-icon" style="z-index: 2;" />
                         </div>
@@ -226,6 +229,8 @@ export default {
             buttonClicked: false,
             userInputObjectData: {},
             
+            fullPhoneDB: {},
+
             selectedProject: '',
             
             displayProjectName: '',
@@ -283,6 +288,8 @@ export default {
 
             selectedPhoneListId: 0,
             selectedPhoneId: 0,
+
+            currentPhone: '',
         }
     },
     components: {
@@ -297,7 +304,7 @@ export default {
     created() {
         this.pb.collection('phone_lists').getFullList().then(records => {
             this.recordsFromDB = records;
-            // console.log('Records From DB', this.recordsFromDB);
+            
             // Project Display Names first
             for(let i = 0; i < this.recordsFromDB.length; i++) {
                 this.storedProjectNameFromDB = this.recordsFromDB[i].stored_name;
@@ -306,17 +313,16 @@ export default {
 
                 this.$set(this.phoneListsFromDB, this.storedProjectNameFromDB, []);
             }
-            // console.log('Project Display Names From DB: ', this.projectDisplayNamesFromDB);
             
             this.phoneListDisplayNamesFromDB = Object.entries(this.projectDisplayNamesFromDB);
-            // console.log('Phone List Display Names From DB: ', this.phoneListDisplayNamesFromDB)
             
         });
 
         this.pb.collection('phones').getFullList({
             expand: 'phone_list_id'
         }).then(data => {
-            console.log('Phone List From DB: ', this.phoneListsFromDB);
+            this.fullPhoneDB = data;
+            
             let currentPhoneListFromDB = '';
             let currentPhoneFromDB = '';
             for(let i = 0; i < data.length; i++) {
@@ -363,8 +369,6 @@ export default {
             let fullPhoneListDB = await this.pb.collection('phone_lists').getFullList();
             let selectedPhoneList = fullPhoneListDB.find(phoneList => phoneList.stored_name === this.selectedProject);
             this.selectedPhoneListId = selectedPhoneList.id;
-
-            console.log('Current Phone List Here ', this.currentPhoneList);
         },
         async editProject() {
             // Grabs the full phone list from the database
@@ -373,7 +377,6 @@ export default {
             // Finds the selected phone list in the database and grabs the id for updating
             let selectedPhoneList = fullPhoneListDB.find(phoneList => phoneList.stored_name === this.selectedProject);
             let selectedPhoneListId = selectedPhoneList.id;
-            console.log(selectedPhoneListId);
 
             // Prompts user to change the name of the project, and changes it in the database and code
             this.displayProjectName = prompt('Enter a new name for the project');
@@ -392,18 +395,11 @@ export default {
 
         },
         async handleProjectChange() {
-            console.log('Changed!');
-            console.log('Selected: ', this.selectedProject)
             // We know the selected project, so we can grab the id from the database of the selected project
             let fullPhoneListDB = await this.pb.collection('phone_lists').getFullList();
             
             let selectedPhoneList = fullPhoneListDB.find(phoneList => phoneList.stored_name === this.selectedProject);
-            console.log('Selected Phone List: \n', selectedPhoneList);
             this.selectedPhoneListId = selectedPhoneList.id;
-            console.log('Selected Phone List Id: \n', this.selectedPhoneListId);
-            console.log('Project Display Names From DB: ', this.projectDisplayNamesFromDB);
-
-            console.log('Current Phone List: ', this.currentPhoneList);
             this.phoneIndex = -1;
             this.currentPhoneIndexClicked = -1;
             this.data = {};
@@ -431,7 +427,6 @@ export default {
             for(let i = 0; i < userInputObjects.length; i++) {
                 items.push(userInputObjects[i][1]);
             }
-            console.log('ITEMS: ', items);
 
             let printContainer = document.createElement('div');
             document.body.appendChild(printContainer);
@@ -525,17 +520,11 @@ export default {
             // Instead of tempSelectedValue, I need the innerHTML of the option
             let innerHTMLText = this.getOptionText(this.tempSelectedValue);
 
-            // return fetch(`/api/files/${innerHTMLText}/${phone}`)
-            //     .then(response => {
-            //         return response.json();
-            //     })
-            //     .then(data => {
-            //         this.data = data;
-            //     })
-            //     .catch(error => {
-            //         console.log('Error: ', error);
-            //     });
-            return fetch(`https://desi-vue-app-server.onrender.com/api/files/${innerHTMLText}/${phone}`)
+            // Local Dev
+            return fetch(`/api/files/${innerHTMLText}/${phone}`)
+
+            // Deploy
+            // return fetch(`https://desi-vue-app-server.onrender.com/api/files/${innerHTMLText}/${phone}`)
                 .then(response => {
                     return response.json();
                 })
@@ -547,17 +536,11 @@ export default {
                 });
         },
         fetchFolders() {
-            // fetch('/api/files')
-            //     .then(response => {
-            //         return response.json();
-            //     })
-            //     .then(data => {
-            //         this.folders = data;
-            //     })
-            //     .catch(err => {
-            //         console.error('ERROR: ', err);
-            //     });
-            fetch('https://desi-vue-app-server.onrender.com/api/files')
+            // Local Dev
+            fetch('/api/files')
+            
+            // Deploy
+            // fetch('https://desi-vue-app-server.onrender.com/api/files')
                 .then(response => {
                     return response.json();
                 })
@@ -569,17 +552,11 @@ export default {
                 });
         },
         fetchModels(subdirectory) {
-            // fetch(`/api/files?subdirectory=${subdirectory}`)
-            //     .then(response =>{
-            //         return response.json();
-            //     })
-            //     .then(data => {
-            //         this.models = data;
-            //     })
-            //     .catch(err => {
-            //         console.error('ERROR ERROR: ', err);
-            //     });
-            fetch(`https://desi-vue-app-server.onrender.com/api/files?subdirectory=${subdirectory}`)
+            // Local Dev
+            fetch(`/api/files?subdirectory=${subdirectory}`)
+            
+            // Deploy
+            // fetch(`https://desi-vue-app-server.onrender.com/api/files?subdirectory=${subdirectory}`)
                 .then(response =>{
                     return response.json();
                 })
@@ -611,9 +588,6 @@ export default {
         addPhone() {
             this.extension = this.tempExtension;
             this.selectedValue = this.tempSelectedValue;
-            console.log(this.selectedPhoneListId);
-            console.log('Current Phone List: ', this.currentPhoneList);
-            console.log(this.projectList);
             this.model = this.tempModel;
             this.name = this.tempName;
             this.currentTemplateSelected = this.tempCurrentTemplateSelected;
@@ -629,8 +603,6 @@ export default {
             
             this.innerModelText = this.getOptionText(this.model);
             this.innerProdFamText = this.getOptionText(this.selectedValue);
-            console.log('Current Phone List Here ', this.currentPhoneList);
-
 
             /*
             The currentPhoneList needs to be pulled from the database
@@ -669,10 +641,11 @@ export default {
             }
         },
         async userInputObjectUpdate(data) {
-            console.log('************HERE************');
+            
             this.userInputObjectData = data;
             
             if(this.tempCurrentTemplateSelected) {
+                console.log('*************************');
                 let templatePhone = this.currentPhoneList.find(phone => phone.ext === this.currentTemplateSelected).userData;
                 let deepCopyTemplatePhone = JSON.parse(JSON.stringify(templatePhone));
                 
@@ -690,10 +663,7 @@ export default {
             }
 
             // Check to see if the phone exists
-            console.log('before');
-            console.log(this.currentPhoneList);
             let phoneExists = this.currentPhoneList.some(phone => phone.ext === this.extension);
-            console.log('after');
 
             if(!phoneExists) {
                 this.currentPhoneList.push({
@@ -709,17 +679,15 @@ export default {
                 this.phoneIndex = this.currentPhoneList.length - 1;
                 this.currentPhoneIndexClicked = this.phoneIndex;
 
-                let currentPhone = this.currentPhoneList[this.currentPhoneList.length - 1];
-                console.log('SELECTED PHONE LIST ID: \n', this.selectedPhoneListId);
+                this.currentPhone = this.currentPhoneList[this.currentPhoneList.length - 1];
                 this.phone = await this.pb.collection('phones').create({
                     phone_list_id: this.selectedPhoneListId,
-                    user_input_object: currentPhone,
-                    extension: currentPhone.ext,
+                    user_input_object: this.currentPhone,
+                    extension: this.currentPhone.ext,
                 });
 
-                // console.log('phone id', this.phone.id, typeof this.phone.id);
             }
-            console.log('phone id', this.phone.id);
+
             this.tempExtension = '';
             this.tempName = '';
             this.templateCheckBox = false;
@@ -744,23 +712,46 @@ export default {
             return option ? option.innerHTML : value;
         },
         async phoneClickedFunc(event, index) {
-            let clickedDiv = event.target;
-            let parentDiv = clickedDiv.closest('.phone-listing');
-            
-            /*This takes the ext in the object of whatever phone was clicked on,
-            and tries to match with the ext in the phoneList that was clicked on.
-            If true, it finds the index and sets it to this.phoneIndex
-            If false, returns -1*/
-            this.phoneIndex = this.currentPhoneList.findIndex(phone => phone.ext === parentDiv.querySelector('div:first-child').innerHTML);
-            this.currentPhoneIndexClicked = index;
-            this.extension = this.currentPhoneList[this.phoneIndex].ext;
-            let fullPhoneDB = await this.pb.collection('phones').getFullList();
-            let currentPhonesInSelectedPhoneList = fullPhoneDB.filter(phone => phone.phone_list_id === this.selectedPhoneListId);
-            let selectedPhone = currentPhonesInSelectedPhoneList.find(phone => phone.extension === this.extension && phone.phone_list_id === this.selectedPhoneListId);
-            this.selectedPhoneId = selectedPhone.id;
+            if(this.currentPhoneIndexClicked === index) {
+                return; // prevents unnecessary reprocessing 
+            }
 
-            // This changes the data to be updated with the phone that was clicked on
-            this.data = this.currentPhoneList[this.phoneIndex].userData[0];
+            // let clickedDiv = event.target;
+            
+            // let parentDiv = clickedDiv.closest('.phone-listing');
+            
+            // /*This takes the ext in the object of whatever phone was clicked on,
+            // and tries to match with the ext in the phoneList that was clicked on.
+            // If true, it finds the index and sets it to this.phoneIndex
+            // If false, returns -1*/
+            // this.phoneIndex = this.currentPhoneList.findIndex(phone => phone.ext === parentDiv.querySelector('div:first-child').innerHTML);
+            // this.currentPhoneIndexClicked = index;
+            // this.extension = this.currentPhoneList[this.phoneIndex].ext;
+            // // let fullPhoneDB = await this.pb.collection('phones').getFullList();
+            
+            // let currentPhonesInSelectedPhoneList = this.fullPhoneDB.filter(phone => phone.phone_list_id === this.selectedPhoneListId);
+            // let selectedPhone = currentPhonesInSelectedPhoneList.find(phone => phone.extension === this.extension && phone.phone_list_id === this.selectedPhoneListId);
+            // this.selectedPhoneId = selectedPhone.id;
+
+            // // This changes the data to be updated with the phone that was clicked on
+            // this.data = this.currentPhoneList[this.phoneIndex].userData[0];
+
+            // ************************************************************************************
+
+            const clickedDiv = event.target.closest('.phone-listing');
+            const extText = clickedDiv?.querySelector('.phone-listing-ext')?.innerText;
+            this.phoneIndex = this.currentPhoneList.findIndex(p => p.ext === extText);
+            this.currentPhoneIndexClicked = index;
+            this.extension = extText;
+
+            const currentPhones = this.fullPhoneDB.filter(phone => phone.phone_list_id === this.selectedPhoneListId);
+            const selectedPhone = currentPhones.find(phone => phone.extension === this.extension);
+            console.log('Selected Phone: ', selectedPhone);
+            this.selectedPhoneId = selectedPhone?.id ?? null;
+
+            if(this.phoneIndex !== -1) {
+                this.data = this.currentPhoneList[this.phoneIndex].userData[0];
+            }
         },
 
         // ======================= PHONE LISTING POPUP =======================
@@ -802,9 +793,8 @@ export default {
     },
     computed: {
         currentPhoneList() {
-            console.log('PHONE LIST FROM DB: ', this.phoneListsFromDB);
-            console.log('SELECTED PROJECT: ', this.selectedProject);
-            
+            console.log('phone list db: ', this.phoneListsFromDB);
+
             return this.phoneListsFromDB[this.selectedProject];
         },
     },

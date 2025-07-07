@@ -26,10 +26,10 @@ export default {
     methods: {
         startPocketBaseDB() {
             // Local Host
-            // this.pb = new PocketBase('http://127.0.0.1:8090');
+            this.pb = new PocketBase('http://127.0.0.1:8090');
             
             // Deploy
-            this.pb = new PocketBase('https://desi-vue-app.onrender.com');
+            // this.pb = new PocketBase('https://desi-vue-app.onrender.com');
             
             // Check to see if user is already logged in
             if(this.pb.authStore.isValid) {
