@@ -324,11 +324,11 @@ export default {
             console.log('Data: ', data);
             this.fullPhoneDB = data;
             
-            let currentPhoneListFromDB = '';
-            let currentPhoneFromDB = '';
             for(let i = 0; i < data.length; i++) {
-                currentPhoneListFromDB = data[i].expand.phone_list_id.stored_name;
-                currentPhoneFromDB = data[i].user_input_object;
+                let currentPhoneListFromDB = data[i].expand.phone_list_id.stored_name;
+                console.log('Current Phone List From DB: ', currentPhoneListFromDB)
+                let currentPhoneFromDB = data[i].user_input_object;
+                console.log('Current Phone From DB: ', currentPhoneFromDB);
                 console.log('Phone Lists From DB: ', this.phoneListsFromDB);
                 this.phoneListsFromDB[currentPhoneListFromDB].push(currentPhoneFromDB);
             }
