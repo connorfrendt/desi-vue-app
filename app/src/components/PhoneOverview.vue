@@ -537,10 +537,10 @@ export default {
         },
         fetchFolders() {
             // Local Dev
-            fetch('/api/files')
+            // fetch('/api/files')
             
             // Deploy
-            // fetch('https://desi-vue-app-server.onrender.com/api/files')
+            fetch('https://desi-vue-app-server.onrender.com/api/files')
                 .then(response => {
                     return response.json();
                 })
@@ -553,10 +553,10 @@ export default {
         },
         fetchModels(subdirectory) {
             // Local Dev
-            fetch(`/api/files?subdirectory=${subdirectory}`)
+            // fetch(`/api/files?subdirectory=${subdirectory}`)
             
             // Deploy
-            // fetch(`https://desi-vue-app-server.onrender.com/api/files?subdirectory=${subdirectory}`)
+            fetch(`https://desi-vue-app-server.onrender.com/api/files?subdirectory=${subdirectory}`)
                 .then(response =>{
                     return response.json();
                 })
