@@ -793,8 +793,6 @@ export default {
     },
     computed: {
         currentPhoneList() {
-            console.log('phone list db: ', this.phoneListsFromDB);
-
             return this.phoneListsFromDB[this.selectedProject];
         },
     },
