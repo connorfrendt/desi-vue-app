@@ -321,6 +321,7 @@ export default {
         this.pb.collection('phones').getFullList({
             expand: 'phone_list_id'
         }).then(data => {
+            console.log('Data: ', data);
             this.fullPhoneDB = data;
             
             let currentPhoneListFromDB = '';
