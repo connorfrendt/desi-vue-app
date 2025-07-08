@@ -521,10 +521,10 @@ export default {
             let innerHTMLText = this.getOptionText(this.tempSelectedValue);
 
             // Local Dev
-            return fetch(`/api/files/${innerHTMLText}/${phone}`)
+            // return fetch(`/api/files/${innerHTMLText}/${phone}`)
 
             // Deploy
-            // return fetch(`https://desi-vue-app-server.onrender.com/api/files/${innerHTMLText}/${phone}`)
+            return fetch(`https://desi-vue-app-server.onrender.com/api/files/${innerHTMLText}/${phone}`)
                 .then(response => {
                     return response.json();
                 })
