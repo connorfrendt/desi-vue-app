@@ -301,8 +301,8 @@ export default {
         pb: Object,
         authData: Object,
     },
-    created() {
-        this.pb.collection('phone_lists').getFullList().then(records => {
+    async created() {
+        await this.pb.collection('phone_lists').getFullList().then(records => {
             this.recordsFromDB = records;
             
             // Project Display Names first
@@ -318,7 +318,7 @@ export default {
             
         });
 
-        this.pb.collection('phones').getFullList({
+        await this.pb.collection('phones').getFullList({
             expand: 'phone_list_id'
         }).then(data => {
             console.log('Data: ', data);
@@ -332,8 +332,8 @@ export default {
                 console.log('Phone Lists From DB: ', this.phoneListsFromDB);
                 this.phoneListsFromDB[currentPhoneListFromDB].push(currentPhoneFromDB);
             }
-        })
- 
+        });
+        
     },
     methods: {
         async addProject() {
@@ -523,10 +523,10 @@ export default {
             let innerHTMLText = this.getOptionText(this.tempSelectedValue);
 
             // Local Dev
-            // return fetch(`/api/files/${innerHTMLText}/${phone}`)
+            return fetch(`/api/files/${innerHTMLText}/${phone}`)
 
             // Deploy
-            return fetch(`https://desi-vue-app-server.onrender.com/api/files/${innerHTMLText}/${phone}`)
+            // return fetch(`https://desi-vue-app-server.onrender.com/api/files/${innerHTMLText}/${phone}`)
                 .then(response => {
                     return response.json();
                 })
@@ -539,10 +539,10 @@ export default {
         },
         fetchFolders() {
             // Local Dev
-            // fetch('/api/files')
+            fetch('/api/files')
             
             // Deploy
-            fetch('https://desi-vue-app-server.onrender.com/api/files')
+            // fetch('https://desi-vue-app-server.onrender.com/api/files')
                 .then(response => {
                     return response.json();
                 })
@@ -555,10 +555,10 @@ export default {
         },
         fetchModels(subdirectory) {
             // Local Dev
-            // fetch(`/api/files?subdirectory=${subdirectory}`)
+            fetch(`/api/files?subdirectory=${subdirectory}`)
             
             // Deploy
-            fetch(`https://desi-vue-app-server.onrender.com/api/files?subdirectory=${subdirectory}`)
+            // fetch(`https://desi-vue-app-server.onrender.com/api/files?subdirectory=${subdirectory}`)
                 .then(response =>{
                     return response.json();
                 })
