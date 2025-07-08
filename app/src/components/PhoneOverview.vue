@@ -329,6 +329,7 @@ export default {
             for(let i = 0; i < data.length; i++) {
                 currentPhoneListFromDB = data[i].expand.phone_list_id.stored_name;
                 currentPhoneFromDB = data[i].user_input_object;
+                console.log('Phone Lists From DB: ', this.phoneListsFromDB);
                 this.phoneListsFromDB[currentPhoneListFromDB].push(currentPhoneFromDB);
             }
         })
