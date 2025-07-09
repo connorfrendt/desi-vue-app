@@ -310,7 +310,6 @@ export default {
                 this.storedProjectNameFromDB = this.recordsFromDB[i].stored_name;
                 this.displayProjectNameFromDB = this.recordsFromDB[i].display_name;
                 this.projectDisplayNamesFromDB[this.storedProjectNameFromDB] = this.displayProjectNameFromDB;
-
                 this.$set(this.phoneListsFromDB, this.storedProjectNameFromDB, []);
             }
             
@@ -321,15 +320,11 @@ export default {
         await this.pb.collection('phones').getFullList({
             expand: 'phone_list_id'
         }).then(data => {
-            console.log('Data: ', data);
             this.fullPhoneDB = data;
             
-            for(let i = 0; i < data.length; i++) {
-                let currentPhoneListFromDB = data[i].expand.phone_list_id.stored_name;
-                console.log('Current Phone List From DB: ', currentPhoneListFromDB)
-                let currentPhoneFromDB = data[i].user_input_object;
-                console.log('Current Phone From DB: ', currentPhoneFromDB);
-                console.log('Phone Lists From DB: ', this.phoneListsFromDB);
+            for(let i = 0; i < this.fullPhoneDB.length; i++) {
+                let currentPhoneListFromDB = this.fullPhoneDB[i].expand.phone_list_id.stored_name;
+                let currentPhoneFromDB = this.fullPhoneDB[i].user_input_object;
                 this.phoneListsFromDB[currentPhoneListFromDB].push(currentPhoneFromDB);
             }
         });
@@ -369,8 +364,16 @@ export default {
             });
 
             let fullPhoneListDB = await this.pb.collection('phone_lists').getFullList();
+            console.log('full phone list: ', fullPhoneListDB);
             let selectedPhoneList = fullPhoneListDB.find(phoneList => phoneList.stored_name === this.selectedProject);
             this.selectedPhoneListId = selectedPhoneList.id;
+            console.log()
+            this.storedProjectNameFromDB = fullPhoneListDB[fullPhoneListDB.length - 1].stored_name;
+            this.displayProjectNameFromDB = fullPhoneListDB[fullPhoneListDB.length - 1].display_name;
+
+            this.projectDisplayNamesFromDB[this.storedProjectNameFromDB] = this.displayProjectNameFromDB;
+            this.$set(this.phoneListsFromDB, this.storedProjectNameFromDB, []);
+
         },
         async editProject() {
             // Grabs the full phone list from the database
@@ -523,10 +526,10 @@ export default {
             let innerHTMLText = this.getOptionText(this.tempSelectedValue);
 
             // Local Dev
-            // return fetch(`/api/files/${innerHTMLText}/${phone}`)
+            return fetch(`/api/files/${innerHTMLText}/${phone}`)
 
             // Deploy
-            return fetch(`https://desi-vue-app-server.onrender.com/api/files/${innerHTMLText}/${phone}`)
+            // return fetch(`https://desi-vue-app-server.onrender.com/api/files/${innerHTMLText}/${phone}`)
                 .then(response => {
                     return response.json();
                 })
@@ -539,10 +542,10 @@ export default {
         },
         fetchFolders() {
             // Local Dev
-            // fetch('/api/files')
+            fetch('/api/files')
             
             // Deploy
-            fetch('https://desi-vue-app-server.onrender.com/api/files')
+            // fetch('https://desi-vue-app-server.onrender.com/api/files')
                 .then(response => {
                     return response.json();
                 })
@@ -555,10 +558,10 @@ export default {
         },
         fetchModels(subdirectory) {
             // Local Dev
-            // fetch(`/api/files?subdirectory=${subdirectory}`)
+            fetch(`/api/files?subdirectory=${subdirectory}`)
             
             // Deploy
-            fetch(`https://desi-vue-app-server.onrender.com/api/files?subdirectory=${subdirectory}`)
+            // fetch(`https://desi-vue-app-server.onrender.com/api/files?subdirectory=${subdirectory}`)
                 .then(response =>{
                     return response.json();
                 })
