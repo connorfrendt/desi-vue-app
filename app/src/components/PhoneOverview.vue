@@ -364,10 +364,10 @@ export default {
             });
 
             let fullPhoneListDB = await this.pb.collection('phone_lists').getFullList();
-            console.log('full phone list: ', fullPhoneListDB);
+            
             let selectedPhoneList = fullPhoneListDB.find(phoneList => phoneList.stored_name === this.selectedProject);
             this.selectedPhoneListId = selectedPhoneList.id;
-            console.log()
+            
             this.storedProjectNameFromDB = fullPhoneListDB[fullPhoneListDB.length - 1].stored_name;
             this.displayProjectNameFromDB = fullPhoneListDB[fullPhoneListDB.length - 1].display_name;
 
@@ -526,10 +526,10 @@ export default {
             let innerHTMLText = this.getOptionText(this.tempSelectedValue);
 
             // Local Dev
-            return fetch(`/api/files/${innerHTMLText}/${phone}`)
+            // return fetch(`/api/files/${innerHTMLText}/${phone}`)
 
             // Deploy
-            // return fetch(`https://desi-vue-app-server.onrender.com/api/files/${innerHTMLText}/${phone}`)
+            return fetch(`https://desi-vue-app-server.onrender.com/api/files/${innerHTMLText}/${phone}`)
                 .then(response => {
                     return response.json();
                 })
@@ -542,10 +542,10 @@ export default {
         },
         fetchFolders() {
             // Local Dev
-            fetch('/api/files')
+            // fetch('/api/files')
             
             // Deploy
-            // fetch('https://desi-vue-app-server.onrender.com/api/files')
+            fetch('https://desi-vue-app-server.onrender.com/api/files')
                 .then(response => {
                     return response.json();
                 })
@@ -558,10 +558,10 @@ export default {
         },
         fetchModels(subdirectory) {
             // Local Dev
-            fetch(`/api/files?subdirectory=${subdirectory}`)
+            // fetch(`/api/files?subdirectory=${subdirectory}`)
             
             // Deploy
-            // fetch(`https://desi-vue-app-server.onrender.com/api/files?subdirectory=${subdirectory}`)
+            fetch(`https://desi-vue-app-server.onrender.com/api/files?subdirectory=${subdirectory}`)
                 .then(response =>{
                     return response.json();
                 })
@@ -583,14 +583,19 @@ export default {
             this.templateCheckBox = false;
         },
         addButton() {
-            this.buttonClicked = !this.buttonClicked;
+            if(this.selectedProject === "") {
+                alert("Please select or add a project to continue.");
+            }
+            else {
+                this.buttonClicked = !this.buttonClicked;
+            }
         },
         templateButton() {
             this.templateCheckBox = !this.templateCheckBox;
         },
         
         // ======================= Add/Delete Phone =======================
-        addPhone() {
+        async addPhone() {
             this.extension = this.tempExtension;
             this.selectedValue = this.tempSelectedValue;
             this.model = this.tempModel;
@@ -610,15 +615,19 @@ export default {
             this.innerProdFamText = this.getOptionText(this.selectedValue);
 
             /*
-            The currentPhoneList needs to be pulled from the database
-            We have the selected phone list id, and then pull the which ever phones have that id as their "phone_list_id"
+                The currentPhoneList needs to be pulled from the database
+                We have the selected phone list id, and then pull the which ever phones have that id as their "phone_list_id"
             */
+            console.log('Updating...');
+            this.fullPhoneDB = await this.pb.collection('phones').getFullList();
+            console.log('Updated!', this.fullPhoneDB);
         },
         clickCancel() {
             this.buttonClicked = false;
         },
         async deletePhone(event, index) {
             event.stopPropagation();
+            console.log('selected phone id: ', this.selectedPhoneId);
             if(confirm('Are you sure you want to delete this phone?')) {
 
                 // Finds the parent div of the trash can icon
@@ -685,12 +694,14 @@ export default {
                 this.currentPhoneIndexClicked = this.phoneIndex;
 
                 this.currentPhone = this.currentPhoneList[this.currentPhoneList.length - 1];
+                console.log('testing here');
                 this.phone = await this.pb.collection('phones').create({
                     phone_list_id: this.selectedPhoneListId,
                     user_input_object: this.currentPhone,
                     extension: this.currentPhone.ext,
                 });
 
+                this.fullPhoneDB = await this.pb.collection('phones').getFullList();
             }
 
             this.tempExtension = '';
@@ -721,6 +732,22 @@ export default {
                 return; // prevents unnecessary reprocessing 
             }
 
+            const clickedDiv = event.target.closest('.phone-listing');
+            const extText = clickedDiv?.querySelector('.phone-listing-ext')?.innerText;
+            this.phoneIndex = this.currentPhoneList.findIndex(p => p.ext === extText);
+            this.currentPhoneIndexClicked = index;
+            this.extension = extText;
+
+            const currentPhones = await this.fullPhoneDB.filter(phone => phone.phone_list_id === this.selectedPhoneListId);
+            console.log('Current Phones: ', currentPhones);
+            const selectedPhone = currentPhones.find(phone => phone.extension === this.extension);
+            console.log('Selected Phone: ', selectedPhone);
+            this.selectedPhoneId = selectedPhone?.id ?? null;
+
+            if(this.phoneIndex !== -1) {
+                this.data = this.currentPhoneList[this.phoneIndex].userData[0];
+            }
+
             // let clickedDiv = event.target;
             
             // let parentDiv = clickedDiv.closest('.phone-listing');
@@ -742,21 +769,6 @@ export default {
             // this.data = this.currentPhoneList[this.phoneIndex].userData[0];
 
             // ************************************************************************************
-
-            const clickedDiv = event.target.closest('.phone-listing');
-            const extText = clickedDiv?.querySelector('.phone-listing-ext')?.innerText;
-            this.phoneIndex = this.currentPhoneList.findIndex(p => p.ext === extText);
-            this.currentPhoneIndexClicked = index;
-            this.extension = extText;
-
-            const currentPhones = this.fullPhoneDB.filter(phone => phone.phone_list_id === this.selectedPhoneListId);
-            const selectedPhone = currentPhones.find(phone => phone.extension === this.extension);
-            console.log('Selected Phone: ', selectedPhone);
-            this.selectedPhoneId = selectedPhone?.id ?? null;
-
-            if(this.phoneIndex !== -1) {
-                this.data = this.currentPhoneList[this.phoneIndex].userData[0];
-            }
         },
 
         // ======================= PHONE LISTING POPUP =======================

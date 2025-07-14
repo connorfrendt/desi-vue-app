@@ -10,7 +10,7 @@ export function showEditPhoneListing() {
 
 export async function confirmEditPopup() {
     const records = await this.pb.collection('phones').getFullList();
-    
+
     this.currentPhone = records.filter(
         ele => ele.phone_list_id === this.selectedPhoneListId && ele.extension === this.extension
     );
