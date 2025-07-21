@@ -17,11 +17,16 @@
             </div>
         </form>
 
-        <div v-if="popupVisible" class="popup">
+        <div id="popup" v-if="popupVisible" class="popup">
+            <span class="cancel-edit" @click="cancelEdit">X</span>
             <div class="textarea-container">
                 <ul style="padding: 0;">
                     <li style="list-style-type: none; height: 100px; width: 200px; background-color: lightgray; display: flex;" :class="[{ [`text-${textVerticalAlign}`]: true }]">
-                        <input type="text" ref="popupInput" v-model="popupText" style="width: 195px; background-color: lightgray; border: none;"
+                        <textarea
+                            ref="popupInput"
+                            v-model="popupText"
+                            style="width: 195px; background-color: lightgray; border: none;"
+                            
                             :class="[
                                 {
                                     bold: isBold,
@@ -33,38 +38,109 @@
                                     [`${fontStyle}`]: true
                                 },
                             ]"
-                        />
+                        ></textarea>
                     </li>
                 </ul>
             </div>
             <div>
                 <div style="text-align: center; margin-top: 10px;">STYLE</div>
-                <div class="popup-button" :class="{ active: isBold }" @click="makeBold">Bold</div>
-                <div class="popup-button" :class="{ active: isItalics }" @click="makeItalicize">Italicize</div>
-                <div class="popup-button" :class="{ active: isUnderline }" @click="makeUnderline">Underline</div>
+                <div
+                    class="popup-button"
+                    :class="{ active: isBold }"
+                    @click="makeBold"
+                    ref="boldButton"
+                    tabIndex="0"
+                    role="button"
+                    @keydown.space.prevent="makeBold"
+                >Bold</div>
+                <div
+                    class="popup-button"
+                    :class="{ active: isItalics }"
+                    @click="makeItalicize"
+                    ref="italicizeButton"
+                    tabIndex="0"
+                    role="button"
+                    @keydown.space.prevent="makeItalicize"
+                >Italicize</div>
+                <div
+                    class="popup-button"
+                    :class="{ active: isUnderline }"
+                    @click="makeUnderline"
+                    ref="underlineButton"
+                    tabIndex="0"
+                    role="button"
+                    @keydown.space.prevent="makeUnderline"
+                >Underline</div>
                 <div style="text-align: center; margin-top: 20px;">JUSTIFICATION</div>
                 
                 <div style="display: flex; justify-content: space-evenly;">
-                    <div class="popup-button" :class="{ active: textVerticalAlign === 'top' }" @click="setVerticalTextAlign('top')">
-                        Top<font-awesome-icon icon="fa-solid fa-arrows-up-to-line" />
+                    <div
+                        class="popup-button"
+                        :class="{ active: textVerticalAlign === 'top' }"
+                        @click="setVerticalTextAlign('top')"
+                        tabIndex="0"
+                        role="button"
+                        @keydown.space.prevent="setVerticalTextAlign('top')"
+                    >
+                        Top
+                        <font-awesome-icon icon="fa-solid fa-arrows-up-to-line" />
                     </div>
-                    <div class="popup-button" :class="{ active: textVerticalAlign === 'center' }" @click="setVerticalTextAlign('center')">
-                        Center<font-awesome-icon icon="fa-solid fa-align-center" />
+                    <div
+                        class="popup-button"
+                        :class="{ active: textVerticalAlign === 'center' }"
+                        @click="setVerticalTextAlign('center')"
+                        tabIndex="0"
+                        role="button"
+                        @keydown.space.prevent="setVerticalTextAlign('center')"
+                    >
+                        Center
+                        <font-awesome-icon icon="fa-solid fa-align-center" />
                     </div>
-                    <div class="popup-button" :class="{ active: textVerticalAlign === 'bottom' }" @click="setVerticalTextAlign('bottom')">
-                        Bottom<font-awesome-icon icon="fa-solid fa-arrows-down-to-line" />
+                    <div
+                        class="popup-button"
+                        :class="{ active: textVerticalAlign === 'bottom' }"
+                        @click="setVerticalTextAlign('bottom')"
+                        tabIndex="0"
+                        role="button"
+                        @keydown.space.prevent="setVerticalTextAlign('bottom')"
+                    >
+                        Bottom
+                        <font-awesome-icon icon="fa-solid fa-arrows-down-to-line" />
                     </div>
                 </div>
 
                 <div style="display: flex; justify-content: space-evenly;">
-                    <div class="popup-button" :class="{ active: textHorizontalAlign === 'left' }" @click="setHorizontalTextAlign('left')">
-                        Left<font-awesome-icon icon="fa-solid fa-align-left" />
+                    <div
+                        class="popup-button"
+                        :class="{ active: textHorizontalAlign === 'left' }"
+                        @click="setHorizontalTextAlign('left')"
+                        tabIndex="0"
+                        role="button"
+                        @keydown.space.prevent="setHorizontalTextAlign('left')"
+                    >
+                        Left
+                        <font-awesome-icon icon="fa-solid fa-align-left" />
                     </div>
-                    <div class="popup-button" :class="{ active: textHorizontalAlign === 'center' }" @click="setHorizontalTextAlign('center')">
+                    <div
+                        class="popup-button"
+                        :class="{ active: textHorizontalAlign === 'center' }"
+                        @click="setHorizontalTextAlign('center')"
+                        tabIndex="0"
+                        role="button"
+                        @keydown.space.prevent="setHorizontalTextAlign('center')"
+                    >
                         Center<font-awesome-icon icon="fa-solid fa-align-center" />
                     </div>
-                    <div class="popup-button" :class="{ active: textHorizontalAlign === 'right' }" @click="setHorizontalTextAlign('right')">
-                        Right<font-awesome-icon icon="fa-solid fa-align-right" />
+                    <div
+                        class="popup-button"
+                        :class="{ active: textHorizontalAlign === 'right' }"
+                        @click="setHorizontalTextAlign('right')"
+                        tabIndex="0"
+                        role="button"
+                        @keydown.space.prevent="setHorizontalTextAlign('right')"
+                    >
+                        Right
+                        <font-awesome-icon icon="fa-solid fa-align-right" />
                     </div>
                 </div>
 
@@ -113,8 +189,8 @@
                 </div>
 
                 <div class="" style="display: flex; justify-content: space-around; margin-top: 100px;">
-                    <div class="popup-button" @click="confirmEdit">OK</div>
-                    <div class="popup-button" @click="cancelEdit">Cancel</div>
+                    <div class="popup-button" @click="confirmEdit">Done</div>
+                    <!-- <div class="popup-button" @click="cancelEdit">Cancel</div> -->
                 </div>
             </div>
         </div>
@@ -167,7 +243,19 @@ export default {
             required: true
         }
     },
+    created() {
+
+    },
     methods: {
+        focusBoldButton() {
+            this.$refs.boldButton?.focus();
+        },
+        focusItalicizeButton() {
+            this.$refs.italicizeButton?.focus();
+        },
+        focusUnderlineButton() {
+            this.$refs.italicizeButton?.focus();
+        },
         updatePhone(data) {
             // Origins - top left corner of the phone's outer box
             this.origins = data.origins;
@@ -191,8 +279,6 @@ export default {
             this.$nextTick(() => {
                 this.gatherUserComments();
             });
-
-            // }
 
         },
         getBoxStyles(box) {
@@ -275,9 +361,29 @@ export default {
             this.$emit('user-input-object', this.userInputObject);
         },
 
-        showPopUp(box, index) {
+        async showPopUp(box, index) {
             // This shows the popup box to edit the text inside an editable box on the phone label
             this.popupVisible = true;
+
+            this.$nextTick(() => {
+                const closePopup = document.getElementById('popup');
+                
+                closePopup.addEventListener("click", () => {
+                    this.resetFocus();
+                });
+
+                closePopup.addEventListener("keydown", (event) => {
+                    if(event.key === "Escape") {
+                        this.popupVisible = false;
+                        this.currentBox = null;
+                        this.currentIndex = null;
+                        this.selectedBox = null;
+                    }
+                });
+
+                
+            });
+
             this.popupText = box[1].userComment;
             
             this.selectedBox = index;
@@ -293,7 +399,6 @@ export default {
             this.textColor = box[1].textColor;
             this.fontSize = box[1].fontSize;
             this.fontStyle = box[1].fontStyle;
-
             this.resetFocus();
         },
 
@@ -325,31 +430,31 @@ export default {
         },
         makeBold() {
             this.isBold = !this.isBold;
-            this.resetFocus();
+            // this.resetFocus();
         },
         makeItalicize() {
             this.isItalics = !this.isItalics;
-            this.resetFocus();
+            // this.resetFocus();
         },
         makeUnderline() {
             this.isUnderline = !this.isUnderline;
-            this.resetFocus();
+            // this.resetFocus();
         },
         setHorizontalTextAlign(align) {
             this.textHorizontalAlign = align;
-            this.resetFocus();
+            // this.resetFocus();
         },
         setVerticalTextAlign(align) {
             this.textVerticalAlign = align;
-            this.resetFocus();
+            // this.resetFocus();
         },
         setTextColor(color) {
             this.textColor = color;
-            this.resetFocus();
+            // this.resetFocus();
         },
         setFontSize(event) {
             this.fontSize = parseInt(event.target.value);
-            this.resetFocus();
+            // this.resetFocus();
         },
         setFontStyle() {
             this.resetFocus();
@@ -398,6 +503,16 @@ textarea {
 
 input:focus {
     outline: none;
+}
+
+.cancel-edit {
+    padding: 5px;
+    background-color: red;
+    border-radius: 5px;
+}
+.cancel-edit:hover {
+    cursor: pointer;
+    background-color: rgb(147, 0, 0);
 }
 /* ----------------- BOLD, ITALICS, UNDERLINE ----------------- */
 .bold {
