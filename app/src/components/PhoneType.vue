@@ -4,13 +4,14 @@
             <div id="outer-box" :style="outerContainerStyles">
                 <div id="main-box">
                     <ul>
-                        <li v-for="(box, index) in boxes" :key="box[0]"
+                        <li
+                            v-for="(box, index) in boxes" :key="box[0]"
                             :id="`input-box-${index}`"
                             :style="[getBoxStyles(box[1]), selectedBox === index ? { outline : '1px solid black', } : '']"
-                            v-html="box[1].editable ? box[1].userComment : box[1].defaultText"
                             style="list-style-type: none;"
                             @click="box[1].editable ? showPopUp(box, index) : ''"
                             :class="getTextClasses(box[1])"
+                            v-html="box[1].editable ? box[1].userComment : box[1].defaultText"
                         ></li>
                     </ul>
                 </div>
@@ -52,7 +53,9 @@
                     tabIndex="0"
                     role="button"
                     @keydown.space.prevent="makeBold"
-                >Bold</div>
+                >
+                    Bold
+                </div>
                 <div
                     class="popup-button"
                     :class="{ active: isItalics }"
@@ -61,7 +64,9 @@
                     tabIndex="0"
                     role="button"
                     @keydown.space.prevent="makeItalicize"
-                >Italicize</div>
+                >
+                    Italicize
+                </div>
                 <div
                     class="popup-button"
                     :class="{ active: isUnderline }"
@@ -70,7 +75,9 @@
                     tabIndex="0"
                     role="button"
                     @keydown.space.prevent="makeUnderline"
-                >Underline</div>
+                >
+                    Underline
+                </div>
                 <div style="text-align: center; margin-top: 20px;">JUSTIFICATION</div>
                 
                 <div style="display: flex; justify-content: space-evenly;">
@@ -146,13 +153,13 @@
 
                 <div style="text-align: center; margin-top: 10px;">COLOR</div>
                 <div style="display: grid; grid-template-columns: repeat(4, 1fr); justify-items: center;">
-                    <div class="popup-button-black" :class="{ active: textColor === 'black' }" @click="setTextColor('black')"></div>
-                    <div class="popup-button-red" :class="{ active: textColor === 'red' }" @click="setTextColor('red')"></div>
-                    <div class="popup-button-orange" :class="{ active: textColor === 'orange' }" @click="setTextColor('orange')"></div>
-                    <div class="popup-button-yellow" :class="{ active: textColor === 'yellow' }" @click="setTextColor('yellow')"></div>
-                    <div class="popup-button-green" :class="{ active: textColor === 'green' }" @click="setTextColor('green')"></div>
-                    <div class="popup-button-blue" :class="{ active: textColor === 'blue' }" @click="setTextColor('blue')"></div>
-                    <div class="popup-button-purple" :class="{ active: textColor === 'purple' }" @click="setTextColor('purple')"></div>
+                    <div class="popup-button-black" :class="{ active: textColor === 'black' }" @click="setTextColor('black')" tabIndex="0" role="button" @keydown.space.prevent="setTextColor('black')"></div>
+                    <div class="popup-button-red" :class="{ active: textColor === 'red' }" @click="setTextColor('red')" tabIndex="0" role="button" @keydown.space.prevent="setTextColor('red')"></div>
+                    <div class="popup-button-orange" :class="{ active: textColor === 'orange' }" @click="setTextColor('orange')" tabIndex="0" role="button" @keydown.space.prevent="setTextColor('orange')"></div>
+                    <div class="popup-button-yellow" :class="{ active: textColor === 'yellow' }" @click="setTextColor('yellow')" tabIndex="0" role="button" @keydown.space.prevent="setTextColor('yellow')"></div>
+                    <div class="popup-button-green" :class="{ active: textColor === 'green' }" @click="setTextColor('green')" tabIndex="0" role="button" @keydown.space.prevent="setTextColor('green')"></div>
+                    <div class="popup-button-blue" :class="{ active: textColor === 'blue' }" @click="setTextColor('blue')" tabIndex="0" role="button" @keydown.space.prevent="setTextColor('blue')"></div>
+                    <div class="popup-button-purple" :class="{ active: textColor === 'purple' }" @click="setTextColor('purple')" tabIndex="0" role="button" @keydown.space.prevent="setTextColor('purple')"></div>
                 </div>
 
                 <div style="text-align: center; margin-top: 10px;">
@@ -189,7 +196,7 @@
                 </div>
 
                 <div class="" style="display: flex; justify-content: space-around; margin-top: 100px;">
-                    <div class="popup-button" @click="confirmEdit">Done</div>
+                    <div class="popup-button" @click="confirmEdit" tabIndex="0" role="button" @keydown.space.prevent="confirmEdit">Done</div>
                     <!-- <div class="popup-button" @click="cancelEdit">Cancel</div> -->
                 </div>
             </div>
@@ -356,7 +363,7 @@ export default {
             }
             
             this.userInputObject = { ...this.userInput };
-            // console.log('userInputObject', this.userInputObject);
+            
             // Passes the userInputObject up to the parent component "PhoneOverview.vue"
             this.$emit('user-input-object', this.userInputObject);
         },
@@ -369,11 +376,13 @@ export default {
                 const closePopup = document.getElementById('popup');
                 
                 closePopup.addEventListener("click", () => {
-                    this.resetFocus();
+                    console.log('CLICK');
+                    // this.resetFocus();
                 });
 
                 closePopup.addEventListener("keydown", (event) => {
                     if(event.key === "Escape") {
+                        console.log('ESCAPE')
                         this.popupVisible = false;
                         this.currentBox = null;
                         this.currentIndex = null;
@@ -414,7 +423,7 @@ export default {
             this.currentBox[1].textColor = this.textColor;
             this.currentBox[1].fontSize = this.fontSize;
             this.currentBox[1].fontStyle = this.fontStyle;
-
+            
             this.$emit('current-box-input', this.currentBox);
             
             this.popupVisible = false;
@@ -430,34 +439,35 @@ export default {
         },
         makeBold() {
             this.isBold = !this.isBold;
-            // this.resetFocus();
+            this.currentBox[1].isBold = this.isBold;
         },
         makeItalicize() {
             this.isItalics = !this.isItalics;
-            // this.resetFocus();
+            this.currentBox[1].isItalics = this.isItalics;
         },
         makeUnderline() {
             this.isUnderline = !this.isUnderline;
-            // this.resetFocus();
+            this.currentBox[1].isUnderline = this.isUnderline;
         },
         setHorizontalTextAlign(align) {
             this.textHorizontalAlign = align;
-            // this.resetFocus();
+            this.currentBox[1].textHorizontalAlign = this.textHorizontalAlign;
         },
         setVerticalTextAlign(align) {
             this.textVerticalAlign = align;
-            // this.resetFocus();
+            this.currentBox[1].textVerticalAlign = this.textVerticalAlign;
         },
         setTextColor(color) {
             this.textColor = color;
-            // this.resetFocus();
+            this.currentBox[1].textColor = this.textColor;
         },
         setFontSize(event) {
             this.fontSize = parseInt(event.target.value);
-            // this.resetFocus();
+            this.currentBox[1].fontSize = this.fontSize;
         },
         setFontStyle() {
-            this.resetFocus();
+            this.currentBox[1].fontStyle = this.fontStyle;
+            // this.resetFocus();
         },
         twipsToPixels(num) {
             let numTwips = num / 1440; // 1440 twips per inch
@@ -467,7 +477,7 @@ export default {
         resetFocus() {
             this.$nextTick(() => {
                 this.$refs.popupInput.focus();
-            })
+            });
         }
     },
     watch: {
@@ -479,6 +489,9 @@ export default {
             else {
                 this.updatePhone(newValue);
             }
+        },
+        popupText() {
+            this.currentBox[1].userComment = this.popupText;
         }
     }
 }
