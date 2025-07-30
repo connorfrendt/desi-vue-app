@@ -261,6 +261,9 @@ export default {
     mounted() {
         window.addEventListener("keydown", this.nextAndPreviousBox);
     },
+    beforeDestroy() {
+        window.removeEventListener("keydown", this.nextAndPreviousBox);
+    },
     created() {
 
     },
@@ -416,6 +419,7 @@ export default {
                 closePopup.addEventListener("keydown", (event) => {
                     if(event.key === "Enter") {
                         console.log('Entered!');
+                        this.confirmEdit();
                     }
                 })
 
