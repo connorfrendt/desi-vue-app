@@ -19,7 +19,9 @@
         </form>
 
         <div id="popup" v-if="popupVisible" class="popup">
-            <span class="cancel-edit" @click="cancelEdit">X</span>
+            <span class="cancel-edit" @click="cancelEdit">
+                <font-awesome-icon icon="fa-solid fa-xmark" />
+            </span>
             <div class="textarea-container">
                 <ul style="padding: 0;">
                     <li style="list-style-type: none; height: 100px; width: 200px; background-color: lightgray; display: flex;" :class="[{ [`text-${textVerticalAlign}`]: true }]">
@@ -194,10 +196,16 @@
                         <option value="24">24</option>
                     </select>
                 </div>
+                <div style="display: flex; flex-direction: column; justify-content: center; margin-top: 50px;">
+                    <div class="popup-button" tabIndex="0" role="button">Save as default</div>
+    
+                    <div class="" style="display: flex; justify-content: space-between; margin-top: 10px;">
+                        <div class="popup-button" tabIndex="0" role="button">Prev</div>
+                        <div class="popup-button" @click="confirmEdit" tabIndex="0" role="button" @keydown.space.prevent="confirmEdit">Done</div>
+                        <div class="popup-button" tabIndex="0" role="button" @click="nextBox">Next</div>
+                        <!-- <div class="popup-button" @click="cancelEdit">Cancel</div> -->
+                    </div>
 
-                <div class="" style="display: flex; justify-content: space-around; margin-top: 100px;">
-                    <div class="popup-button" @click="confirmEdit" tabIndex="0" role="button" @keydown.space.prevent="confirmEdit">Done</div>
-                    <!-- <div class="popup-button" @click="cancelEdit">Cancel</div> -->
                 </div>
             </div>
         </div>
@@ -254,14 +262,18 @@ export default {
 
     },
     methods: {
-        focusBoldButton() {
-            this.$refs.boldButton?.focus();
-        },
-        focusItalicizeButton() {
-            this.$refs.italicizeButton?.focus();
-        },
-        focusUnderlineButton() {
-            this.$refs.italicizeButton?.focus();
+        nextBox() {
+            let userInputObjects = Object.entries(this.userInput[0].objects);
+            console.log('UIO: ', userInputObjects);
+            console.log('Current Box: ', this.currentBox[1].editable);
+            console.log('Current Index: ', this.currentIndex);
+            console.log('Selected Box: ', this.selectedBox);
+            console.log('Selected Box: ', this.selectedBox + 1);
+            this.currentIndex += 1;
+            this.selectedBox += 1;
+            let nextBox = userInputObjects[this.currentIndex]
+
+            this.showPopUp(nextBox, this.currentIndex);
         },
         updatePhone(data) {
             // Origins - top left corner of the phone's outer box
@@ -371,15 +383,10 @@ export default {
         async showPopUp(box, index) {
             // This shows the popup box to edit the text inside an editable box on the phone label
             this.popupVisible = true;
-
+            
             this.$nextTick(() => {
                 const closePopup = document.getElementById('popup');
                 
-                closePopup.addEventListener("click", () => {
-                    console.log('CLICK');
-                    // this.resetFocus();
-                });
-
                 closePopup.addEventListener("keydown", (event) => {
                     if(event.key === "Escape") {
                         console.log('ESCAPE')
@@ -390,7 +397,12 @@ export default {
                     }
                 });
 
-                
+                closePopup.addEventListener("keydown", (event) => {
+                    if(event.key === "Enter") {
+                        console.log('Entered!');
+                    }
+                })
+
             });
 
             this.popupText = box[1].userComment;
@@ -398,6 +410,7 @@ export default {
             this.selectedBox = index;
 
             this.currentBox = box;
+            
             this.currentIndex = index;
 
             this.isBold = box[1].isBold;
@@ -519,13 +532,18 @@ input:focus {
 }
 
 .cancel-edit {
-    padding: 5px;
+    padding: 3px 5px;
     background-color: red;
     border-radius: 5px;
 }
 .cancel-edit:hover {
     cursor: pointer;
     background-color: rgb(147, 0, 0);
+}
+
+.save-default {
+    background-color: red;
+    text-align: center;
 }
 /* ----------------- BOLD, ITALICS, UNDERLINE ----------------- */
 .bold {

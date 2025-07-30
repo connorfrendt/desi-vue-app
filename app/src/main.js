@@ -11,9 +11,9 @@ import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import { faTrashCan, faPenToSquare, faFolderOpen, faFloppyDisk, faUser } from '@fortawesome/free-regular-svg-icons';
 
 // SOLID ICONS
-import { faAlignCenter, faAlignLeft, faAlignRight, faAngleDown, faArrowsDownToLine, faArrowsUpToLine, faGripLinesVertical, faPlus, faPrint, faRightFromBracket, } from '@fortawesome/free-solid-svg-icons';
+import { faAlignCenter, faAlignLeft, faAlignRight, faAngleDown, faArrowsDownToLine, faArrowsUpToLine, faGripLinesVertical, faPlus, faPrint, faRightFromBracket, faXmark, } from '@fortawesome/free-solid-svg-icons';
 
-library.add(faTrashCan, faPlus, faPenToSquare, faFolderOpen, faFloppyDisk, faPrint, faAngleDown, faAlignLeft, faAlignCenter, faAlignRight, faArrowsUpToLine, faArrowsDownToLine, faRightFromBracket, faUser, faGripLinesVertical)
+library.add(faTrashCan, faPlus, faPenToSquare, faFolderOpen, faFloppyDisk, faPrint, faAngleDown, faAlignLeft, faAlignCenter, faAlignRight, faArrowsUpToLine, faArrowsDownToLine, faRightFromBracket, faUser, faGripLinesVertical, faXmark)
 Vue.component('font-awesome-icon', FontAwesomeIcon);
 
 Vue.use(VueRouter);
