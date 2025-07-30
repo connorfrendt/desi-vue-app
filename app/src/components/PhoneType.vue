@@ -200,7 +200,7 @@
                     <div class="popup-button" tabIndex="0" role="button">Save as default</div>
     
                     <div class="" style="display: flex; justify-content: space-between; margin-top: 10px;">
-                        <div class="popup-button" tabIndex="0" role="button">Prev</div>
+                        <div class="popup-button" tabIndex="0" role="button" @click="prevBox">Prev</div>
                         <div class="popup-button" @click="confirmEdit" tabIndex="0" role="button" @keydown.space.prevent="confirmEdit">Done</div>
                         <div class="popup-button" tabIndex="0" role="button" @click="nextBox">Next</div>
                         <!-- <div class="popup-button" @click="cancelEdit">Cancel</div> -->
@@ -258,22 +258,38 @@ export default {
             required: true
         }
     },
+    mounted() {
+        window.addEventListener("keydown", this.nextAndPreviousBox);
+    },
     created() {
 
     },
     methods: {
+        nextAndPreviousBox(event) {
+            if(event.altKey && event.key === "n") {
+                event.preventDefault();
+                this.nextBox();
+            }
+            if(event.altKey && event.key === "p") {
+                event.preventDefault();
+                this.prevBox();
+            }
+        },
         nextBox() {
             let userInputObjects = Object.entries(this.userInput[0].objects);
-            console.log('UIO: ', userInputObjects);
-            console.log('Current Box: ', this.currentBox[1].editable);
-            console.log('Current Index: ', this.currentIndex);
-            console.log('Selected Box: ', this.selectedBox);
-            console.log('Selected Box: ', this.selectedBox + 1);
             this.currentIndex += 1;
             this.selectedBox += 1;
-            let nextBox = userInputObjects[this.currentIndex]
+            let nextBox = userInputObjects[this.currentIndex];
 
             this.showPopUp(nextBox, this.currentIndex);
+        },
+        prevBox() {
+            let userInputObjects = Object.entries(this.userInput[0].objects);
+            this.currentIndex -= 1;
+            this.selectedBox -= 1;
+            let prevBox = userInputObjects[this.currentIndex];
+
+            this.showPopUp(prevBox, this.currentIndex);
         },
         updatePhone(data) {
             // Origins - top left corner of the phone's outer box
