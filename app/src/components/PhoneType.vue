@@ -29,7 +29,6 @@
                             ref="popupInput"
                             v-model="popupText"
                             style="width: 195px; background-color: lightgray; border: none;"
-                            
                             :class="[
                                 {
                                     bold: isBold,
@@ -200,9 +199,9 @@
                     <div class="popup-button" tabIndex="0" role="button">Save as default</div>
     
                     <div class="" style="display: flex; justify-content: space-between; margin-top: 10px;">
-                        <div class="popup-button" tabIndex="0" role="button" @click="prevBox">Prev</div>
-                        <div class="popup-button" @click="confirmEdit" tabIndex="0" role="button" @keydown.space.prevent="confirmEdit">Done</div>
-                        <div class="popup-button" tabIndex="0" role="button" @click="nextBox">Next</div>
+                        <div class="popup-button" @click="prevBox" @keydown.space.prevent="prevBox" tabIndex="0" role="button">Prev</div>
+                        <div class="popup-button" @click="confirmEdit" @keydown.space.prevent="confirmEdit" tabIndex="0" role="button">Done</div>
+                        <div class="popup-button" @click="nextBox" @keydown.space.prevent="nextBox" tabIndex="0" role="button">Next</div>
                         <!-- <div class="popup-button" @click="cancelEdit">Cancel</div> -->
                     </div>
 
@@ -233,7 +232,9 @@ export default {
             currentIndex: null,
             
             popupVisible: false,
+            originalPopupText: '',
             popupText: '',
+            popupTextNew: '',
 
             isBold: false,
             isItalics: false,
@@ -371,6 +372,7 @@ export default {
             }
         },
         gatherUserComments() {
+            
             let userInputObjects = Object.entries(this.userInput[0].objects);
             
             for(let i = 0; i < userInputObjects.length; i++) {
@@ -394,7 +396,7 @@ export default {
             }
             
             this.userInputObject = { ...this.userInput };
-            
+            console.log('GATHERED', this.userInputObjects);
             // Passes the userInputObject up to the parent component "PhoneOverview.vue"
             this.$emit('user-input-object', this.userInputObject);
         },
@@ -405,6 +407,7 @@ export default {
             
             this.$nextTick(() => {
                 const closePopup = document.getElementById('popup');
+                console.log('Popup', closePopup);
                 
                 closePopup.addEventListener("keydown", (event) => {
                     if(event.key === "Escape") {
@@ -416,15 +419,15 @@ export default {
                     }
                 });
 
-                closePopup.addEventListener("keydown", (event) => {
-                    if(event.key === "Enter") {
-                        console.log('Entered!');
-                        this.confirmEdit();
-                    }
-                })
+                // closePopup.addEventListener("keydown", (event) => {
+                //     if(event.key === "Enter") {
+                //         console.log('Entered!');
+                //         this.confirmEdit();
+                //     }
+                // })
 
             });
-
+            this.originalPopupText = box[1].userComment;
             this.popupText = box[1].userComment;
             
             this.selectedBox = index;
@@ -446,7 +449,7 @@ export default {
 
         confirmEdit() {
             // This is confirming the text changes in the popup box and makes them appear on the phone label
-            
+            this.originalPopupText = this.popupText;
             this.currentBox[1].userComment = this.popupText;
             this.currentBox[1].isBold = this.isBold;
             this.currentBox[1].isItalics = this.isItalics;
@@ -465,6 +468,7 @@ export default {
             this.selectedBox = null;
         },
         cancelEdit() {
+            this.currentBox[1].userComment = this.originalPopupText;
             this.popupVisible = false;
             this.currentBox = null;
             this.currentIndex = null;
@@ -524,7 +528,12 @@ export default {
             }
         },
         popupText() {
-            this.currentBox[1].userComment = this.popupText;
+            // if confirmEdit -> this.currentBox[1].userComment = this.popupTextNew;
+            
+            // if cancelEdit -> this.currentBox[1].userComment = this.popupText
+            this.currentBox[1].userComment = this.popupTextNew;
+            this.popupTextNew = this.popupText;
+
         }
     }
 }
