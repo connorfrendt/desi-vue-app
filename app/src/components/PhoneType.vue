@@ -368,13 +368,16 @@ export default {
             if(box.editable === true) {
                 let boldValue = "";
                 let italicsValue = "";
+                let underlineValue = "";
                 if(box.userComment !== "") {
                     boldValue = box.isBold;
                     italicsValue = box.isItalics;
+                    underlineValue = box.isUnderline;
                 }
                 else {
                     boldValue = this.isDefaultBold;
                     italicsValue = this.isDefaultItalics;
+                    underlineValue = this.isDefaultUnderline;
                 }
                 return {
                     // bold: box.isBold ?? this.isDefaultBold,
@@ -382,7 +385,8 @@ export default {
                     // italics: box.isItalics ?? this.isDefaultItalics,
                     italics: italicsValue,
                     // underline: this.isDefaultUnderline || box.isUnderline,
-                    underline: box.isUnderline ?? this.isDefaultUnderline,
+                    // underline: box.isUnderline ?? this.isDefaultUnderline,
+                    underline: underlineValue,
                     'text-left': box.textHorizontalAlign === 'left',
                     'text-h-center': box.textHorizontalAlign === 'center',
                     'text-right': box.textHorizontalAlign === 'right',
@@ -465,6 +469,10 @@ export default {
                 let italicsValue = this.isDefaultItalics;
                 this.isItalics = italicsValue;
                 box[1].isItalics = italicsValue;
+
+                let underlineValue = this.isDefaultUnderline;
+                this.isUnderline = underlineValue;
+                box[1].isUnderline = underlineValue;
             }
             else {
                 let boldValue = box[1].isBold;
@@ -473,16 +481,20 @@ export default {
 
                 let italicsValue = box[1].isItalics;
                 this.isItalics = italicsValue;
-                box[1].isItalics = boldValue;
+                box[1].isItalics = italicsValue;
+
+                let underlineValue = box[1].isUnderline;
+                this.isUnderline = underlineValue;
+                box[1].isUnderline = underlineValue;
             }
 
             // let italicsValue = box[1].isItalics || this.isDefaultItalics;
             // this.isItalics = italicsValue;
             // box[1].isItalics = italicsValue;
             
-            let underlineValue = box[1].isUnderline || this.isDefaultUnderline;
-            this.isUnderline = underlineValue;
-            box[1].isUnderline = underlineValue;
+            // let underlineValue = box[1].isUnderline || this.isDefaultUnderline;
+            // this.isUnderline = underlineValue;
+            // box[1].isUnderline = underlineValue;
 
             // this.isUnderline = this.isDefaultUnderline ?? this.isUnderline ?? box[1].isUnderline;
             this.textHorizontalAlign = box[1].textHorizontalAlign;
