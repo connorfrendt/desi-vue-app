@@ -196,7 +196,7 @@
                     </select>
                 </div>
                 <div style="display: flex; flex-direction: column; justify-content: center; margin-top: 50px;">
-                    <div class="popup-button" tabIndex="0" role="button">Save as default</div>
+                    <div class="popup-button" @click="saveDefault" tabIndex="0" role="button">Save as default</div>
     
                     <div class="" style="display: flex; justify-content: space-between; margin-top: 10px;">
                         <div class="popup-button" @click="prevBox" @keydown.space.prevent="prevBox" tabIndex="0" role="button">Prev</div>
@@ -237,8 +237,14 @@ export default {
             popupTextNew: '',
 
             isBold: false,
+            isDefaultBold: false,
+
             isItalics: false,
+            isDefaultItalics: false,
+            
             isUnderline: false,
+            isDefaultUnderline: false,
+            
             textHorizontalAlign: 'center',
             textVerticalAlign: 'center',
             textColor: 'black',
@@ -269,6 +275,11 @@ export default {
 
     },
     methods: {
+        saveDefault() {
+            this.isDefaultBold = this.isBold;
+            this.isDefaultItalics = this.isItalics;
+            this.isDefaultUnderline = this.isUnderline;
+        },
         nextAndPreviousBox(event) {
             if(event.altKey && event.key === "n") {
                 event.preventDefault();
@@ -331,11 +342,9 @@ export default {
                     top: this.twipsToPixels(box.position[1]) + 'px',
                     backgroundColor: box.kind === 'text' || box.kind === 'rectangle' ? box.color : '',
                     border: box.kind === 'dottedLine' ? `1px dotted ${box.color}` : box.editable ? '1px solid rgba(0, 0, 0, 0.5)' : '',
-                    // outline: box.editable ? '1px solid rgba(0, 0, 0, 0.5)' : '',
                     color: box.kind === 'staticText' ? box.color : '',
                     zIndex: box.editable ? 2 : 1,
                     fontSize: box.fontSize ? box.fontSize + 'px' : '12px',
-                    // marginTop: '5px',
                 }
                 return styles;
             }
@@ -356,23 +365,37 @@ export default {
         },
         getTextClasses(box) {
             // Applies classes to each individual editable box. Each class gets applied when the following value is "true"
-            return {
-                bold: box.isBold,
-                italics: box.isItalics,
-                underline: box.isUnderline,
-                'text-left': box.textHorizontalAlign === 'left',
-                'text-h-center': box.textHorizontalAlign === 'center',
-                'text-right': box.textHorizontalAlign === 'right',
-                'text-top': box.textVerticalAlign === 'top',
-                'text-v-center': box.textVerticalAlign === 'center',
-                'text-bottom': box.textVerticalAlign === 'bottom',
-                [`text-${box.textColor}`]: true,
-                [`font-size-${box.fontSize}`]: true,
-                [`${box.fontStyle}`]: true
+            if(box.editable === true) {
+                let boldValue = "";
+                let italicsValue = "";
+                if(box.userComment !== "") {
+                    boldValue = box.isBold;
+                    italicsValue = box.isItalics;
+                }
+                else {
+                    boldValue = this.isDefaultBold;
+                    italicsValue = this.isDefaultItalics;
+                }
+                return {
+                    // bold: box.isBold ?? this.isDefaultBold,
+                    bold: boldValue,
+                    // italics: box.isItalics ?? this.isDefaultItalics,
+                    italics: italicsValue,
+                    // underline: this.isDefaultUnderline || box.isUnderline,
+                    underline: box.isUnderline ?? this.isDefaultUnderline,
+                    'text-left': box.textHorizontalAlign === 'left',
+                    'text-h-center': box.textHorizontalAlign === 'center',
+                    'text-right': box.textHorizontalAlign === 'right',
+                    'text-top': box.textVerticalAlign === 'top',
+                    'text-v-center': box.textVerticalAlign === 'center',
+                    'text-bottom': box.textVerticalAlign === 'bottom',
+                    [`text-${box.textColor}`]: true,
+                    [`font-size-${box.fontSize}`]: true,
+                    [`${box.fontStyle}`]: true
+                }
             }
         },
         gatherUserComments() {
-            
             let userInputObjects = Object.entries(this.userInput[0].objects);
             
             for(let i = 0; i < userInputObjects.length; i++) {
@@ -384,8 +407,8 @@ export default {
                     obj.userComment = userComment;
                     
                     // After the || is the default values for the editable boxes
-                    obj.isBold = obj.isBold || false;
-                    obj.isItalics = obj.isItalics || false;
+                    obj.isBold = obj.isBold || this.isBold || false;
+                    obj.isItalics = obj.isItalics || this.isItalics || false;
                     obj.isUnderline = obj.isUnderline || false;
                     obj.textHorizontalAlign = obj.textHorizontalAlign || 'center';
                     obj.textVerticalAlign = obj.textVerticalAlign || 'center';
@@ -396,7 +419,7 @@ export default {
             }
             
             this.userInputObject = { ...this.userInput };
-            console.log('GATHERED', this.userInputObjects);
+            
             // Passes the userInputObject up to the parent component "PhoneOverview.vue"
             this.$emit('user-input-object', this.userInputObject);
         },
@@ -407,7 +430,6 @@ export default {
             
             this.$nextTick(() => {
                 const closePopup = document.getElementById('popup');
-                console.log('Popup', closePopup);
                 
                 closePopup.addEventListener("keydown", (event) => {
                     if(event.key === "Escape") {
@@ -427,18 +449,42 @@ export default {
                 // })
 
             });
+            
             this.originalPopupText = box[1].userComment;
             this.popupText = box[1].userComment;
-            
             this.selectedBox = index;
-
             this.currentBox = box;
-            
             this.currentIndex = index;
+            
+            if(box[1].userComment === "") {
+                // let boldValue = box[1].isBold || this.isDefaultBold;
+                let boldValue = this.isDefaultBold;
+                this.isBold = boldValue;
+                box[1].isBold = boldValue;
 
-            this.isBold = box[1].isBold;
-            this.isItalics = box[1].isItalics;
-            this.isUnderline = box[1].isUnderline;
+                let italicsValue = this.isDefaultItalics;
+                this.isItalics = italicsValue;
+                box[1].isItalics = italicsValue;
+            }
+            else {
+                let boldValue = box[1].isBold;
+                this.isBold = boldValue;
+                box[1].isBold = boldValue;
+
+                let italicsValue = box[1].isItalics;
+                this.isItalics = italicsValue;
+                box[1].isItalics = boldValue;
+            }
+
+            // let italicsValue = box[1].isItalics || this.isDefaultItalics;
+            // this.isItalics = italicsValue;
+            // box[1].isItalics = italicsValue;
+            
+            let underlineValue = box[1].isUnderline || this.isDefaultUnderline;
+            this.isUnderline = underlineValue;
+            box[1].isUnderline = underlineValue;
+
+            // this.isUnderline = this.isDefaultUnderline ?? this.isUnderline ?? box[1].isUnderline;
             this.textHorizontalAlign = box[1].textHorizontalAlign;
             this.textVerticalAlign = box[1].textVerticalAlign;
             this.textColor = box[1].textColor;
@@ -468,6 +514,7 @@ export default {
             this.selectedBox = null;
         },
         cancelEdit() {
+            console.log(this.currentBox[1]);
             this.currentBox[1].userComment = this.originalPopupText;
             this.popupVisible = false;
             this.currentBox = null;
@@ -528,12 +575,9 @@ export default {
             }
         },
         popupText() {
-            // if confirmEdit -> this.currentBox[1].userComment = this.popupTextNew;
-            
-            // if cancelEdit -> this.currentBox[1].userComment = this.popupText
-            this.currentBox[1].userComment = this.popupTextNew;
-            this.popupTextNew = this.popupText;
-
+            // this.popupTextNew = this.popupText;
+            // this.currentBox[1].userComment = this.popupTextNew;
+            this.currentBox[1].userComment = this.popupText;
         }
     }
 }
@@ -656,7 +700,10 @@ input:focus {
     text-align: center;
     border-radius: 5px;
 }
-.popup-button:hover,
+.popup-button:hover {
+    background-color: rgb(178, 178, 178);
+    cursor: pointer;
+}
 .popup-button.active {
     background-color: gray;
     cursor: pointer;
