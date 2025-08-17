@@ -250,7 +250,10 @@ export default {
             isDefaultUnderline: false,
             
             textHorizontalAlign: 'center',
+            textHorizontalAlignDefault: 'center',
+
             textVerticalAlign: 'center',
+            textVerticalAlignDefault: 'center',
             textColor: 'black',
 
             fontSize: 0,
@@ -283,6 +286,7 @@ export default {
             this.isDefaultBold = this.isBold;
             this.isDefaultItalics = this.isItalics;
             this.isDefaultUnderline = this.isUnderline;
+            this.textHorizontalAlignDefault = this.textHorizontalAlign;
         },
         nextAndPreviousBox(event) {
             if(event.altKey && event.key === "n") {
@@ -373,23 +377,29 @@ export default {
                 let boldValue = "";
                 let italicsValue = "";
                 let underlineValue = "";
+                let textHAlignValue = "";
                 if(box.userComment !== "") {
                     boldValue = box.isBold;
                     italicsValue = box.isItalics;
                     underlineValue = box.isUnderline;
+                    textHAlignValue = box.textHorizontalAlign
                 }
                 else {
                     boldValue = this.isDefaultBold;
                     italicsValue = this.isDefaultItalics;
                     underlineValue = this.isDefaultUnderline;
+                    textHAlignValue = this.textHorizontalAlignDefault;
                 }
                 return {
                     bold: boldValue,
                     italics: italicsValue,
                     underline: underlineValue,
-                    'text-left': box.textHorizontalAlign === 'left',
-                    'text-h-center': box.textHorizontalAlign === 'center',
-                    'text-right': box.textHorizontalAlign === 'right',
+                    // 'text-left': box.textHorizontalAlign === 'left',
+                    'text-left': textHAlignValue === 'left',
+                    // 'text-h-center': box.textHorizontalAlign === 'center',
+                    'text-h-center': textHAlignValue === 'center',
+                    // 'text-right': box.textHorizontalAlign === 'right',
+                    'text-right': textHAlignValue === 'right',
                     'text-top': box.textVerticalAlign === 'top',
                     'text-v-center': box.textVerticalAlign === 'center',
                     'text-bottom': box.textVerticalAlign === 'bottom',
@@ -461,7 +471,6 @@ export default {
             this.currentIndex = index;
             
             if(box[1].userComment === "") {
-                // let boldValue = box[1].isBold || this.isDefaultBold;
                 let boldValue = this.isDefaultBold;
                 this.isBold = boldValue;
                 box[1].isBold = boldValue;
@@ -473,6 +482,10 @@ export default {
                 let underlineValue = this.isDefaultUnderline;
                 this.isUnderline = underlineValue;
                 box[1].isUnderline = underlineValue;
+
+                let textHAlignValue = this.textHorizontalAlignDefault;
+                this.textHorizontalAlign = textHAlignValue;
+                box[1].textHorizontalAlign = textHAlignValue;
             }
             else {
                 let boldValue = box[1].isBold;
@@ -486,18 +499,13 @@ export default {
                 let underlineValue = box[1].isUnderline;
                 this.isUnderline = underlineValue;
                 box[1].isUnderline = underlineValue;
+
+                let textHAlignValue = box[1].textHorizontalAlign;
+                this.textHorizontalAlign = textHAlignValue;
+                box[1].textHorizontalAlign = textHAlignValue;
             }
 
-            // let italicsValue = box[1].isItalics || this.isDefaultItalics;
-            // this.isItalics = italicsValue;
-            // box[1].isItalics = italicsValue;
-            
-            // let underlineValue = box[1].isUnderline || this.isDefaultUnderline;
-            // this.isUnderline = underlineValue;
-            // box[1].isUnderline = underlineValue;
-
-            // this.isUnderline = this.isDefaultUnderline ?? this.isUnderline ?? box[1].isUnderline;
-            this.textHorizontalAlign = box[1].textHorizontalAlign;
+            // this.textHorizontalAlign = box[1].textHorizontalAlign;
             this.textVerticalAlign = box[1].textVerticalAlign;
             this.textColor = box[1].textColor;
             this.fontSize = box[1].fontSize;
