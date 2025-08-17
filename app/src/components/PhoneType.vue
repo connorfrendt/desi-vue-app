@@ -26,6 +26,7 @@
                 <ul style="padding: 0;">
                     <li style="list-style-type: none; height: 100px; width: 200px; background-color: lightgray; display: flex;" :class="[{ [`text-${textVerticalAlign}`]: true }]">
                         <textarea
+                            id="text-area"
                             ref="popupInput"
                             v-model="popupText"
                             style="width: 195px; background-color: lightgray; border: none;"
@@ -39,6 +40,9 @@
                                     [`font-size-${fontSize}`]: true,
                                     [`${fontStyle}`]: true
                                 },
+                                {
+                                    'vertical-center': textVerticalAlign === 'center'
+                                }
                             ]"
                         ></textarea>
                     </li>
@@ -380,12 +384,8 @@ export default {
                     underlineValue = this.isDefaultUnderline;
                 }
                 return {
-                    // bold: box.isBold ?? this.isDefaultBold,
                     bold: boldValue,
-                    // italics: box.isItalics ?? this.isDefaultItalics,
                     italics: italicsValue,
-                    // underline: this.isDefaultUnderline || box.isUnderline,
-                    // underline: box.isUnderline ?? this.isDefaultUnderline,
                     underline: underlineValue,
                     'text-left': box.textHorizontalAlign === 'left',
                     'text-h-center': box.textHorizontalAlign === 'center',
@@ -596,6 +596,14 @@ export default {
 </script>
 
 <style scoped>
+li {
+    white-space: pre-line;
+}
+
+.vertical-center {
+    padding-top: 35px;
+}
+
 .popup {
     position: absolute;
     top: 0;
@@ -682,14 +690,17 @@ input:focus {
 .text-left {
     display: flex;
     justify-content: flex-start;
+    text-align: left
 }
 .text-h-center {
     display: flex;
     justify-content: center;
+    text-align: center;
 }
 .text-right {
     display: flex;
     justify-content: flex-end;
+    text-align: right;
 }
 .text-top {
     display: flex;
@@ -698,6 +709,7 @@ input:focus {
 .text-v-center {
     display: flex;
     align-items: center;
+    /* padding-top: 33px; */
 }
 .text-bottom {
     display: flex;
