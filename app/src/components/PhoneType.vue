@@ -287,6 +287,7 @@ export default {
             this.isDefaultItalics = this.isItalics;
             this.isDefaultUnderline = this.isUnderline;
             this.textHorizontalAlignDefault = this.textHorizontalAlign;
+            this.textVerticalAlignDefault = this.textVerticalAlign;
         },
         nextAndPreviousBox(event) {
             if(event.altKey && event.key === "n") {
@@ -378,31 +379,34 @@ export default {
                 let italicsValue = "";
                 let underlineValue = "";
                 let textHAlignValue = "";
+                let textVAlignValue = "";
                 if(box.userComment !== "") {
                     boldValue = box.isBold;
                     italicsValue = box.isItalics;
                     underlineValue = box.isUnderline;
                     textHAlignValue = box.textHorizontalAlign
+                    textVAlignValue = box.textVerticalAlign
                 }
                 else {
                     boldValue = this.isDefaultBold;
                     italicsValue = this.isDefaultItalics;
                     underlineValue = this.isDefaultUnderline;
                     textHAlignValue = this.textHorizontalAlignDefault;
+                    textVAlignValue = this.textVerticalAlignDefault;
                 }
                 return {
                     bold: boldValue,
                     italics: italicsValue,
                     underline: underlineValue,
-                    // 'text-left': box.textHorizontalAlign === 'left',
+
                     'text-left': textHAlignValue === 'left',
-                    // 'text-h-center': box.textHorizontalAlign === 'center',
                     'text-h-center': textHAlignValue === 'center',
-                    // 'text-right': box.textHorizontalAlign === 'right',
                     'text-right': textHAlignValue === 'right',
-                    'text-top': box.textVerticalAlign === 'top',
-                    'text-v-center': box.textVerticalAlign === 'center',
-                    'text-bottom': box.textVerticalAlign === 'bottom',
+                    
+                    'text-top': textVAlignValue === 'top',
+                    'text-v-center': textVAlignValue === 'center',
+                    'text-bottom': textVAlignValue === 'bottom',
+                    
                     [`text-${box.textColor}`]: true,
                     [`font-size-${box.fontSize}`]: true,
                     [`${box.fontStyle}`]: true
@@ -486,6 +490,10 @@ export default {
                 let textHAlignValue = this.textHorizontalAlignDefault;
                 this.textHorizontalAlign = textHAlignValue;
                 box[1].textHorizontalAlign = textHAlignValue;
+
+                let textVAlignValue = this.textVerticalAlignDefault;
+                this.textVerticalAlign = textVAlignValue;
+                box[1].textVerticalAlign = textVAlignValue;
             }
             else {
                 let boldValue = box[1].isBold;
@@ -503,10 +511,14 @@ export default {
                 let textHAlignValue = box[1].textHorizontalAlign;
                 this.textHorizontalAlign = textHAlignValue;
                 box[1].textHorizontalAlign = textHAlignValue;
+
+                let textVAlignValue = box[1].textVerticalAlign;
+                this.textVerticalAlign = textVAlignValue;
+                box[1].textVerticalAlign = textVAlignValue;
             }
 
             // this.textHorizontalAlign = box[1].textHorizontalAlign;
-            this.textVerticalAlign = box[1].textVerticalAlign;
+            // this.textVerticalAlign = box[1].textVerticalAlign;
             this.textColor = box[1].textColor;
             this.fontSize = box[1].fontSize;
             this.fontStyle = box[1].fontStyle;
